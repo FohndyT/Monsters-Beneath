@@ -39,24 +39,10 @@ public class MovementInput : MonoBehaviour
     private void OnMovement(InputValue value)
     {
         moveInput = value.Get<Vector2>();
-        if (moveInput.x < 0)
-        {
-            directionHoriontale = -1;
-        }
-        else
-        {
-            directionHoriontale = 1;
-        }
-
-        if (moveInput.y < 0)
-        {
-            directionVerticale = -1;
-        }
-        else
-        {
-            directionVerticale = 1;
-        }
-        gameObject.transform.Rotate(0,90*directionHoriontale+90*directionVerticale,0,Space.World);
+        moveInput.Normalize();
+        Vector3 moveInput3d = new Vector3(moveInput.x, 0, moveInput.y);
+        if (moveInput3d != Vector3.zero)
+            transform.forward = moveInput3d;
     }
 
     private void OnDash()
@@ -64,9 +50,9 @@ public class MovementInput : MonoBehaviour
         if(CanDash)
         {
             if(moveInput.x != 0) 
-                playerRigidbody.AddForce(dashDistance*directionHoriontale,0,0,ForceMode.Impulse);
+                playerRigidbody.AddForce(moveInput.x*dashDistance,0,0,ForceMode.Impulse);
             else if(moveInput.y!= 0) 
-                playerRigidbody.AddForce(0,0,dashDistance*directionVerticale,ForceMode.Impulse);
+                playerRigidbody.AddForce(0,0,moveInput.y*dashDistance,ForceMode.Impulse);
             CanDash = false;
         }
     }

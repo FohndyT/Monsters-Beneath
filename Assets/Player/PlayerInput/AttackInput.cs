@@ -9,7 +9,7 @@ public class AttackInput : MonoBehaviour
 
     private void OnAttack()
     {
-        
         Instantiate(Sword, positionAttack);
     }
+    
 }

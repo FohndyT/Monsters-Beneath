@@ -146,7 +146,7 @@ public partial class @NewControls : IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""b99bc4b1-07d0-4db7-8336-8505f2dfa1dc"",
                     ""path"": ""<Keyboard>/e"",
-                    ""interactions"": """",
+                    ""interactions"": ""Hold,Press"",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Attack"",

@@ -7,7 +7,7 @@ public class JumpingInput : MonoBehaviour
 {
     private Rigidbody playerRigidbody;
 
-    private float distanceATerre = 1f/* 0.5f*/;
+    private float distanceATerre = 0.5f;
 
     private bool estATerre;
     
