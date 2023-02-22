@@ -14,7 +14,6 @@ public class MovementInput : MonoBehaviour
     
     
     public float vitesse = 2f;
-    public float dashVitesse;
     public float dashDistance;
     private bool CanDash = true;
     
@@ -32,8 +31,6 @@ public class MovementInput : MonoBehaviour
     }
 
     private Vector2 moveInput;
-    public float directionHoriontale = 1;
-    public float directionVerticale = 1;
 
 
     private void OnMovement(InputValue value)
@@ -49,11 +46,18 @@ public class MovementInput : MonoBehaviour
     {
         if(CanDash)
         {
-            if(moveInput.x != 0) 
-                playerRigidbody.AddForce(moveInput.x*dashDistance,0,0,ForceMode.Impulse);
-            else if(moveInput.y!= 0) 
-                playerRigidbody.AddForce(0,0,moveInput.y*dashDistance,ForceMode.Impulse);
-            CanDash = false;
+            if (moveInput == Vector2.zero)
+                return;
+            else if (moveInput.x != 0)
+            {
+                playerRigidbody.AddForce(moveInput.x * dashDistance, 0, 0, ForceMode.Impulse);
+                CanDash = false;
+            }
+            else if (moveInput.y != 0)
+            {
+                playerRigidbody.AddForce(0, 0, moveInput.y * dashDistance, ForceMode.Impulse);
+                CanDash = false;
+            }
         }
     }
 }
