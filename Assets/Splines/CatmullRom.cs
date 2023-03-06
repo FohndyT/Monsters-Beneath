@@ -24,14 +24,14 @@ public class CatmullRom : MonoBehaviour
 		}
 	}
 	
-	void DisplayCatmullRomSpline(int pos)
+	void DisplayCatmullRomSpline(int position)
 	{
-		Vector3 p0 = PointsList[ClampListPos(pos - 1)].position;
-		Vector3 p1 = PointsList[pos].position;
-		Vector3 p2 = PointsList[ClampListPos(pos + 1)].position;
-		Vector3 p3 = PointsList[ClampListPos(pos + 2)].position;
+		Vector3 p0 = PointsList[ClampListPos(position - 1)].position;
+		Vector3 p1 = PointsList[position].position;
+		Vector3 p2 = PointsList[ClampListPos(position + 1)].position;
+		Vector3 p3 = PointsList[ClampListPos(position + 2)].position;
 		
-		Vector3 lastPos = p1;
+		Vector3 lastPosition = p1;
 		
 		float resolution = 0.2f;
 		
@@ -41,31 +41,31 @@ public class CatmullRom : MonoBehaviour
 		{
 			float t = i * resolution;
 			
-			Vector3 newPos = GetCatmullRomPosition(t, p0, p1, p2, p3);
+			Vector3 newPosition = GetCatmullRomPosition(t, p0, p1, p2, p3);
 			
-			Gizmos.DrawLine(lastPos, newPos);
+			Gizmos.DrawLine(lastPosition, newPosition);
 			
-			lastPos = newPos;
+			lastPosition = newPosition;
 		}
 	}
 	
-	int ClampListPos(int pos)
+	int ClampListPos(int position)
 	{
-		if (pos < 0)
+		if (position < 0)
 		{
-			pos = PointsList.Length - 1;
+			position = PointsList.Length - 1;
 		}
     
-		if (pos > PointsList.Length)
+		if (position > PointsList.Length)
 		{
-			pos = 1;
+			position = 1;
 		}
-		else if (pos > PointsList.Length - 1)
+		else if (position > PointsList.Length - 1)
 		{
-			pos = 0;
+			position = 0;
 		}
     
-		return pos;
+		return position;
 	}
 	
 	Vector3 GetCatmullRomPosition(float t, Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3)
