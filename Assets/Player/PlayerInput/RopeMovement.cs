@@ -14,6 +14,8 @@ public class RopeMovement : MonoBehaviour
     private Rigidbody selfRigidbody;
     private Rigidbody ropeRigidbody;
 
+    private float playerSpeed;
+
     private void Start()
     {
         mainRope = GameObject.FindWithTag("MainRope");
@@ -28,13 +30,21 @@ public class RopeMovement : MonoBehaviour
             transform.position = new Vector3(mainRope.transform.position.x,
                                            mainRope.transform.position.y - characterPositionY,
                                              mainRope.transform.position.z);
+            
+            if (Input.GetKey("w"))
+            {
+                ropeRigidbody.velocity = new Vector3(0, 0, playerSpeed);
+            }
+            
+            if (Input.GetKey("s"))
+            {
+                ropeRigidbody.velocity = new Vector3(0, 0, -playerSpeed);
+            }
 
             if (Input.GetKey("space"))
             {
                 onRope = false;
-                selfRigidbody.velocity = new Vector3(ropeRigidbody.velocity.x, 
-                                                   ropeRigidbody.velocity.y + 3, 
-                                                     ropeRigidbody.velocity.z);
+                selfRigidbody.velocity = new Vector3(0, ropeRigidbody.velocity.y /* + 3 */, ropeRigidbody.velocity.z);
             }
         }
     }
@@ -43,6 +53,7 @@ public class RopeMovement : MonoBehaviour
     {
         if (mainRope.CompareTag("MainRope"))
         {
+            playerSpeed = selfRigidbody.velocity.z;
             characterPositionY = mainRope.transform.position.y - transform.position.y;
             //characterPositionX = transform.position.x - mainRope.transform.position.x;
             onRope = true;
