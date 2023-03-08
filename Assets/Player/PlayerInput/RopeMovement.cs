@@ -18,9 +18,7 @@ public class RopeMovement : MonoBehaviour
 
     private void Start()
     {
-        mainRope = GameObject.FindWithTag("MainRope");
         selfRigidbody = GetComponent<Rigidbody>();
-        ropeRigidbody = mainRope.GetComponent<Rigidbody>();
     }
 
     void Update()
@@ -49,15 +47,28 @@ public class RopeMovement : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider mainRope)
+    private void OnTriggerEnter(Collider rope)
     {
-        if (mainRope.CompareTag("MainRope"))
+        if (rope.CompareTag("MainRope") || rope.CompareTag("MainRope2"))
         {
-            playerSpeed = selfRigidbody.velocity.z;
-            characterPositionY = mainRope.transform.position.y - transform.position.y;
-            //characterPositionX = transform.position.x - mainRope.transform.position.x;
             onRope = true;
-            Debug.Log("Collision MainRope Detected");
+            
+            playerSpeed = selfRigidbody.velocity.z;
+            characterPositionY = rope.transform.position.y - transform.position.y;
+            
+            Debug.Log("Collision Rope Detected");
+            
+            if (rope.CompareTag("MainRope"))
+            {
+                mainRope = GameObject.FindWithTag("MainRope");
+            }
+
+            if (rope.CompareTag("MainRope2"))
+            {
+                mainRope = GameObject.FindWithTag("MainRope2");
+            }
+            
+            ropeRigidbody = mainRope.GetComponent<Rigidbody>();
             ropeRigidbody.AddForce(new Vector3(selfRigidbody.velocity.x * 35,0,selfRigidbody.velocity.z * 35));
         }
     }
