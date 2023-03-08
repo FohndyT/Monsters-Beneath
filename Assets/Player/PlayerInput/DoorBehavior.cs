@@ -11,6 +11,7 @@ public class DoorBehavior : MonoBehaviour
    public float tempsMaxOuvert = 5f;
    private float tempsOuvert = 0f;
    private Vector3 positionBase;
+   private bool isClosing = false;
 
    private void Awake()
    {
@@ -29,13 +30,25 @@ public class DoorBehavior : MonoBehaviour
          transform.position += Vector3.up * Time.deltaTime;
          tempsOuvert += Time.deltaTime;
       }
-
+      if(transform.position.y >= hauteurMax)
+         tempsOuvert += Time.deltaTime;
+      
       if (tempsOuvert >= tempsMaxOuvert)
+         if (transform.position.y >= positionBase.y)
+            isClosing = true;
+         
+      if (isClosing)
       {
-         if (transform.position.y > positionBase.y)
-            transform.position += Vector3.down * Time.deltaTime;
-         else
+         transform.position += Vector3.down * (2f * Time.deltaTime);
+         if (transform.position.y <= positionBase.y)
+         {
+            isClosing = false;
             transform.position = positionBase;
+            IsBeingUsed = false;
+            tempsOuvert = 0f;
+         }
       }
+
+
    }
 }
