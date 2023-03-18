@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,10 +12,12 @@ public class InputsManager : MonoBehaviour
     Vector3 skewedMovement;
     Vector3 skewedDirection;
     bool camLock = false;
-    const float jumpForce = 15000f;     // Mass de 30
+    const float appliedVelo = 8f;
+    const float jumpForce = 16000f;     // Mass de 30
     const float gravityForce = 600f;    // Drag de 0
     public bool isGrounded = false;     // Angular drag de 0.05
     public RaycastHit rayHit;
+    bool inMenu = true;
     #endregion 
 
     void Start()
@@ -29,17 +32,15 @@ public class InputsManager : MonoBehaviour
         CheckIfGrounded();
         TransformPlayer();
     }
+
     void CheckIfGrounded()
-    {
-        if (Physics.Raycast(transform.position, -transform.up, out rayHit, meshFilth.mesh.bounds.extents.y + 0.1f))     // ray hit a l'origine du monde? ca fait un double saut?
-            isGrounded = true;
-    }
+    { isGrounded = Physics.Raycast(transform.position, -transform.up, out rayHit, meshFilth.mesh.bounds.extents.y + 0.1f); }
     void TransformPlayer()
     {
-        playbody.velocity = new Vector3(skewedMovement.x * 6, playbody.velocity.y, skewedMovement.z * 6);
+        playbody.velocity = new Vector3(skewedMovement.x * appliedVelo, playbody.velocity.y, skewedMovement.z * appliedVelo);
         playbody.AddForce(new Vector3(0, -gravityForce, 0));
         if (skewedDirection != Vector3.zero && !camLock)
-            transform.forward = Vector3.Lerp(transform.forward, skewedDirection, Time.deltaTime * 35);  //  Slerp pour rotation de 180 non abruptes, mais rotation trop unnatural. Enleve le focus.
+            transform.forward = Vector3.Lerp(transform.forward, skewedDirection, Time.deltaTime * 35);
         //transform.rotation = Quaternion.LookRotation(playbody.velocity, transform.up);    //  Dangerous but fun. Could be applied as a "confused player" state
     }
 
@@ -51,7 +52,12 @@ public class InputsManager : MonoBehaviour
     }
     void OnOrientationLock(InputValue value)
     {
-        //camLock = true; //  Puisque detect juste premire frame, le cam lock perdure. Must find a way de faire que les actions se font a chaque frame, this way le transform en haut vas pouvoir etre deplace au OnMove()
+        camLock = true;     // Only called once. Trouver comment appeler a repetition lorsque le button est held.
+        Invoke("OrientationUnlock", 1f);
+    }
+    void OrientationUnlock()
+    {
+        camLock = false;
     }
     void OnJump(InputValue value)
     {
@@ -77,12 +83,10 @@ public class InputsManager : MonoBehaviour
     void OnItemSelect(InputValue value) { }
     void OnOpenMenu(InputValue value)
     {
-        //if (!inMenu)
-        //{
-        //    playerInput.SwitchCurrentActionMap("Menu");
-        //    Debug.Log(playerInput.currentActionMap);
-        //    inMenu = true;
-        //}
+        if (inMenu) { playerInput.SwitchCurrentActionMap("Gameplay"); }
+        else { playerInput.SwitchCurrentActionMap("Menu"); }
+        Debug.Log(playerInput.currentActionMap);
+        inMenu = !inMenu;
     }
 
     //  Menu Inputs

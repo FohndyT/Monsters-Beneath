@@ -16,12 +16,12 @@
                 },
                 {
                     "name": "Orientation Lock",
-                    "type": "Button",
+                    "type": "Value",
                     "id": "c4f2edd7-30ed-4c04-aa0e-9dbd79df5507",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Jump",
@@ -144,6 +144,61 @@
                     "isPartOfComposite": true
                 },
                 {
+                    "name": "WASD (2D Vector)",
+                    "id": "041d578c-7d85-4b21-88ce-b560cd4b1908",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "297415d1-cf36-4dc2-97f5-d517da30b212",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "1b218197-c5ed-4719-868b-7720507be9f3",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "fa27a90e-3cdd-4288-9519-24f0f1ec8646",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "7ba18ff8-1e2c-4594-8642-ccd534b47f60",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
                     "name": "Mouse movement",
                     "id": "295cdd51-e7b0-4975-8fe9-e69a9bfd927b",
                     "path": "OneModifier",
@@ -200,6 +255,17 @@
                 },
                 {
                     "name": "",
+                    "id": "204b08da-49cc-4664-981a-52c04afb4f90",
+                    "path": "<Keyboard>/l",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Orientation Lock",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "69e0c66f-9223-438d-90fd-5a215cfa5fbd",
                     "path": "<Mouse>/rightButton",
                     "interactions": "",
@@ -245,7 +311,7 @@
                 {
                     "name": "",
                     "id": "8e7bd488-42b3-419b-8c1f-c5b743f06c50",
-                    "path": "<Keyboard>/s",
+                    "path": "<Keyboard>/u",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
@@ -267,7 +333,7 @@
                 {
                     "name": "",
                     "id": "166e3cf2-e9fb-4f98-96de-80253eaef5dd",
-                    "path": "<Keyboard>/a",
+                    "path": "<Keyboard>/i",
                     "interactions": "Hold",
                     "processors": "",
                     "groups": "Keyboard",
@@ -333,7 +399,7 @@
                 {
                     "name": "",
                     "id": "ea3240ea-56d7-4552-95e8-40791249749f",
-                    "path": "<Keyboard>/s",
+                    "path": "<Keyboard>/u",
                     "interactions": "Hold(duration=0.8)",
                     "processors": "",
                     "groups": "Keyboard",
@@ -355,7 +421,7 @@
                 {
                     "name": "",
                     "id": "ff337d40-68dc-4663-bd97-c7acb556a699",
-                    "path": "<Keyboard>/a",
+                    "path": "<Keyboard>/i",
                     "interactions": "MultiTap(tapDelay=0.3,tapCount=3,pressPoint=0.05)",
                     "processors": "",
                     "groups": "Keyboard",

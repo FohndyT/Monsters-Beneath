@@ -1,65 +1,70 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq.Expressions;
+using System.Linq;
 using UnityEngine;
 
 public class DebugAndGodMode : MonoBehaviour
 {
-    //InputsManager inputManager;
-    JumpingInput jumpScript;
+    BezierCurve[] curves;
+    InputsManager inputManager;
+    //JumpingInput jumpScript;
     #region Attributes
     enum DebugFunctions { SwitchDebugOnOff, ShowHitboxes, ShowRaycasts, ShowTrajectories, UnlockPuzzle };
     KeyCode[] debugHotKeys = { KeyCode.F1, KeyCode.F5, KeyCode.F6, KeyCode.F7, KeyCode.F8 };
     bool[] debugStates;
     int nbDebugStates;
+    int nbOfDrawLines = 10;
     Material mat;
     #endregion
     private void Start()
     {
         nbDebugStates = debugHotKeys.Length;
-        debugStates = new bool[nbDebugStates];
-        //inputManager = GetComponent<InputsManager>();
-        jumpScript = GetComponent<JumpingInput>();
+        debugStates = Enumerable.Repeat(true, nbDebugStates).ToArray();
+        curves = FindObjectsOfType<BezierCurve>();
+        inputManager = GetComponent<InputsManager>();
+        //jumpScript = GetComponent<JumpingInput>();
         mat = new Material(Shader.Find("Hidden/Internal-Colored"));
         mat.hideFlags = HideFlags.HideAndDontSave;
     }
-    void SwitchOnOff(bool condition, bool state, string debugLog)
+    void SwitchOnOff(bool condition, ref bool state, string debugLog)
     {
         if (condition)
         {
             state = !state;
-            //switch (state)
-            //{
-            //    case true:
-            //        state = false; break;
-            //    case false:
-            //        state = true; break;
-            //}
             Debug.Log(debugLog + state);
         }
     }
     void Update()
     {
         for (int i = 0; i < nbDebugStates; i++)
-            SwitchOnOff(Input.GetKeyDown(debugHotKeys[i]), debugStates[i], Enum.GetName(typeof(DebugFunctions), i) + " : ");
-        if (debugStates[0])
-        {
-            //if (debugStates[1]) { }
-            //if (debugStates[3]) { }
-            //if (debugStates[4]) { }
-        }
+            SwitchOnOff(Input.GetKeyDown(debugHotKeys[i]), ref debugStates[i], Enum.GetName(typeof(DebugFunctions), i) + " : ");
     }
     private void OnRenderObject()
     {
-        if (jumpScript.estATerre)    // inputManager.isGrounded   //  debugStates[0] && debugStates[2] && inputManager.isGrounded
+        if (debugStates[0])
         {
             mat.SetPass(0);
-            GL.PushMatrix(); GL.Begin(GL.LINES);
-            GL.Color(Color.red);
-            GL.Vertex(transform.position);
-            GL.Vertex(transform.position + Vector3.down);    // inputManager.rayHit.point
-            GL.End(); GL.PopMatrix();
+            GL.PushMatrix();
+            if (debugStates[2] && inputManager.isGrounded)    // jumpScript.estATerre
+            {
+                GL.Begin(GL.LINES);
+                GL.Color(Color.red);
+                GL.Vertex(transform.position);
+                GL.Vertex(inputManager.rayHit.point);    // transform.position + Vector3.down
+                GL.End();
+            }
+            if (debugStates[3])
+            {
+                foreach (var curve in curves)
+                {
+                    nbOfDrawLines = curve.points.Length * 10;
+                    GL.Begin(GL.LINE_STRIP);
+                    GL.Color(Color.white);
+                    for (int i = 0; i < nbOfDrawLines; i++)
+                    { GL.Vertex(curve.GetPoint((float)i / nbOfDrawLines)); }
+                    GL.End();
+                }
+            }
+            GL.PopMatrix();
         }
     }
 }
