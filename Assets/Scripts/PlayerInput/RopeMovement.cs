@@ -42,7 +42,7 @@ public class RopeMovement : MonoBehaviour
             if (Input.GetKey("space"))
             {
                 onRope = false;
-                selfRigidbody.velocity = new Vector3(0, ropeRigidbody.velocity.y /* + 3 */, ropeRigidbody.velocity.z);
+                selfRigidbody.velocity = new Vector3(0, ropeRigidbody.velocity.y + 2, ropeRigidbody.velocity.z);
             }
         }
     }

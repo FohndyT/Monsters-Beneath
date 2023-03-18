@@ -7,11 +7,12 @@ TagManager:
   - MainRope
   - Rope
   - MainRope2
+  - Obstacle
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Obstacle
   - Water
   - UI
   - InteractableObject
