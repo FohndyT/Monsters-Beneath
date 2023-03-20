@@ -8,6 +8,7 @@ TagManager:
   - Rope
   - MainRope2
   - Obstacle
+  - Planeur
   layers:
   - Default
   - TransparentFX

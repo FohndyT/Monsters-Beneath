@@ -6,10 +6,11 @@ using UnityEngine;
 
 public class Planage : MonoBehaviour
 {
-    [SerializeField] GameObject planeur;
+    [SerializeField] private GameObject planeur;
+    private GameObject clonePlaneur;
 
     // À modifier plus tard
-    private bool planeurEstCollecté = true;
+    private bool planeurEstCollecté = false;
     
     private bool estCréé;
 
@@ -19,15 +20,25 @@ public class Planage : MonoBehaviour
         {
             if (Input.GetKey("1") && !estCréé)
             {
-                Instantiate(planeur, planeur.transform.localPosition,Quaternion.identity);
+                clonePlaneur = Instantiate(planeur, transform.localPosition + new Vector3(0,0.7499999f,0),transform.rotation);
+                clonePlaneur.transform.parent = transform;
+                
                 estCréé = true;
             }
 
             if (Input.GetKey("2") && estCréé)
             {
-                Destroy(planeur);
+                Destroy(clonePlaneur);
                 estCréé = false;
             }
+        }
+    }
+    
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Planeur")
+        {
+            planeurEstCollecté = true;
         }
     }
 }
