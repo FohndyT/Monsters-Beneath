@@ -10,11 +10,12 @@ public class MovementInput : MonoBehaviour
     private void Awake()
     {
         playerRigidbody = GetComponent<Rigidbody>();
+        playerRigidbody.freezeRotation = true;
     }
 
 
-    public float vitesse = 2f;
-    public float dashDistance;
+    public float vitesse = 25f;
+    public float dashDistance = 15;
     private bool CanDash = true;
 
 
