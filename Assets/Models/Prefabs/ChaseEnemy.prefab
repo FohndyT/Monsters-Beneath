@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 7436113257616151570}
   - component: {fileID: 2080273936114949109}
   - component: {fileID: 2080273936114949114}
-  - component: {fileID: 2080273936114949115}
   - component: {fileID: 8606172064178512742}
+  - component: {fileID: 293069052576213264}
   m_Layer: 0
   m_Name: ChaseEnemy
   m_TagString: Untagged
@@ -74,22 +74,6 @@ NavMeshAgent:
   m_BaseOffset: 0.5
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &2080273936114949115
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1859521772846679362}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9ee018e10bb9374aafd1e69e0131b02, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  waypoints: []
-  evadeTime: 7
-  waitTime: 5
 --- !u!65 &8606172064178512742
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -103,6 +87,24 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 3.965582, y: 3.1638966, z: 17.068295}
   m_Center: {x: 0.017725945, y: 1.0819483, z: 7.1061845}
+--- !u!114 &293069052576213264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1859521772846679362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6b6c137d950fa24ab31f14b77b71e6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  waypoints: []
+  chaseMode: 0
+  patrolMode: 1
+  evadeTime: 5
+  waitTime: 5
 --- !u!1 &2080273937011938122
 GameObject:
   m_ObjectHideFlags: 0
