@@ -37,5 +37,11 @@ Material:
     m_Floats:
     - _BUILTIN_QueueControl: 0
     - _BUILTIN_QueueOffset: 0
-    m_Colors: []
+    - _Nombre_de_bulles: 20
+    - _Nombre_de_vagues: 0
+    - _Vitesse_de_vague: 0
+    - _Vitesse_des_bulles: 2
+    m_Colors:
+    - _Couleur_de_base: {r: 0, g: 1, b: 0, a: 1}
+    - _Couleur_secondaire: {r: 1, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
