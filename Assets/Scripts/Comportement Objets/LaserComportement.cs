@@ -2,39 +2,73 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// https://www.youtube.com/watch?v=kzHNUT9q4JE&ab_channel=BaDuy
+
 public class LaserComportement : MonoBehaviour
 {
-    private LineRenderer rayon;
-    private RaycastHit pointDeFrappe;
+    [SerializeField] private float longueurRayon;
+
+    private LineRenderer lr;
+    private RaycastHit frappe;
+    private Ray rayon;
     
     void Start()
     {
-        rayon = GetComponent<LineRenderer>();
+        lr = GetComponent<LineRenderer>();
     }
 
     void Update()
     {
-        rayon.SetPosition(0,transform.position);
-        if (Physics.Raycast(transform.position,transform.forward, out pointDeFrappe))
+        rayon = new Ray(transform.position,transform.forward);
+
+        lr.positionCount = 1;
+        lr.SetPosition(0,transform.position);
+        float longueurÀTraverser = longueurRayon;
+
+        for (int i = 0; i < 10; i++)
         {
-            if (pointDeFrappe.collider)
+            if (Physics.Raycast(rayon.origin, rayon.direction, out frappe, longueurÀTraverser))
             {
-                rayon.SetPosition(1,pointDeFrappe.point);
+                lr.positionCount += 1;
+                lr.SetPosition(lr.positionCount - 1, frappe.point);
+                longueurÀTraverser -= Vector3.Distance(rayon.origin, frappe.point);
+                
+                rayon = new Ray(frappe.point, Vector3.Reflect(rayon.direction, frappe.normal));
+
+                if (frappe.collider.tag != "Mirroir")
+                {
+                    break;
+                }
+            }
+            else
+            {
+                lr.positionCount += 1;
+                lr.SetPosition(lr.positionCount - 1, rayon.origin + rayon.direction * longueurÀTraverser);
+            }
+        }
+        
+        /////////////////////////////////////////////////////////////////////////////////////////
+        
+        /* if (Physics.Raycast(transform.position,transform.forward, out frappe))
+        {
+            if (frappe.collider)
+            {
+                lr.SetPosition(1,frappe.point);
             }
         }
         else
         {
-            rayon.SetPosition(1,transform.position + transform.forward * 1000);
-        }
+            lr.SetPosition(1,transform.position + transform.forward * 500);
+        } */
         
         // Juste pour les tests, à enlever si implimenté dans le jeu
         if (Input.GetKey("a"))
         {
-            transform.Rotate(-Vector3.up / 2,Space.Self);
+            transform.Rotate(-Vector3.up / 3,Space.Self);
         }
         if (Input.GetKey("d"))
         {
-            transform.Rotate(Vector3.up / 2,Space.Self);
+            transform.Rotate(Vector3.up / 3,Space.Self);
         }
     }
 }

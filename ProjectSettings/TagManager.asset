@@ -9,6 +9,7 @@ TagManager:
   - MainRope2
   - Obstacle
   - Planeur
+  - Mirroir
   layers:
   - Default
   - TransparentFX
