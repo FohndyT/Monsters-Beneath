@@ -4,6 +4,7 @@ using UnityEngine;
 
 // https://www.youtube.com/watch?v=kzHNUT9q4JE&ab_channel=BaDuy
 
+[RequireComponent(typeof(LineRenderer))]
 public class LaserComportement : MonoBehaviour
 {
     [SerializeField] private float longueurRayon;
@@ -59,7 +60,7 @@ public class LaserComportement : MonoBehaviour
         else
         {
             lr.SetPosition(1,transform.position + transform.forward * 500);
-        } */
+        } 
         
         // Juste pour les tests, à enlever si implimenté dans le jeu
         if (Input.GetKey("a"))
@@ -69,6 +70,6 @@ public class LaserComportement : MonoBehaviour
         if (Input.GetKey("d"))
         {
             transform.Rotate(Vector3.up / 3,Space.Self);
-        }
+        } */
     }
 }

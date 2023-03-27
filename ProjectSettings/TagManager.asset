@@ -10,6 +10,7 @@ TagManager:
   - Obstacle
   - Planeur
   - Mirroir
+  - Bois
   layers:
   - Default
   - TransparentFX
