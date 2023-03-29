@@ -3,7 +3,7 @@ using UnityEngine;
 public class CameraBehaviour : MonoBehaviour
 {
     public bool eagleView { get; set; } = true;
-    public Vector3 camOffset;
+    public Vector3 camOffset { get; set; }
     Transform playerTrans;
     CurveTraveler camTraveler;
 

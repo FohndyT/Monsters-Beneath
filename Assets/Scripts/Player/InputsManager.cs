@@ -24,7 +24,7 @@ public class InputsManager : MonoBehaviour
     protected Vector3 skewedMovement;
     Vector3 skewedDirection;
     const float appliedVelo = 8f;
-    private float tempsÉcoulé = 0;
+    private float tempsEcoule = 0;
     public float dashForce = 20;
     private bool canDash = true;
     #endregion
@@ -86,12 +86,12 @@ public class InputsManager : MonoBehaviour
     }
     void ActionsCheck()
     {
-        if (tempsÉcoulé > 3f)
+        if (tempsEcoule > 3f)
         {
             canDash = true;
-            tempsÉcoulé = 0;
+            tempsEcoule = 0;
         }
-        tempsÉcoulé += Time.deltaTime;
+        tempsEcoule += Time.deltaTime;
 
         if (!canAttack)
         {
