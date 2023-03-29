@@ -321,7 +321,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &75699068
 SphereCollider:
@@ -437,7 +437,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 143806493}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b0dffdbf00e5f974fbaf5bf79d578ed7, type: 3}
+  m_Script: {fileID: 11500000, guid: 8769f934f17eb7d42bce09a724e56de7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Current_item: {fileID: 1533134730}
@@ -516,7 +516,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 214317092}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6b6c137d950fa24ab31f14b77b71e6e, type: 3}
+  m_Script: {fileID: 11500000, guid: b9ee018e10bb9374aafd1e69e0131b02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 1793003137}
@@ -903,7 +903,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &815041431
 SphereCollider:
@@ -1609,5 +1609,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 6458646907186982591, guid: 6e1d3bc4a718e904597a8ca3113387a3, type: 3}
+      propertyPath: Sword
+      value: 
+      objectReference: {fileID: 2158391310216367706, guid: 8e185d6fdea9fc446858816ae432acb1, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6e1d3bc4a718e904597a8ca3113387a3, type: 3}
