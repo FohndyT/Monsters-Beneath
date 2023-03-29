@@ -1,19 +1,16 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class EnemyAi : MonoBehaviour
 {
+    CurveTraveler traveler;
     [SerializeField] private GameObject target;
     private NavMeshAgent agent;
     private Transform obj;
-    [SerializeField] private Transform[] waypoints;
-    public bool chaseMode;
+    public bool chaseMode = false;
     public bool patrolMode = true;
-    private int currentWaypoint = 0;
-    private Vector3 originalPosition;
+    private Vector3 returnPos;
     [SerializeField] private float evadeTime = 5f;
     [SerializeField] private float waitTime = 5f;
     private float waitingTime = 0f;
@@ -22,7 +19,8 @@ public class EnemyAi : MonoBehaviour
     {
         obj = GetComponent<Transform>();
         agent = GetComponent<NavMeshAgent>();
-        originalPosition = transform.position;
+        traveler = GetComponent<CurveTraveler>();
+        returnPos = transform.position;
 
     }
     private void OnTriggerEnter(Collider other)
@@ -31,47 +29,48 @@ public class EnemyAi : MonoBehaviour
         {
             chaseMode = true;
             patrolMode = false;
+            traveler.enabled = false;
         }
     }
 
     private IEnumerator OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
+        {
             for (float alpha = evadeTime; alpha >= 0; alpha -= 0.1f)
             {
                 agent.SetDestination(target.transform.position);
                 chaseMode = false;
                 yield return null;
             }
+        }
     }
-    
+
     void Update()
     {
         if (patrolMode)
         {
-            Transform waypoint = waypoints[currentWaypoint];
-            if (Vector3.Distance(obj.position, waypoint.position) < 1f)
-            {
-                currentWaypoint = (currentWaypoint + 1) % waypoints.Length;
-            }
-            else
-            {
-                agent.SetDestination(waypoint.position);
-            }
+            // maybe do something but for now CurveTraveler fait cette job
         }
-        if(chaseMode)
+        if (chaseMode)
+        {
+            traveler.enabled = false;
             agent.SetDestination(target.transform.position);
+        }
         else
         {
             if (waitingTime >= waitTime)
             {
-                agent.SetDestination(originalPosition);
+                agent.SetDestination(returnPos);
                 waitingTime = 0f;
             }
             waitingTime += Time.deltaTime;
         }
 
-        if (Vector3.Distance(obj.position, originalPosition) < 1f)
+        if (Vector3.Distance(obj.position, returnPos) < 1f)
+        {
+            traveler.enabled = true;
             patrolMode = true;
+        }
     }
 }
