@@ -11,6 +11,7 @@ TagManager:
   - Planeur
   - Mirroir
   - Bois
+  - Mirroir Doublant
   layers:
   - Default
   - TransparentFX

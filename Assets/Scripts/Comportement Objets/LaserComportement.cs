@@ -38,6 +38,11 @@ public class LaserComportement : MonoBehaviour
 
                 if (frappe.collider.tag != "Mirroir")
                 {
+                    if (frappe.collider.tag == "Player")
+                    {
+                        Destroy(frappe.transform.gameObject);
+                    }
+
                     break;
                 }
             }
