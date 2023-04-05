@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TranslationVerticale : MonoBehaviour
 {
-    [SerializeField] private float grandeurMouvement = 5;
+    [SerializeField] private float grandeurMouvement = 1;
     private float mouvement;
     private float temps;
     
@@ -12,6 +12,6 @@ public class TranslationVerticale : MonoBehaviour
     {
         temps += Time.deltaTime;
         mouvement = Mathf.Sin(temps);
-        transform.position += new Vector3(0, grandeurMouvement * mouvement, 0);  
+        transform.position += new Vector3(0, grandeurMouvement * mouvement / 25f, 0);  
     }
 }

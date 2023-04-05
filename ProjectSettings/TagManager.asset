@@ -12,6 +12,7 @@ TagManager:
   - Mirroir
   - Bois
   - Mirroir Doublant
+  - Boss
   layers:
   - Default
   - TransparentFX
