@@ -65,7 +65,11 @@ public class DevTools : MonoBehaviour
                         {
                             curve.CalculateCoefficients(currentCurve);
                             for (int i = 0; i <= nbOfDrawLines; i++)
-                            { GL.Vertex(curve.GetPoint((float)i / nbOfDrawLines)); }
+                            {
+                                Vector3 tempV = curve.curveType == Curve.CurveType.LinearSpline ? curve.GetPoint((float)i / nbOfDrawLines) + curve.points[currentCurve] :
+                                                                                                  curve.GetPoint((float)i / nbOfDrawLines);
+                                GL.Vertex(tempV);
+                            }
                         }
                         GL.End();
                     }

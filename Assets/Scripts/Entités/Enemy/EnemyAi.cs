@@ -7,7 +7,6 @@ public class EnemyAi : MonoBehaviour
     CurveTraveler traveler;
     [SerializeField] private GameObject target;
     private NavMeshAgent agent;
-    private Transform obj;
     public bool chaseMode = false;
     public bool patrolMode = true;
     private Vector3 returnPos;
@@ -17,7 +16,7 @@ public class EnemyAi : MonoBehaviour
 
     private void Awake()
     {
-        obj = GetComponent<Transform>();
+        target = GameObject.Find("Player");
         agent = GetComponent<NavMeshAgent>();
         traveler = GetComponent<CurveTraveler>();
         returnPos = transform.position;
@@ -54,6 +53,7 @@ public class EnemyAi : MonoBehaviour
         }
         if (chaseMode)
         {
+            traveler.progress = 0f;
             traveler.enabled = false;
             agent.SetDestination(target.transform.position);
         }
@@ -67,7 +67,7 @@ public class EnemyAi : MonoBehaviour
             waitingTime += Time.deltaTime;
         }
 
-        if (Vector3.Distance(obj.position, returnPos) < 1f)
+        if (Vector3.Distance(transform.position, returnPos) < 1f)
         {
             traveler.enabled = true;
             patrolMode = true;

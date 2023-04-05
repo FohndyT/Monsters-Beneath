@@ -23,7 +23,7 @@ public class SpecialAttackInput : MonoBehaviour
         Items = new[] { Fouet, Projectile, PowerGlove, CrystalLight };
     }
 
-    private void OnSpecialAttack()
+    private void OnItem()
     {
         if (canAttack)
         {
@@ -48,7 +48,7 @@ public class SpecialAttackInput : MonoBehaviour
         }
         canAttack = false;
     }
-    private void OnSwitchSpecialAttack()
+    private void OnItemSelect()
     {
         if (isUsingLight)
             return;

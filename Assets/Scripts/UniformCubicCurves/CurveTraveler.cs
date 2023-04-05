@@ -6,9 +6,9 @@ public class CurveTraveler : MonoBehaviour
     public Curve curve;     // public pour EnemyAi
     DevTools devtools;
     #region Attributes
-    [SerializeField] float duration;
+    public float duration;
     int currentCurve;
-    float progress;
+    public float progress { get; set; }
     bool goingFwd = true;
     [SerializeField] bool lookFwd;
     public enum Behaviour { Once, OnceAndBack, Loop, PingPong }
@@ -19,63 +19,67 @@ public class CurveTraveler : MonoBehaviour
     { devtools = GameObject.Find("Player").GetComponent<DevTools>(); }
     private void Update()
     {
-        if (goingFwd)
+        if (curve != null)
         {
-            progress += (Time.deltaTime * curve.nbCurves) / duration;
-            if (progress > 1f)
+            if (goingFwd)
             {
-                ++currentCurve;
-                progress -= 1f;
-                if (currentCurve >= curve.nbCurves)
+                progress += (Time.deltaTime * curve.nbCurves) / duration;
+                if (progress > 1f)
                 {
-                    switch (mode)
+                    ++currentCurve;
+                    progress -= 1f;
+                    if (currentCurve >= curve.nbCurves)
                     {
-                        case Behaviour.Once:
-                            currentCurve = 0;
-                            enabled = false;
-                            break;
-                        case Behaviour.Loop:
-                            currentCurve = 0;
-                            progress = 0f;
-                            break;
-                        default:
-                            --currentCurve;
-                            progress = 1f - progress;
-                            goingFwd = false;
-                            break;
+                        switch (mode)
+                        {
+                            case Behaviour.Once:
+                                currentCurve = 0;
+                                enabled = false;
+                                progress = 0f;
+                                break;
+                            case Behaviour.Loop:
+                                currentCurve = 0;
+                                progress = 0f;
+                                break;
+                            default:
+                                --currentCurve;
+                                progress = 1f - progress;
+                                goingFwd = false;
+                                break;
+                        }
                     }
+                    else
+                        curve.CalculateCoefficients(currentCurve);
                 }
-                else
-                    curve.CalculateCoefficients(currentCurve);
             }
-        }
-        else if (!goingFwd)
-        {
-            progress -= (Time.deltaTime * curve.nbCurves) / duration;
-            if (progress < 0f)
+            else if (!goingFwd)
             {
-                --currentCurve;
-                progress += 1f;
-                if (currentCurve <= -1)
+                progress -= (Time.deltaTime * curve.nbCurves) / duration;
+                if (progress < 0f)
                 {
-                    currentCurve = 0;
-                    progress = 1f - progress;
-                    goingFwd = true;
-                    if (mode == Behaviour.OnceAndBack) { enabled = false; }
+                    --currentCurve;
+                    progress += 1f;
+                    if (currentCurve <= -1)
+                    {
+                        currentCurve = 0;
+                        progress = 1f - progress;
+                        goingFwd = true;
+                        if (mode == Behaviour.OnceAndBack) { enabled = false; }
+                    }
+                    else
+                        curve.CalculateCoefficients(currentCurve);
                 }
-                else
-                    curve.CalculateCoefficients(currentCurve);
             }
-        }
-        if (devtools.debugStates[3])
-            curve.CalculateCoefficients(currentCurve);
-        Vector3 pos = curve.GetPoint(progress);
-        transform.position = pos;
-        if (lookFwd)
-        {
-            transform.LookAt(pos + curve.GetVelocity(progress));        // si ternaire ici
-            if (!goingFwd)
-                transform.LookAt(pos - curve.GetVelocity(progress));
+            if (devtools.debugStates[3])
+                curve.CalculateCoefficients(currentCurve);
+            Vector3 pos = curve.curveType == Curve.CurveType.LinearSpline ? curve.GetPoint(progress) + curve.points[currentCurve] :
+                                                                            curve.GetPoint(progress);
+            transform.position = pos;
+            if (lookFwd)
+            {
+                Vector3 cible = goingFwd ? pos + curve.GetVelocity(progress) : pos - curve.GetVelocity(progress);
+                transform.LookAt(cible);
+            }
         }
     }
 }

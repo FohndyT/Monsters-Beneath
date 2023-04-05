@@ -11,6 +11,7 @@ TagManager:
   - Planeur
   - Mirroir
   - Bois
+  - DangerZone
   layers:
   - Default
   - TransparentFX

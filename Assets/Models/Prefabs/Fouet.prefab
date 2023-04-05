@@ -106,7 +106,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2593001988178739303}
-  - component: {fileID: 7362935380379458861}
+  - component: {fileID: 5995883921307512549}
   m_Layer: 0
   m_Name: Fouet
   m_TagString: Untagged
@@ -130,7 +130,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7362935380379458861
+--- !u!114 &5995883921307512549
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -139,7 +139,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5842108098151362548}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1700ec85dcafd1343b835154170f1d9d, type: 3}
+  m_Script: {fileID: 11500000, guid: b0270f84e26ea3942a3f04d6ddd8ee3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "Dur\xE9eDeVie": 1
+  "Dur\xE9eDeVie": 2

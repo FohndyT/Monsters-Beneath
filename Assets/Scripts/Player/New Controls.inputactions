@@ -1,5 +1,5 @@
 {
-    "name": "P1 Controls",
+    "name": "New Controls",
     "maps": [
         {
             "name": "Gameplay",
@@ -354,7 +354,7 @@
                     "name": "",
                     "id": "166e3cf2-e9fb-4f98-96de-80253eaef5dd",
                     "path": "<Keyboard>/i",
-                    "interactions": "Hold",
+                    "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
                     "action": "Item",
@@ -365,7 +365,7 @@
                     "name": "",
                     "id": "63e82b16-4a31-4ff3-ab66-23f53ecff53c",
                     "path": "<Keyboard>/q",
-                    "interactions": "Hold",
+                    "interactions": "",
                     "processors": "",
                     "groups": "Keyboard",
                     "action": "Item",
@@ -376,7 +376,7 @@
                     "name": "",
                     "id": "99c708e8-cd40-4896-9cbe-583920a2b45c",
                     "path": "<Gamepad>/buttonEast",
-                    "interactions": "Hold",
+                    "interactions": "",
                     "processors": "",
                     "groups": "Controller",
                     "action": "Item",
