@@ -1,3 +1,5 @@
+// Fohndy Nomerth Tah
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,7 +12,7 @@ public class Planage : MonoBehaviour
     private GameObject clonePlaneur;
 
     // À modifier plus tard
-    private bool planeurEstCollecté = false;
+    private bool planeurEstCollecté;
     
     private bool estCréé;
 

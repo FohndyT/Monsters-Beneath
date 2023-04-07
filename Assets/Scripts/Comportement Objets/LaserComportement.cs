@@ -1,3 +1,5 @@
+// Fohndy Nomerth Tah
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,7 +14,7 @@ public class LaserComportement : MonoBehaviour
     private LineRenderer lr;
     private RaycastHit frappe;
     private Ray rayon;
-    
+
     void Start()
     {
         lr = GetComponent<LineRenderer>();

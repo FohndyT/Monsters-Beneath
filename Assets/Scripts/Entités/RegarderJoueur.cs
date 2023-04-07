@@ -1,3 +1,5 @@
+// Fohndy Nomerth Tah
+
 using UnityEngine;
 
 public class RegarderJoueur : MonoBehaviour
