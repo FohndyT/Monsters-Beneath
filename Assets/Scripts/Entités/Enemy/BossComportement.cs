@@ -28,10 +28,14 @@ public class BossComportement : MonoBehaviour
     private bool slimeEstCréer;
     
     [SerializeField] private float vitesseMouvement = 5f;
-    private Transform positionYJoueur;
 
     private GameObject joueur;
     private Animator animation;
+
+    private float temps;
+    
+    private bool marche = true;
+    private bool attaque;
 
     
     [NonSerialized] public short phase = 0;
@@ -59,33 +63,50 @@ public class BossComportement : MonoBehaviour
 
     void RegarderJoueur()
     {
-        // positionYJoueur.position = new Vector3(joueur.transform.position.x, transform.position.y, joueur.transform.position.z);
-        
-        // Faire en sorte que si le boss attaque, que son celle-ci ne suit pas le joueur. À enlever si fait.
-        //transform.LookAt(positionYJoueur);
+        if (marche)
+        {
+            transform.LookAt(new Vector3(joueur.transform.position.x,transform.position.y,joueur.transform.position.z));
+        }
     }
 
     void PoursuitePhaseUn()
     {
-        transform.position = Vector3.MoveTowards(transform.position,
-                                                  new Vector3(joueur.transform.position.x,
-                                                                   transform.position.y,
-                                                                   joueur.transform.position.z),
-                                          vitesseMouvement * Time.deltaTime);
-        animation.runtimeAnimatorController = animationMarche;
+        if (marche)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, new Vector3(joueur.transform.position.x, transform.position.y, joueur.transform.position.z), vitesseMouvement * Time.deltaTime);
+            
+            animation.runtimeAnimatorController = animationMarche;
+        }
     }
     void PoursuitePhaseDeux()
     {
-        transform.position = Vector3.MoveTowards(transform.position,
+        if (marche)
+        {
+            transform.position = Vector3.MoveTowards(transform.position,
             new Vector3(joueur.transform.position.x, transform.position.y, joueur.transform.position.z), vitesseMouvement * 2 * Time.deltaTime);
-        animation.runtimeAnimatorController = animationCourir;
+        
+            animation.runtimeAnimatorController = animationCourir;
+        }
     }
 
-    private void OnCollisionEnter(Collision joueur)
+    private void OnTriggerEnter(Collider other)
     {
-        
+        if (other.CompareTag("Player"))
+        {
+            Debug.Log("Trigger Activated");
+            marche = false;
+            animation.runtimeAnimatorController = animationFrappe;
+        }
     }
-    
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            marche = true;
+        }
+    }
+
     void Esquiver()
     {
         
@@ -115,6 +136,4 @@ public class BossComportement : MonoBehaviour
     {
         
     }
-    
-    
 }
