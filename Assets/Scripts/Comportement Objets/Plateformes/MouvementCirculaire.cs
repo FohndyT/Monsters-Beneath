@@ -9,7 +9,7 @@ public class MouvementCirculaire : MonoBehaviour
     [SerializeField] private float rayon = 0.65f;
     
     private float temps;
-    private void Update()
+    private void FixedUpdate()
     {
         temps += Time.deltaTime;
 

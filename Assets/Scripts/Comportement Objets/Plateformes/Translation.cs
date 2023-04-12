@@ -10,7 +10,7 @@ public class Translation : MonoBehaviour
     private float mouvement;
     private float temps;
     
-    void Update()
+    void FixedUpdate()
     {
         temps += Time.deltaTime;
         mouvement = Mathf.Sin(temps);
