@@ -63,7 +63,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sideviewdirection: {x: 1, y: 0, z: 0}
   sideviewUpVector: {x: 0, y: 1, z: 0}
-  crossprodDirectionIsLeft: 0
+  crossprodDirectionIsLeft: 1
 --- !u!114 &5672939027850170163
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -94,7 +94,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7b1445c1f0c58e498467e31691b62cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CanInteract: 0
+  canInteract: 0
   isUsing: 0
 --- !u!114 &5672939027850170162
 MonoBehaviour:
