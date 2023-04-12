@@ -30,7 +30,6 @@ public class Transition2D3D : MonoBehaviour
         camScript = cam.GetComponent<CameraBehaviour>();
         camTraveler = cam.GetComponent<CurveTraveler>();
         camPath = GetComponent<Curve>();
-        camTraveler.curve = camPath;
         playBody = GameObject.Find("Player").GetComponent<Rigidbody>();
 
         transPlayer = GameObject.Find("Player").transform;
@@ -49,6 +48,7 @@ public class Transition2D3D : MonoBehaviour
     { if (GetComponent<InteractInput>().canInteract) { Transition(); } }
     void Transition()
     {
+        camTraveler.curve = camPath;
         GameObject.Find("Player").GetComponent<InputsManager>().transitionCam = this;
         camScript.eagleView = !camScript.eagleView;
         camScript.camOffset = camScript.eagleView ? new Vector3(-7, 7, -7) : EndPt3D * 7 + camVerticalOffset2D;

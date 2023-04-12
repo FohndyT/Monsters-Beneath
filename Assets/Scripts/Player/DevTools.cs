@@ -7,23 +7,27 @@ public class DevTools : MonoBehaviour
 {
     Curve[] curves;
     InputsManager inputManager;
+    Material mat;
     #region Attributes
     enum DebugFunctions { DebugDisplay, ShowHitboxes, ShowRaycasts, ShowTrajectories, UnlockNearPuzzle };
     KeyCode[] debugHotKeys = { KeyCode.F1, KeyCode.F5, KeyCode.F6, KeyCode.F7, KeyCode.F8 };
     public bool[] debugStates { get; private set; }
     int nbDebugStates;
     int nbOfDrawLines = 10;
-    Material mat;
     #endregion
 
     private void Awake()
     {
         nbDebugStates = debugHotKeys.Length;
         debugStates = Enumerable.Repeat(true, nbDebugStates).ToArray();
-        RefreshCurveArray();
+
         inputManager = GetComponent<InputsManager>();
         mat = new Material(Shader.Find("Hidden/Internal-Colored"));
         mat.hideFlags = HideFlags.HideAndDontSave;
+    }
+    private void Start()
+    {
+        RefreshCurveArray();
     }
     public void RefreshCurveArray()
     { if (debugStates[3]) { curves = FindObjectsOfType<Curve>(); } }
