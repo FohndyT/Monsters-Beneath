@@ -76,11 +76,11 @@ public class InputsManager : MonoBehaviour
             if (!isDashing)
             {
                 playbody.velocity = camBehave.eagleView ? new Vector3(skewedMovement.x * moveVelo, playbody.velocity.y, skewedMovement.z * moveVelo) :
-                                                          Vector3.up * playbody.velocity.y + rawMovement.x * moveVelo * transitionCam.sideviewdirection;
+                                                          Vector3.up * playbody.velocity.y + rawMovement.x * moveVelo * transitionCam.sideviewWorldDirection;
                 if (skewedDirection != Vector3.zero && !camLock)
                 {
                     transform.forward = camBehave.eagleView ? Vector3.Lerp(transform.forward, skewedDirection, Time.deltaTime * 35) :
-                                                              rawMovement.x * transitionCam.sideviewdirection + rawMovement.z * Vector3.Cross(transitionCam.sideviewdirection, transitionCam.sideviewUpVector);
+                                                              rawMovement.x * transitionCam.sideviewWorldDirection + rawMovement.z * Vector3.Cross(transitionCam.sideviewWorldDirection, transitionCam.sideviewWorldUpVector);
                 }
             }
             playbody.AddForce(new Vector3(0, -gravityForce, 0));
@@ -108,7 +108,7 @@ public class InputsManager : MonoBehaviour
         isDashing = true;
         canDash = false;
         playbody.velocity = camBehave.eagleView ? new Vector3(skewedMovement.x * dashVelo, 0, skewedMovement.z * dashVelo) :
-                                          Vector3.up * playbody.velocity.y + rawMovement.x * dashVelo * transitionCam.sideviewdirection;
+                                          Vector3.up * playbody.velocity.y + rawMovement.x * dashVelo * transitionCam.sideviewWorldDirection;
         yield return new WaitForSeconds(dashDuration);
         isDashing = false;
         yield return new WaitForSeconds(dashCooldown);

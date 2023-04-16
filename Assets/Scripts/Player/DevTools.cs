@@ -20,14 +20,10 @@ public class DevTools : MonoBehaviour
     {
         nbDebugStates = debugHotKeys.Length;
         debugStates = Enumerable.Repeat(true, nbDebugStates).ToArray();
-
+        RefreshCurveArray();
         inputManager = GetComponent<InputsManager>();
         mat = new Material(Shader.Find("Hidden/Internal-Colored"));
         mat.hideFlags = HideFlags.HideAndDontSave;
-    }
-    private void Start()
-    {
-        RefreshCurveArray();
     }
     public void RefreshCurveArray()
     { if (debugStates[3]) { curves = FindObjectsOfType<Curve>(); } }
