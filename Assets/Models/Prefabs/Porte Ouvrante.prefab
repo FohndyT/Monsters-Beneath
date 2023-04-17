@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 4925155043166139711}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1, y: 1, z: 1}
-  m_LocalScale: {x: 2.5, y: 3.5, z: 0.5}
+  m_LocalScale: {x: 13, y: 9.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -65,7 +65,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 22262639920f43d6be32430e4e58350d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -112,7 +112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7b1445c1f0c58e498467e31691b62cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CanInteract: 0
+  canInteract: 0
   isUsing: 0
 --- !u!114 &3435998979722156198
 MonoBehaviour:
@@ -156,6 +156,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad77c01638826a94c911078659271281, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "dur\xE9eTransition": 1
-  waitTime: 1.5
+  "dur\xE9eTransition": 3
+  waitTime: 4
   angleOuverture: 90

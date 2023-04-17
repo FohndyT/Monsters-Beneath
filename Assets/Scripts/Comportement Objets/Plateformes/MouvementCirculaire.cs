@@ -6,12 +6,13 @@ using UnityEngine;
 
 public class MouvementCirculaire : MonoBehaviour
 {
-    [SerializeField] private float rayon = 0.65f;
+    [SerializeField] private float rayon = 0.3f;
+    [SerializeField] private float vitesse = 0.3f;
     
     private float temps;
     private void FixedUpdate()
     {
-        temps += Time.deltaTime;
+        temps += Time.deltaTime * vitesse;
 
         transform.position += new Vector3(Mathf.Cos(temps) * rayon,Mathf.Sin(temps) * rayon,0);
     }

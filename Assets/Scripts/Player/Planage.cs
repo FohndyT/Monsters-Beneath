@@ -9,12 +9,19 @@ using UnityEngine;
 public class Planage : MonoBehaviour
 {
     [SerializeField] private GameObject planeur;
+    [SerializeField] private float vitesseDescente = -2f;
     private GameObject clonePlaneur;
+    private Rigidbody rb;
 
     // À modifier plus tard
     private bool planeurEstCollecté;
     
     private bool estCréé;
+
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
 
     private void Update()
     {
@@ -34,6 +41,8 @@ public class Planage : MonoBehaviour
                 estCréé = false;
             }
         }
+
+        VitesseDescente();
     }
     
     private void OnCollisionEnter(Collision collision)
@@ -41,6 +50,19 @@ public class Planage : MonoBehaviour
         if (collision.gameObject.tag == "Planeur")
         {
             planeurEstCollecté = true;
+        }
+    }
+
+    private void VitesseDescente()
+    {
+        if (estCréé)
+        {
+            rb.useGravity = false;
+            rb.velocity = new Vector3(rb.velocity.x, vitesseDescente, rb.velocity.z);
+        }
+        else
+        {
+            rb.useGravity = true;
         }
     }
 }

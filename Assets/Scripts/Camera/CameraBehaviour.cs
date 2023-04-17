@@ -2,16 +2,16 @@ using UnityEngine;
 
 public class CameraBehaviour : MonoBehaviour
 {
-    public bool eagleView { get; set; } = true;
-    public Vector3 camOffset;
-    Transform playerTrans;
+    Transform transPlayer;
     CurveTraveler camTraveler;
+    public bool eagleView { get; set; } = true;
+    public Vector3 camOffset { get; set; }
 
     void Start()
     {
         Application.targetFrameRate = 60;
 
-        playerTrans = GameObject.Find("Player").transform;
+        transPlayer = GameObject.Find("Player").transform;
         camTraveler = GetComponent<CurveTraveler>();
         camOffset = new(-7, 7, -7);
     }
@@ -19,17 +19,12 @@ public class CameraBehaviour : MonoBehaviour
     {
         float LookY = 0;
         if (eagleView || camTraveler.isActiveAndEnabled)
-        {
-            transform.position = playerTrans.position + camOffset;
-            LookY = playerTrans.position.y;
-        }
+            LookY = transPlayer.position.y;
         else if (!eagleView && !camTraveler.isActiveAndEnabled)
-        {
-            transform.position = new Vector3(playerTrans.position.x, 0f, playerTrans.position.z) + camOffset;
             LookY = transform.position.y;
-        }
-        // transform.position = eagleView ? playerTrans.position + offset2D : new Vector3(playerTrans.position.x, 0f, playerTrans.position.z) + offset2D;
+        //transform.position = transPlayer.position + camOffset;
+        transform.position = eagleView ? transPlayer.position + camOffset : new Vector3(transPlayer.position.x, 0f, transPlayer.position.z) + camOffset;
         // LookY = eagleView ? playerTrans.position.y : transform.position.y;
-        transform.LookAt(new Vector3(playerTrans.position.x, LookY, playerTrans.position.z));
+        transform.LookAt(new Vector3(transPlayer.position.x, LookY, transPlayer.position.z));
     }
 }

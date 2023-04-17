@@ -2,22 +2,22 @@ using UnityEngine;
 
 public class InteractInput : MonoBehaviour
 {
-    public bool CanInteract = false;
+    public bool canInteract = false;
     public bool isUsing = false;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player")
-            CanInteract = true;
+            canInteract = true;
     }
     private void OnTriggerExit(Collider other)
     {
         if (other.tag == "Player")
         {
-            CanInteract = false;
+            canInteract = false;
             isUsing = false;
         }
     }
     private void OnAttack()
-    { isUsing = CanInteract; }
+    { isUsing = canInteract; }
 }

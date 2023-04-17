@@ -7,7 +7,6 @@ public class InputsManager : MonoBehaviour
 {
     #region Components
     Rigidbody playbody;
-    BoxCollider boxColle;
     PlayerInput playerInput;
     CameraBehaviour camBehave;
     CurveTraveler camPathTraveler;
@@ -18,14 +17,15 @@ public class InputsManager : MonoBehaviour
     const float gravityForce = 600f;    // Drag de 0
     public bool estATerre = false;     // Angular drag de 0.05
     public RaycastHit rayHit;
+    public float rayHitMax { get; private set; }
     #endregion
     #region Moving
     Vector3 rawMovement;
     protected Vector3 skewedMovement;
     Vector3 skewedDirection;
-    const float appliedVelo = 8f;
-    private float tempsÉcoulé = 0;
-    public float dashForce = 20;
+    const float appliedVelo = 9f;
+    private float tempsEcoule = 0;
+    public float dashVelo = 20f;
     private bool canDash = true;
     #endregion
     #region Attacking
@@ -51,7 +51,7 @@ public class InputsManager : MonoBehaviour
     void Start()
     {
         playbody = GetComponent<Rigidbody>();
-        boxColle = GetComponent<BoxCollider>();
+        rayHitMax = (GetComponent<BoxCollider>().size.y * 0.5f) + 0.05f;
         playerInput = GetComponent<PlayerInput>();
         playbody.freezeRotation = true;
         handPos = GameObject.Find("PlayerHandPos").transform;
@@ -68,7 +68,7 @@ public class InputsManager : MonoBehaviour
     }
 
     void CheckIfGrounded()
-    { estATerre = Physics.Raycast(transform.position, -transform.up, out rayHit, (boxColle.size.y * 0.5f) + 0.05f); }
+    { estATerre = Physics.Raycast(transform.position, -transform.up, out rayHit, rayHitMax); }
     void MovePlayer()
     {
         if (!camPathTraveler.isActiveAndEnabled)
@@ -86,12 +86,12 @@ public class InputsManager : MonoBehaviour
     }
     void ActionsCheck()
     {
-        if (tempsÉcoulé > 3f)
+        if (tempsEcoule > 3f)
         {
             canDash = true;
-            tempsÉcoulé = 0;
+            tempsEcoule = 0;
         }
-        tempsÉcoulé += Time.deltaTime;
+        tempsEcoule += Time.deltaTime;
 
         if (!canAttack)
         {
@@ -115,7 +115,7 @@ public class InputsManager : MonoBehaviour
     {
         if (canDash)
         {
-            playbody.AddForce(skewedDirection.x * dashForce, 0, skewedDirection.z * dashForce, ForceMode.Impulse);
+            playbody.velocity = new(skewedDirection.x * dashVelo, 0, skewedDirection.z * dashVelo);
             canDash = false;
         }
     }

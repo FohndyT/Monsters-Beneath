@@ -27,7 +27,6 @@ public class BossComportement : MonoBehaviour
     
     [SerializeField] private GameObject slime;
     private GameObject ennemiSlime;
-    private bool slimeEstCreer;
 
     [SerializeField] public int vieMax = 500;
     [SerializeField] public int vieRestante;
@@ -37,18 +36,29 @@ public class BossComportement : MonoBehaviour
     private Animator animation;
 
     private bool marche = true;
-    private bool seFaitAttaquer;
+    // private bool seFaitAttaquer;
+    private bool dashEnMarche;
+    // private bool slimeEstCreer;
+
+    private Rigidbody rb;
+    
+    private float temps;
+    private Vector3 positionJoueurDash;
+    private Vector3 directionJoueurDash;
 
     // Ne pas enlever le NonSerialized
     [NonSerialized] public short phase = 0;
     
     void Start()
-    { 
+    {
+        rb = GetComponent<Rigidbody>();
         joueur = GameObject.FindWithTag("Player");
         animation = GetComponent<Animator>();
 
         vieRestante = vieMax;
         barDeVie.MettreVieMax(vieMax);
+
+        StartCoroutine(Attente());
     }
 
     void Update()
@@ -58,6 +68,7 @@ public class BossComportement : MonoBehaviour
         if (phase == 1)
         {
             PoursuitePhaseUn();
+            Dash();
         }
 
         if (phase == 2)
@@ -105,6 +116,7 @@ public class BossComportement : MonoBehaviour
         }
     }
 
+    // Attaque en corps à corps
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -114,11 +126,11 @@ public class BossComportement : MonoBehaviour
             animation.runtimeAnimatorController = animationFrappe;
         }
     }
-
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
         {
+            // Ne pas changer
             Invoke("MarcheEnTrue",1f);
         }
     }
@@ -127,9 +139,22 @@ public class BossComportement : MonoBehaviour
         marche = true;
     }
 
-    void Esquiver()
+    IEnumerator Attente()
     {
-        
+        // Dash
+        while (true)
+        {
+            yield return new WaitForSeconds(10);
+
+            float nombre = Random.Range(0, 3);
+            if (nombre == 0 && marche && !dashEnMarche)
+            {
+                dashEnMarche = true;
+                positionJoueurDash = joueur.transform.position;
+                positionJoueurDash = (transform.position - positionJoueurDash).normalized;
+
+            }
+        }
     }
 
     void Bouclier()
@@ -139,7 +164,28 @@ public class BossComportement : MonoBehaviour
 
     void Dash()
     {
-        
+        if (dashEnMarche)
+        {
+            temps += Time.deltaTime;
+            
+            marche = false;
+            
+            //transform.position = Vector3.MoveTowards(transform.position, direction,vitesseMouvement * Time.deltaTime);
+            
+            // transform.position += vitesseMouvement / 70f * temps * -positionJoueurDash;
+            
+            transform.position += vitesseMouvement / 30f * -positionJoueurDash;
+            
+            animation.runtimeAnimatorController = animationCourir;
+
+            Invoke("MarcheEnTrue",4f);
+            Invoke("MettreDashEnFalse", 4f);
+        }
+    }
+
+    void MettreDashEnFalse()
+    {
+        dashEnMarche = false;
     }
 
     void CreationSlimesVolants()
