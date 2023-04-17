@@ -22,9 +22,8 @@ public class CameraBehaviour : MonoBehaviour
             LookY = transPlayer.position.y;
         else if (!eagleView && !camTraveler.isActiveAndEnabled)
             LookY = transform.position.y;
-        //transform.position = transPlayer.position + camOffset;
-        transform.position = eagleView ? transPlayer.position + camOffset : new Vector3(transPlayer.position.x, 0f, transPlayer.position.z) + camOffset;
-        // LookY = eagleView ? playerTrans.position.y : transform.position.y;
-        transform.LookAt(new Vector3(transPlayer.position.x, LookY, transPlayer.position.z));
+        transform.position = eagleView ? transPlayer.position + camOffset : new Vector3(transPlayer.position.x, 0f, transPlayer.position.z) + camOffset; // le new Vector3(transPlayer.position.x, 0f, transPlayer.position.z) cause le bump final lors de la transition 3D-->2D
+        if (!camTraveler.isActiveAndEnabled)
+            transform.LookAt(new Vector3(transPlayer.position.x, LookY, transPlayer.position.z));
     }
 }

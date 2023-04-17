@@ -1,5 +1,4 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Transition2D3D : MonoBehaviour
@@ -7,19 +6,20 @@ public class Transition2D3D : MonoBehaviour
     #region Components
     Camera cam;
     CameraBehaviour camScript;
-    Transform transPlayer;
-    Rigidbody playBody;
     CurveTraveler camTraveler;
     Curve camPath;
+    GameObject player;
+    Transform transPlayer;
+    Rigidbody playBody;
     #endregion
     #region Attributes
-    public Vector3 sideviewdirection;
-    [SerializeField] public Vector3 sideviewUpVector = new(0, 1, 0);
-    [SerializeField] bool crossprodDirectionIsLeft;
-    Vector3 EndPt2D = new(0, 0, 2);
-    Vector3 EndPt3D = new(0, 0, -2);
+    public Vector3 sideviewWorldDirection;
+    public Vector3 sideviewWorldUpVector;
+    [SerializeField] Vector3 EndPt2D;
+    [SerializeField] Vector3 EndPt3D;
+    Vector3 camVerticalOffset2D;
     float timer;
-    const float slideDuration = 1f;
+    float slideDuration = 1f;
     bool noControlOnChracter;
     #endregion
 
@@ -29,39 +29,47 @@ public class Transition2D3D : MonoBehaviour
         camScript = cam.GetComponent<CameraBehaviour>();
         camTraveler = cam.GetComponent<CurveTraveler>();
         camPath = GetComponent<Curve>();
-        camTraveler.curve = camPath;
-        playBody = GameObject.Find("Player").GetComponent<Rigidbody>();
-
-        transPlayer = GameObject.Find("Player").transform;
         camPath.curveType = Curve.CurveType.CatmullromSpline;
-        GameObject.Find("Player").GetComponent<DevTools>().RefreshCurveArray();
+
+        player = GameObject.Find("Player");
+        transPlayer = player.transform;
+        playBody = player.GetComponent<Rigidbody>();
+        player.GetComponent<DevTools>().RefreshCurveArray();
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.name.Equals("Player") && !noControlOnChracter)
+        camVerticalOffset2D = sideviewWorldUpVector * 1.5f;
+        if (other.gameObject.Equals(player) && !noControlOnChracter)
             Transition();
     }
     public void OnAttack()
-    {
-        if (GetComponent<InteractInput>().canInteract)
-            Transition();
-    }
+    { if (GetComponent<InteractInput>().canInteract) { Transition(); } }
     void Transition()
     {
-        GameObject.Find("Player").GetComponent<InputsManager>().transitionCam = this;
+        camTraveler.curve = camPath;
+        player.GetComponent<InputsManager>().transitionCam = this;
         camScript.eagleView = !camScript.eagleView;
-        camScript.camOffset = camScript.eagleView ? new Vector3(-7, 7, -7) :
-                                               crossprodDirectionIsLeft ? Vector3.Cross(sideviewdirection, sideviewUpVector).normalized * 12 + new Vector3(0, 0, 0) :
-                                                                          Vector3.Cross(sideviewUpVector, sideviewdirection).normalized * 12 + new Vector3(0, 0, 0);
-        camPath.points[0] = transPlayer.position - transform.position;
+        camScript.camOffset = camScript.eagleView ? new Vector3(-7, 7, -7) : EndPt3D * 12 + camVerticalOffset2D;
+
+        Vector3 tempV = camScript.eagleView ? EndPt3D * 2 : EndPt2D * 2;
+        camPath.points[0] = Vector3.zero;
         camPath.points[1] = camScript.transform.position - transform.position;
-        camPath.points[2] = transPlayer.position + camScript.camOffset - transform.position;
-        camPath.points[3] = transPlayer.position - transform.position;
+        camPath.points[2] = transform.InverseTransformDirection(transform.TransformDirection(tempV) + camScript.camOffset);
+        camPath.points[3] = Vector3.zero;
 
         camTraveler.enabled = true;
-        Vector3 tempV = camScript.eagleView ? EndPt3D + transform.position : EndPt2D + transform.position;
-        GameObject.Find("Player").GetComponent<Rigidbody>().velocity = Vector3.zero;
-        StartCoroutine(SlideToPt(tempV));
+        playBody.velocity = Vector3.zero;
+        StartCoroutine(SmoothCam());
+        StartCoroutine(SlideToPt(transform.TransformDirection(tempV) + transform.position));
+    }
+    IEnumerator SmoothCam()
+    {
+        for (float t = 0; t < camTraveler.duration; t += Time.deltaTime)
+        {
+            cam.transform.LookAt(transPlayer.position + camVerticalOffset2D);
+            yield return null;
+        }
+        StopCoroutine(SmoothCam());
     }
     IEnumerator SlideToPt(Vector3 tempV)
     {

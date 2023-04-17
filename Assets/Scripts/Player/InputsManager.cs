@@ -1,5 +1,4 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -23,13 +22,17 @@ public class InputsManager : MonoBehaviour
     Vector3 rawMovement;
     protected Vector3 skewedMovement;
     Vector3 skewedDirection;
-    const float appliedVelo = 9f;
-    private float tempsEcoule = 0;
-    public float dashVelo = 20f;
+    const float moveVelo = 9f;
+    public float dashVelo = 40f;
+    float dashDuration = 0.4f;
+    float dashCooldown = 0.1f;
+    bool isDashing;
     private bool canDash = true;
     #endregion
     #region Attacking
     [SerializeField] private GameObject Sword;
+    float attackCooldown = 0.5f;
+    public bool canAttack = true;
     #endregion
     #region Items
     [SerializeField] private GameObject Fouet;
@@ -38,8 +41,6 @@ public class InputsManager : MonoBehaviour
     [SerializeField] private GameObject CrystalLight;
     private GameObject[] Items;
     private int itemIndex = 0;
-    private float cooldownTimer = 0f;
-    public bool canAttack = true;
     public static bool usingLight = false;
     #endregion
     #region Autres
@@ -64,7 +65,6 @@ public class InputsManager : MonoBehaviour
     {
         CheckIfGrounded();
         MovePlayer();
-        ActionsCheck();
     }
 
     void CheckIfGrounded()
@@ -73,51 +73,24 @@ public class InputsManager : MonoBehaviour
     {
         if (!camPathTraveler.isActiveAndEnabled)
         {
-            playbody.velocity = camBehave.eagleView ? new Vector3(skewedMovement.x * appliedVelo, playbody.velocity.y, skewedMovement.z * appliedVelo) :
-                                                      Vector3.up * playbody.velocity.y + rawMovement.x * appliedVelo * transitionCam.sideviewdirection;
+            if (!isDashing)
+            {
+                playbody.velocity = camBehave.eagleView ? new Vector3(skewedMovement.x * moveVelo, playbody.velocity.y, skewedMovement.z * moveVelo) :
+                                                          Vector3.up * playbody.velocity.y + rawMovement.x * moveVelo * transitionCam.sideviewWorldDirection;
+                if (skewedDirection != Vector3.zero && !camLock)
+                {
+                    transform.forward = camBehave.eagleView ? Vector3.Lerp(transform.forward, skewedDirection, Time.deltaTime * 35) :
+                                                              rawMovement.x * transitionCam.sideviewWorldDirection + rawMovement.z * Vector3.Cross(transitionCam.sideviewWorldDirection, transitionCam.sideviewWorldUpVector);
+                }
+            }
             playbody.AddForce(new Vector3(0, -gravityForce, 0));
-            if (skewedDirection != Vector3.zero && !camLock)
-            {
-                transform.forward = camBehave.eagleView ? Vector3.Lerp(transform.forward, skewedDirection, Time.deltaTime * 35) :
-                                                          rawMovement.x * transitionCam.sideviewdirection + rawMovement.z * Vector3.Cross(transitionCam.sideviewdirection, transitionCam.sideviewUpVector);
-            }
-        }
-        //transform.rotation = Quaternion.LookRotation(playbody.velocity, transform.up);    //  Dangerous but fun. Could be applied as a "confused player" state
-    }
-    void ActionsCheck()
-    {
-        if (tempsEcoule > 3f)
-        {
-            canDash = true;
-            tempsEcoule = 0;
-        }
-        tempsEcoule += Time.deltaTime;
-
-        if (!canAttack)
-        {
-            if (cooldownTimer < 0.75f)
-                cooldownTimer += Time.deltaTime;
-            else
-            {
-                canAttack = true;
-                cooldownTimer = 0;
-            }
         }
     }
-
     void OnMove(InputValue value)
     {
         rawMovement = new Vector3(value.Get<Vector2>().x, 0, value.Get<Vector2>().y);
         skewedMovement = Quaternion.AngleAxis(45, Vector3.up) * rawMovement;
         skewedDirection = Quaternion.AngleAxis(35, Vector3.up) * rawMovement;  // Mouvement avec souris est HYPER plus vite, va falloir limiter le range... detecter le medium?
-    }
-    private void OnDash()
-    {
-        if (canDash)
-        {
-            playbody.velocity = new(skewedDirection.x * dashVelo, 0, skewedDirection.z * dashVelo);
-            canDash = false;
-        }
     }
     void OnOrientationLock(InputValue value)
     {
@@ -127,6 +100,20 @@ public class InputsManager : MonoBehaviour
     void OrientationUnlock()
     {
         camLock = false;
+    }
+    private void OnDash()
+    { if (canDash) { StartCoroutine(Dash()); } }
+    IEnumerator Dash()
+    {
+        isDashing = true;
+        canDash = false;
+        playbody.velocity = camBehave.eagleView ? new Vector3(skewedMovement.x * dashVelo, 0, skewedMovement.z * dashVelo) :
+                                          Vector3.up * playbody.velocity.y + rawMovement.x * dashVelo * transitionCam.sideviewWorldDirection;
+        yield return new WaitForSeconds(dashDuration);
+        isDashing = false;
+        yield return new WaitForSeconds(dashCooldown);
+        canDash = true;
+        StopCoroutine(Dash());
     }
     void OnJump(InputValue value)
     {
@@ -138,19 +125,21 @@ public class InputsManager : MonoBehaviour
         }
     }
     void OnAttack(InputValue value)
+    { if (canAttack) { StartCoroutine(Attack()); } }
+    IEnumerator Attack()
     {
+        canAttack = false;
         Instantiate(Sword, handPos);
-        /* (Commentaires personnels)
-         * Instantiate boxcollider (with timer? stopwatch? coroutine?)
-         * Call Method that send message to enemy that was hit
-         * Repeat for second attack phase collider (with Devtools affichage)
-         */
+        yield return new WaitForSeconds(attackCooldown);
+        canAttack = true;
+        StopCoroutine(Attack());
     }
     void OnAttackCharged(InputValue value) { }
     void OnItem(InputValue value)
     {
         if (canAttack)
         {
+            canAttack = false;
             if (itemIndex == 3)
             {
                 if (usingLight)
@@ -170,7 +159,6 @@ public class InputsManager : MonoBehaviour
             else
                 Instantiate(Items[itemIndex], handPos);
         }
-        canAttack = false;
     }
     void OnItemUseSwap(InputValue value) { }
     void OnItemSelect(InputValue value)

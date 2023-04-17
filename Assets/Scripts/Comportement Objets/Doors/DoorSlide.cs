@@ -4,8 +4,8 @@ public class DoorSlide : MonoBehaviour
 {
     private bool isInteracting = false;
 
-    public float hauteurMax = 5f;
-    public float tempsMaxOuvert = 5f;
+    public float hauteurMax = 3f;
+    public float tempsMaxOuvert = 2f;
     private float tempsOuvert = 0f;
     private Vector3 positionBase;
     private bool isClosing = false;
@@ -24,7 +24,7 @@ public class DoorSlide : MonoBehaviour
     {
         if (isInteracting && transform.position.y <= hauteurMax)
         {
-            transform.position += Vector3.up * Time.deltaTime;
+            transform.position += Vector3.up * (4f * Time.deltaTime);
             tempsOuvert += Time.deltaTime;
         }
         if (transform.position.y >= hauteurMax)
@@ -35,7 +35,7 @@ public class DoorSlide : MonoBehaviour
 
         if (isClosing)
         {
-            transform.position += Vector3.down * (2f * Time.deltaTime);
+            transform.position += Vector3.down * (4f * Time.deltaTime);
             if (transform.position.y <= positionBase.y)
             {
                 isClosing = false;

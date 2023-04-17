@@ -7,13 +7,13 @@ public class DevTools : MonoBehaviour
 {
     Curve[] curves;
     InputsManager inputManager;
+    Material mat;
     #region Attributes
     enum DebugFunctions { DebugDisplay, ShowHitboxes, ShowRaycasts, ShowTrajectories, UnlockNearPuzzle };
     KeyCode[] debugHotKeys = { KeyCode.F1, KeyCode.F5, KeyCode.F6, KeyCode.F7, KeyCode.F8 };
     public bool[] debugStates { get; private set; }
     int nbDebugStates;
     int nbOfDrawLines = 10;
-    Material mat;
     #endregion
 
     private void Awake()

@@ -1,15 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SwordBehavior : MonoBehaviour
 {
-    [SerializeField] private float DuréeDeVie = 1f;
-    private float tempsÉcoulé = 0;
+    Transform handPos;
+    [SerializeField] private float dureeDeVie = 0.2f;
+    private float chrono = 0;
+    private void Awake()
+    {
+        handPos = GetComponentInParent<Transform>();
+    }
     private void Update()
     {
-        if (DuréeDeVie < tempsÉcoulé)
+        if (dureeDeVie < chrono)
             Destroy(gameObject);
-        tempsÉcoulé += Time.deltaTime;
+        transform.RotateAround(handPos.position, Vector3.up, 120 / dureeDeVie * Time.deltaTime);
+        chrono += Time.deltaTime;
     }
 }
