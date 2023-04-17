@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class DoorRotate : MonoBehaviour
 {
+    BoxCollider colle;
     #region Attributes
     Coroutine allerRetour;
     bool canOpen = true;
@@ -16,6 +17,7 @@ public class DoorRotate : MonoBehaviour
 
     private void Awake()
     {
+        colle = GetComponent<BoxCollider>();
         pivot = new Vector3(transform.position.x - (transform.localScale.x * 0.5f), transform.position.y, transform.position.z);
     }
 
@@ -36,15 +38,14 @@ public class DoorRotate : MonoBehaviour
     }
     IEnumerator Pivoter(float angle)
     {
+        colle.enabled = false;
         while (timer < duréeTransition)
         {
             transform.RotateAround(pivot, Vector3.up, angle * Time.deltaTime / duréeTransition);
             timer += Time.deltaTime;
-
-            //if (timer > duréeTransition * 0.5f)     // La porte entrave le parcours du joueur lorsqu'elle s'ouvre. For convenience
-            //    enRetour = false ? colle.enabled = false : colle.enabled = true;
             yield return null;
         }
+        colle.enabled = true;
         timer = 0f;
         enRetour = !enRetour;
         StopCoroutine(Pivoter(0));
