@@ -7,10 +7,46 @@ using UnityEngine;
 
 public class Vent : MonoBehaviour
 {
-    [SerializeField] private Vector3 forceVent;
+    private Vector3 forceVent;
+    private Planage planage;
+    private Rigidbody rb;
 
-    private void Update()
+    private bool estEnVol;
+
+    private void Start()
     {
-        
+        rb = GameObject.FindWithTag("Player").GetComponent<Rigidbody>();
+        planage = rb.gameObject.GetComponent<Planage>();
+    }
+
+    /* private void Update()
+    {
+        if (estEnVol)
+        {
+            rb.velocity = forceVent;
+        }
+    }*/
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            if (planage.estCréé)
+            {
+                Debug.Log("Collision Vent");
+            
+                // estEnVol = true;
+                planage.vitesseParachute = 8f;
+            }
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            // estEnVol = false;
+            planage.vitesseParachute = -2f;
+        }
     }
 }

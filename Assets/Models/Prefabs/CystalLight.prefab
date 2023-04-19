@@ -10,8 +10,13 @@ GameObject:
   m_Component:
   - component: {fileID: 4901469695091633826}
   - component: {fileID: 2512695536168584865}
+<<<<<<< HEAD
   - component: {fileID: -1265381268843368657}
   - component: {fileID: -1523482009091944448}
+=======
+  - component: {fileID: 6510039253181697231}
+  - component: {fileID: 4062279405396969572}
+>>>>>>> 8ba8841251ad66d4eb5dc52452d62e6124b50bba
   m_Layer: 0
   m_Name: CystalLight
   m_TagString: Untagged
@@ -26,8 +31,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4610062949676745976}
+<<<<<<< HEAD
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0.632}
+=======
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 1.598}
+>>>>>>> 8ba8841251ad66d4eb5dc52452d62e6124b50bba
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -47,7 +57,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d58b215c6b85c0a49b56ff36ff6e9c86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< HEAD
 --- !u!120 &-1265381268843368657
+=======
+--- !u!120 &6510039253181697231
+>>>>>>> 8ba8841251ad66d4eb5dc52452d62e6124b50bba
 LineRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -67,7 +81,11 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
+<<<<<<< HEAD
   - {fileID: 0}
+=======
+  - {fileID: 2100000, guid: 9f1829940a16bd043befb5801cfda8eb, type: 2}
+>>>>>>> 8ba8841251ad66d4eb5dc52452d62e6124b50bba
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -98,8 +116,13 @@ LineRenderer:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
+<<<<<<< HEAD
         time: 0.046913583
         value: 0.2857142
+=======
+        time: 0.040748596
+        value: 0.13227463
+>>>>>>> 8ba8841251ad66d4eb5dc52452d62e6124b50bba
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -146,7 +169,11 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
+<<<<<<< HEAD
 --- !u!114 &-1523482009091944448
+=======
+--- !u!114 &4062279405396969572
+>>>>>>> 8ba8841251ad66d4eb5dc52452d62e6124b50bba
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -158,7 +185,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5774cc87dfecd6748bea222cd2cb7733, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< HEAD
   longueurRayon: 50
+=======
+  longueurRayon: 500
+>>>>>>> 8ba8841251ad66d4eb5dc52452d62e6124b50bba
 --- !u!1 &8912183658128773937
 GameObject:
   m_ObjectHideFlags: 0
