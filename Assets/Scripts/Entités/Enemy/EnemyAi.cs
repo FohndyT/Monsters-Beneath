@@ -13,6 +13,7 @@ public class EnemyAi : MonoBehaviour
     [SerializeField] private float evadeTime = 5f;
     [SerializeField] private float waitTime = 5f;
     private float waitingTime = 0f;
+    public float Health = 100f;
 
     private void Awake()
     {
@@ -22,13 +23,23 @@ public class EnemyAi : MonoBehaviour
         returnPos = transform.position;
 
     }
-    private void OnTriggerEnter(Collider other)
+    private IEnumerator OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
             chaseMode = true;
             patrolMode = false;
             traveler.enabled = false;
+        }
+
+        if (other.CompareTag("PlayerAttack"))
+        {
+            Health -= 50f;
+            for (float alpha = 1.5f; alpha >= 0; alpha -= 0.1f)
+            {
+                agent.SetDestination(transform.position);
+                yield return null;
+            }
         }
     }
 
@@ -47,6 +58,11 @@ public class EnemyAi : MonoBehaviour
 
     void Update()
     {
+        if (Health <= 0)
+        {
+            Destroy(gameObject);
+            chaseMode = false;
+        }
         if (patrolMode)
         {
             // maybe do something but for now CurveTraveler fait cette job

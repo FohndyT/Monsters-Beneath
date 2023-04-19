@@ -14,6 +14,9 @@ TagManager:
   - Mirroir Doublant
   - Boss
   - Slime
+  - Enemy
+  - DangerZone
+  - PlayerAttack
   layers:
   - Default
   - TransparentFX

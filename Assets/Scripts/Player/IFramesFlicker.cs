@@ -16,7 +16,5 @@ public class IFramesFlicker : MonoBehaviour
                 playerTextureColor.a -= Time.deltaTime;
                 PlayerTexture.color = playerTextureColor;
             }
-            else
-                PlayerTexture.color = new Color(255, 255, 255, 255);
         }
 }

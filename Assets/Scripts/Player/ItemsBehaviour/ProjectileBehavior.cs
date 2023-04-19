@@ -8,8 +8,8 @@ public class ProjectileBehavior : MonoBehaviour
 {
     private Rigidbody projectile;
     private Transform positionAttack;
-    private float lifeTime = 5f;
-    private float timeSpent = 0f;
+    [SerializeField] private float DuréeDeVie = 2f;
+    private float tempsÉcoulé = 0;
     private void Awake()
     {
         projectile = GetComponent<Rigidbody>();
@@ -19,7 +19,9 @@ public class ProjectileBehavior : MonoBehaviour
     {
         projectile.AddForce(projectile.transform.forward, ForceMode.Impulse);
         positionAttack = transform.parent;
-        Destroy(this);
+        if (DuréeDeVie < tempsÉcoulé)
+            Destroy(gameObject);
+        tempsÉcoulé += Time.deltaTime;
     }
 
     private void OnCollisionEnter(Collision collision)

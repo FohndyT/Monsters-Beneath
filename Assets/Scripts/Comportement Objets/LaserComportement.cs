@@ -42,7 +42,7 @@ public class LaserComportement : MonoBehaviour
                 {
                     if (frappe.collider.tag == "Player")
                     {
-                        Destroy(frappe.transform.gameObject);
+                        //Destroy(frappe.transform.gameObject);
                     }
 
                     break;
