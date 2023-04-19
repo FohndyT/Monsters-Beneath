@@ -20,31 +20,31 @@ namespace DStarLite
         static PriorityQueue<State, double> U;
         static State[,] S;
         static double km;
-        static State sArrivée;
-        static State sDébut;
+        static State sArrivÃ©e;
+        static State sDÃ©but;
 
-        // dx et dy sont les Point2D du départ et ax et ay sont les Point2D de l'arrivée
+        // dx et dy sont les Point2D du dï¿½part et ax et ay sont les Point2D de l'arrivï¿½e
         public static void RunDStarLite(int dx, int dy, int ax, int ay, DStarLiteEnvironment env)
         {
-            sDébut = new State();
-            sDébut.x = dx;
-            sDébut.y = dy;
-            sArrivée = new State();
-            sArrivée.x = ax;
-            sArrivée.y = ay;
-            State slast = sDébut;
+            sDÃ©but = new State();
+            sDÃ©but.x = dx;
+            sDÃ©but.y = dy;
+            sArrivÃ©e = new State();
+            sArrivÃ©e.x = ax;
+            sArrivÃ©e.y = ay;
+            State slast = sDÃ©but;
             Initialize();
             ComputeShortestPath();
-            while (!sDébut.Equals(sArrivée))
+            while (!sDÃ©but.Equals(sArrivÃ©e))
             {
                 // if(sstart.g.isInfinity) then there is no known path
-                sDébut = MinSuccState(sDébut);
-                env.MoveTo(new Point2D(sDébut.x, sDébut.y));
+                sDÃ©but = MinSuccState(sDÃ©but);
+                env.MoveTo(new Point2D(sDÃ©but.x, sDÃ©but.y));
                 LinkedList<Point2D> obstacleCoord = env.GetObstaclesInVision();
                 double oldkm = km;
                 State oldslast = slast;
-                km += Heuristic(sDébut, slast);
-                slast = sDébut;
+                km += Heuristic(sDÃ©but, slast);
+                slast = sDÃ©but;
                 bool change = false;
                 foreach (Point2D c in obstacleCoord)
                 {
@@ -68,7 +68,7 @@ namespace DStarLite
 
         static K CalculateKey(State s)
         {
-            return new K(min(s.g, s.rhs) + Heuristic(s, sDébut) + km, min(s.g, s.rhs));
+            return new K(min(s.g, s.rhs) + Heuristic(s, sDÃ©but) + km, min(s.g, s.rhs));
         }
 
         static double Heuristic(State a, State b)
@@ -93,15 +93,15 @@ namespace DStarLite
                     S[i, j].rhs = Double.PositiveInfinity;
                 }
             }
-            sArrivée = S[sArrivée.x, sArrivée.y];
-            sDébut = S[sDébut.x, sDébut.y];
-            sArrivée.rhs = 0;
-            U.Insert(sArrivée, CalculateKey(sArrivée));
+            sArrivÃ©e = S[sArrivÃ©e.x, sArrivÃ©e.y];
+            sDÃ©but = S[sDÃ©but.x, sDÃ©but.y];
+            sArrivÃ©e.rhs = 0;
+            U.Insert(sArrivÃ©e, CalculateKey(sArrivÃ©e));
         }
 
         static void UpdateVertex(State u)
         {
-            if (!u.Equals(sArrivée))
+            if (!u.Equals(sArrivÃ©e))
             {
                 u.rhs = MinSucc(u);
             }
@@ -146,7 +146,7 @@ namespace DStarLite
 
         static void ComputeShortestPath()
         {
-            while (U.TopKey().CompareTo(CalculateKey(sDébut)) < 0 || sDébut.rhs != sDébut.g)
+            while (U.TopKey().CompareTo(CalculateKey(sDÃ©but)) < 0 || sDÃ©but.rhs != sDÃ©but.g)
             {
                 K kold = U.TopKey();
                 State u = U.Pop();

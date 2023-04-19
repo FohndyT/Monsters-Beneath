@@ -33,6 +33,7 @@ public class InputsManager : MonoBehaviour
     [SerializeField] private GameObject Sword;
     float attackCooldown = 0.5f;
     public bool canAttack = true;
+    public bool canAttackSpecial = true;
     #endregion
     #region Items
     [SerializeField] private GameObject Fouet;
@@ -135,11 +136,11 @@ public class InputsManager : MonoBehaviour
         StopCoroutine(Attack());
     }
     void OnAttackCharged(InputValue value) { }
-    void OnItem(InputValue value)
+    /*void OnItem(InputValue value)
     {
-        if (canAttack)
+        if (canAttackSpecial)
         {
-            canAttack = false;
+            canAttackSpecial = false;
             if (itemIndex == 3)
             {
                 if (usingLight)
@@ -157,16 +158,19 @@ public class InputsManager : MonoBehaviour
                 handPos.transform.DetachChildren();
             }
             else
+            {
                 Instantiate(Items[itemIndex], handPos);
+                canAttackSpecial = true;
+            }
         }
-    }
+    }*/
     void OnItemUseSwap(InputValue value) { }
-    void OnItemSelect(InputValue value)
+    /*void OnItemSelect(InputValue value)
     {
         if (usingLight)
             return;
         itemIndex = itemIndex < Items.Length - 1 ? +1 : 0;
-    }
+    }*/
     void OnOpenMenu(InputValue value)
     {
         if (inMenu) { playerInput.SwitchCurrentActionMap("Gameplay"); }
