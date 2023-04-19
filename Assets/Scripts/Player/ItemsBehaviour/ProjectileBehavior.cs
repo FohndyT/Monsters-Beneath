@@ -8,6 +8,8 @@ public class ProjectileBehavior : MonoBehaviour
 {
     private Rigidbody projectile;
     private Transform positionAttack;
+    private float lifeTime = 5f;
+    private float timeSpent = 0f;
     private void Awake()
     {
         projectile = GetComponent<Rigidbody>();
@@ -17,6 +19,7 @@ public class ProjectileBehavior : MonoBehaviour
     {
         projectile.AddForce(projectile.transform.forward, ForceMode.Impulse);
         positionAttack = transform.parent;
+        Destroy(this);
     }
 
     private void OnCollisionEnter(Collision collision)

@@ -9,7 +9,7 @@ public class DoorRotate : MonoBehaviour
     bool canOpen = true;
     bool enRetour = false;
     Vector3 pivot;
-    [SerializeField] float duréeTransition = 1;
+    [SerializeField] float durÃ©eTransition = 1;
     [SerializeField] float waitTime = 2;
     [SerializeField] float angleOuverture = 90;
     float timer;
@@ -29,9 +29,9 @@ public class DoorRotate : MonoBehaviour
     IEnumerator AllerRetour()
     {
         StartCoroutine(Pivoter(-angleOuverture));
-        yield return new WaitForSeconds(duréeTransition + waitTime);
+        yield return new WaitForSeconds(durÃ©eTransition + waitTime);
         StartCoroutine(Pivoter(angleOuverture));
-        yield return new WaitForSeconds(duréeTransition);    // Empêche d'ouvrir la porte midway lorsqu'elle se ferme
+        yield return new WaitForSeconds(durÃ©eTransition);    // Empï¿½che d'ouvrir la porte midway lorsqu'elle se ferme
         canOpen = true;
         StopCoroutine(allerRetour);
         allerRetour = null;
@@ -39,9 +39,9 @@ public class DoorRotate : MonoBehaviour
     IEnumerator Pivoter(float angle)
     {
         colle.enabled = false;
-        while (timer < duréeTransition)
+        while (timer < durÃ©eTransition)
         {
-            transform.RotateAround(pivot, Vector3.up, angle * Time.deltaTime / duréeTransition);
+            transform.RotateAround(pivot, Vector3.up, angle * Time.deltaTime / durÃ©eTransition);
             timer += Time.deltaTime;
             yield return null;
         }
