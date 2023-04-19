@@ -4,8 +4,8 @@ Shader "Unlit/ShaderTest"
 {
     Properties
     {
-        _TexturePrincipal ("Texture", 2D) = "white" {}
-        _CouleurDeBase ("Couleur", Color) = (1,1,1,1)
+        _TexturePrincipal ("Texture", 2D) = "black" {}
+        _CouleurDeBase ("Couleur", Color) = (0,0,0,0)
     }
     SubShader
     {

@@ -13,29 +13,29 @@ public class TournerObjet : MonoBehaviour
     {
         if (estControléParJoueur)
         {
-            if (Input.GetKey(KeyCode.RightArrow))
+            if (Input.GetKey("k"))
             {
-                transform.GetChild(0).Rotate(-Vector3.up / 3,Space.Self);
+                transform.parent.Rotate(-Vector3.up / 3,Space.Self);
             }
             
-            if (Input.GetKey(KeyCode.LeftArrow))
+            if (Input.GetKey("j"))
             {
-                transform.GetChild(0).Rotate(Vector3.up / 3,Space.Self);
+                transform.parent.Rotate(Vector3.up / 3,Space.Self);
             }
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.CompareTag("Player"))
         {
             estControléParJoueur = true;
         }
     }
     
-    private void OnCollisionExit(Collision collision)
+    private void OnTriggerExit(Collider collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.CompareTag("Player"))
         {
             estControléParJoueur = false;
         }

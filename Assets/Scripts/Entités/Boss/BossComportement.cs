@@ -146,7 +146,7 @@ public class BossComportement : MonoBehaviour
         {
             yield return new WaitForSeconds(10);
 
-            float nombre = Random.Range(0, 3);
+            float nombre = Random.Range(0, 6);
             if (nombre == 0 && marche && !dashEnMarche)
             {
                 dashEnMarche = true;

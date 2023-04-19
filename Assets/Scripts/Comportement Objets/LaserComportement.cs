@@ -3,13 +3,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 // https://www.youtube.com/watch?v=kzHNUT9q4JE&ab_channel=BaDuy
 
 [RequireComponent(typeof(LineRenderer))]
 public class LaserComportement : MonoBehaviour
 {
-    [SerializeField] private float longueurRayon;
+    // [SerializeField] private bool up, down, left, right, forward, backward;
+    // private Vector3 directionRayon;
+    
+    [SerializeField] private float longueurRayon = 500;
 
     private LineRenderer lr;
     private RaycastHit frappe;
@@ -24,7 +28,9 @@ public class LaserComportement : MonoBehaviour
     {
         rayon = new Ray(transform.position,transform.forward);
 
+        // Nombre de points (verticies)
         lr.positionCount = 1;
+        // Met la position du premier point à la position du gameObject
         lr.SetPosition(0,transform.position);
         float longueurÀTraverser = longueurRayon;
 
@@ -40,7 +46,7 @@ public class LaserComportement : MonoBehaviour
 
                 if (frappe.collider.tag != "Mirroir")
                 {
-                    if (frappe.collider.tag == "Player")
+                    if (frappe.collider.CompareTag("Bois") && !transform.parent.CompareTag("Mirroir"))
                     {
                         Destroy(frappe.transform.gameObject);
                     }
@@ -54,7 +60,36 @@ public class LaserComportement : MonoBehaviour
                 lr.SetPosition(lr.positionCount - 1, rayon.origin + rayon.direction * longueurÀTraverser);
             }
         }
-        
+
+        /* void Direction()
+        {
+            if (up)
+            {
+                directionRayon = transform.up;
+            }
+            if (down)
+            {
+                directionRayon = -transform.up;
+            }
+            if (left)
+            {
+                directionRayon = -transform.right;
+            }
+            if (right)
+            {
+                directionRayon = transform.right;
+            }
+            if (forward)
+            {
+                directionRayon = transform.forward;
+            }
+
+            if (backward)
+            {
+                directionRayon = -transform.forward;
+            }
+        }*/
+
         /////////////////////////////////////////////////////////////////////////////////////////
         
         /* if (Physics.Raycast(transform.position,transform.forward, out frappe))
