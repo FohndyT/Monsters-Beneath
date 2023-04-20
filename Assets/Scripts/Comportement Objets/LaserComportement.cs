@@ -51,6 +51,11 @@ public class LaserComportement : MonoBehaviour
                         Destroy(frappe.transform.gameObject);
                     }
 
+                    if (transform.parent.CompareTag("Mirroir") && frappe.collider.CompareTag("Player"))
+                    {
+                        Debug.Log("Joueur touché");
+                    }
+
                     break;
                 }
             }

@@ -19,14 +19,6 @@ public class Vent : MonoBehaviour
         planage = rb.gameObject.GetComponent<Planage>();
     }
 
-    /* private void Update()
-    {
-        if (estEnVol)
-        {
-            rb.velocity = forceVent;
-        }
-    }*/
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
