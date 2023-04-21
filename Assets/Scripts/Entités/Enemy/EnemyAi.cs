@@ -5,14 +5,15 @@ using UnityEngine.AI;
 public class EnemyAi : MonoBehaviour
 {
     CurveTraveler traveler;
-    [SerializeField] private GameObject target;
-    private NavMeshAgent agent;
-    public bool chaseMode = false;
-    public bool patrolMode = true;
-    private Vector3 returnPos;
-    [SerializeField] private float evadeTime = 5f;
-    [SerializeField] private float waitTime = 5f;
-    private float waitingTime = 0f;
+    NavMeshAgent agent;
+    [SerializeField] GameObject target;
+    [SerializeField] bool chaseMode = false;
+    [SerializeField] bool patrolMode = true;
+    [SerializeField] bool returnFromChase = false;
+    [SerializeField] float evadeTime = 5f;
+    [SerializeField] float waitTime = 5f;
+    float waitingTime = 0f;
+    Vector3 returnPos;
     public float Health = 100f;
 
     private void Awake()
@@ -78,15 +79,17 @@ public class EnemyAi : MonoBehaviour
             if (waitingTime >= waitTime)
             {
                 agent.SetDestination(returnPos);
+                returnFromChase = true;
                 waitingTime = 0f;
             }
             waitingTime += Time.deltaTime;
         }
 
-        if (Vector3.Distance(transform.position, returnPos) < 1f)
+        if (returnFromChase && Vector3.Distance(transform.position, returnPos) < 1f)
         {
             traveler.enabled = true;
             patrolMode = true;
+            returnFromChase = false;
         }
     }
 }

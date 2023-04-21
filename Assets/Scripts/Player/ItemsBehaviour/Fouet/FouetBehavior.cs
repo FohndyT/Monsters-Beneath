@@ -20,7 +20,7 @@ public class FouetBehavior : MonoBehaviour
         {
             float x = chrono * Mathf.PI / dureeDeVie;
             transParent.localScale = new(1, 1, Mathf.Abs(Mathf.Sin(x)));
-            transParent.position += Mathf.Cos(x) / Mathf.PI * transform.up + (transParent.position - posIni);
+            transParent.position += Mathf.Cos(x) / Mathf.PI * transform.up;
         }
         if (chrono > dureeDeVie)
         {

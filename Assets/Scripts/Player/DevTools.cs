@@ -32,7 +32,7 @@ public class DevTools : MonoBehaviour
     }
     public void RefreshCurveArray()
     {
-        if (debugStates[0] && debugStates[3])
+        if (debugStates != null && debugStates[0] && debugStates[3])
         {
             curves = FindObjectsOfType<Curve>();
             var curvs = new List<Curve>();

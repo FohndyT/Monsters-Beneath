@@ -43,7 +43,7 @@ public class Transition2D3D : MonoBehaviour
             Transition();
     }
     public void OnAttack()
-    { if (GetComponent<InteractInput>().canInteract) { Transition(); } }
+    { if (GetComponent<InteractInput>().canInteract && !noControlOnChracter) { Transition(); } }
     void Transition()
     {
         camTraveler.curve = camPath;
@@ -64,16 +64,17 @@ public class Transition2D3D : MonoBehaviour
     }
     IEnumerator SmoothCam()
     {
+        noControlOnChracter = true;
         for (float t = 0; t < camTraveler.duration; t += Time.deltaTime)
         {
             cam.transform.LookAt(transPlayer.position + camVerticalOffset2D);
             yield return null;
         }
+        noControlOnChracter = false;
         StopCoroutine(SmoothCam());
     }
     IEnumerator SlideToPt(Vector3 tempV)
     {
-        noControlOnChracter = true;
         playBody.useGravity = false;
         Vector3 posIni = transPlayer.position;
         while (timer < slideDuration)
@@ -84,7 +85,6 @@ public class Transition2D3D : MonoBehaviour
         }
         timer = 0f;
         playBody.useGravity = true;
-        noControlOnChracter = false;
         transPlayer.position = tempV;
         StopCoroutine(SlideToPt(Vector3.zero));
     }
