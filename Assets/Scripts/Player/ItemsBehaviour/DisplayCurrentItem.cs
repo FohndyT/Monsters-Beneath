@@ -7,17 +7,19 @@ using TMPro;
 public class DisplayCurrentItem : MonoBehaviour
 {
     public GameObject Current_item;
+    InputsManager inputs;
     private TextMeshProUGUI textMeshPro_Current_item;
     private int CurrentSpecialId;
 
     private void Awake()
     {
+        inputs = GameObject.Find("Player").GetComponent<InputsManager>();
         textMeshPro_Current_item = Current_item.GetComponent<TextMeshProUGUI>();
     }
-    
+
     void Update()
     {
-        CurrentSpecialId = SpecialAttackInput.itemIndex;
-        textMeshPro_Current_item.text = SpecialAttackInput.Items[CurrentSpecialId].name;
+        CurrentSpecialId = inputs.itemIndex;
+        textMeshPro_Current_item.text = inputs.Items[CurrentSpecialId].name;
     }
 }

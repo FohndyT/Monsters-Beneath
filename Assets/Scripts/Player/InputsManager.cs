@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Utilities;
 
 public class InputsManager : MonoBehaviour
 {
@@ -9,6 +10,9 @@ public class InputsManager : MonoBehaviour
     PlayerInput playerInput;
     CameraBehaviour camBehave;
     CurveTraveler camPathTraveler;
+    Transform handLeftPos;
+    Transform handRightPos;
+    DevTools devtools;
     public Transition2D3D transitionCam { get; set; }
     #endregion
     #region Jumping
@@ -33,39 +37,40 @@ public class InputsManager : MonoBehaviour
     [SerializeField] private GameObject Sword;
     float attackCooldown = 0.5f;
     public bool canAttack = true;
-    public bool canAttackSpecial = true;
     #endregion
     #region Items
     [SerializeField] private GameObject Fouet;
     [SerializeField] private GameObject Projectile;
-    [SerializeField] private GameObject PowerGlove;
     [SerializeField] private GameObject CrystalLight;
-    private GameObject[] Items;
-    private int itemIndex = 0;
-    public static bool usingLight = false;
+    [SerializeField] private GameObject CrystalLaser;
+    public GameObject[] Items;
+    public int itemIndex = 0;
+    public bool canUseItem = true;
     #endregion
     #region Autres
-    Transform handPos;
     bool camLock = false;
     bool inMenu = true;
     #endregion
 
-    void Start()
+    void Awake()
     {
         playbody = GetComponent<Rigidbody>();
         rayHitMax = (GetComponent<BoxCollider>().size.y * 0.5f) + 0.05f;
         playerInput = GetComponent<PlayerInput>();
         playbody.freezeRotation = true;
-        handPos = GameObject.Find("PlayerHandPos").transform;
-        Items = new[] { Fouet, Projectile, PowerGlove, CrystalLight };
+        handLeftPos = GameObject.Find("PlayerLeftHandPos").transform;
+        handRightPos = GameObject.Find("PlayerRightHandPos").transform;
+        Items = new[] { Fouet, Projectile, CrystalLight, CrystalLaser };
         Camera camu = Camera.main;
         camBehave = camu.GetComponent<CameraBehaviour>();
         camPathTraveler = camu.GetComponent<CurveTraveler>();
+        devtools = GetComponent<DevTools>();
     }
     private void Update()
     {
         CheckIfGrounded();
         MovePlayer();
+        //Debug.Log(canUseItem.ToString() + "  " + Items[itemIndex].ToString());
     }
 
     void CheckIfGrounded()
@@ -94,13 +99,16 @@ public class InputsManager : MonoBehaviour
         skewedDirection = Quaternion.AngleAxis(35, Vector3.up) * rawMovement;  // Mouvement avec souris est HYPER plus vite, va falloir limiter le range... detecter le medium?
     }
     void OnOrientationLock(InputValue value)
+    { StartCoroutine(OrientationLock(playerInput.actions["Orientation Lock"])); }
+    IEnumerator OrientationLock(InputAction lockAction)
     {
-        camLock = true;     // Only called once. Trouver comment appeler a repetition lorsque le button est held.
-        Invoke("OrientationUnlock", 1f);
-    }
-    void OrientationUnlock()
-    {
+        while (lockAction.inProgress)
+        {
+            camLock = true;
+            yield return null;
+        }
         camLock = false;
+        StopCoroutine(OrientationLock(lockAction));
     }
     private void OnDash()
     { if (canDash) { StartCoroutine(Dash()); } }
@@ -130,47 +138,25 @@ public class InputsManager : MonoBehaviour
     IEnumerator Attack()
     {
         canAttack = false;
-        Instantiate(Sword, handPos);
+        Instantiate(Sword, handRightPos);
         yield return new WaitForSeconds(attackCooldown);
         canAttack = true;
         StopCoroutine(Attack());
     }
     void OnAttackCharged(InputValue value) { }
-    /*void OnItem(InputValue value)
+    void OnItem(InputValue value)
     {
-        if (canAttackSpecial)
+        if (canUseItem)
         {
-            canAttackSpecial = false;
-            if (itemIndex == 3)
-            {
-                if (usingLight)
-                {
-                    usingLight = false;
-                    return;
-                }
-                Instantiate(CrystalLight, handPos);
-                usingLight = true;
-                return;
-            }
+            canUseItem = false;
+            Instantiate(Items[itemIndex], handLeftPos);
             if (itemIndex == 1)
-            {
-                Instantiate(Projectile, handPos);
-                handPos.transform.DetachChildren();
-            }
-            else
-            {
-                Instantiate(Items[itemIndex], handPos);
-                canAttackSpecial = true;
-            }
+                handLeftPos.transform.DetachChildren();
         }
-    }*/
-    void OnItemUseSwap(InputValue value) { }
-    /*void OnItemSelect(InputValue value)
-    {
-        if (usingLight)
-            return;
-        itemIndex = itemIndex < Items.Length - 1 ? +1 : 0;
-    }*/
+    }
+    void OnItemUseSwap(InputValue value) { }    // Relics of a past idea
+    void OnItemSelect(InputValue value)
+    { itemIndex = itemIndex < Items.Length - 1 ? itemIndex + 1 : 0; }
     void OnOpenMenu(InputValue value)
     {
         if (inMenu) { playerInput.SwitchCurrentActionMap("Gameplay"); }

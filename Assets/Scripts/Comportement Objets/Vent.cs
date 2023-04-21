@@ -31,12 +31,12 @@ public class Vent : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            if (planage.estCréé)
+            if (planage.estCree)
             {
                 Debug.Log("Collision Vent");
             
                 // estEnVol = true;
-                planage.vitesseParachute = 8f;
+                planage.vitessePara = 8f;
             }
         }
     }
@@ -46,7 +46,7 @@ public class Vent : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             // estEnVol = false;
-            planage.vitesseParachute = -2f;
+            planage.vitessePara = -2f;
         }
     }
 }
