@@ -8,6 +8,7 @@ public class InputsManager : MonoBehaviour
     #region Components
     Rigidbody playbody;
     PlayerInput playerInput;
+    Player player;
     CameraBehaviour camBehave;
     CurveTraveler camPathTraveler;
     Transform handLeftPos;
@@ -43,8 +44,9 @@ public class InputsManager : MonoBehaviour
     [SerializeField] private GameObject Projectile;
     [SerializeField] private GameObject CrystalLight;
     [SerializeField] private GameObject CrystalLaser;
-    public GameObject[] Items;
-    public int itemIndex = 0;
+    public GameObject[] Items { get; private set; }
+    public int selectedItem { get; private set; } = 0;
+    int currentItem = 0;
     public bool canUseItem = true;
     #endregion
     #region Autres
@@ -57,6 +59,7 @@ public class InputsManager : MonoBehaviour
         playbody = GetComponent<Rigidbody>();
         rayHitMax = (GetComponent<BoxCollider>().size.y * 0.5f) + 0.05f;
         playerInput = GetComponent<PlayerInput>();
+        player = GetComponent<Player>();
         playbody.freezeRotation = true;
         handLeftPos = GameObject.Find("PlayerLeftHandPos").transform;
         handRightPos = GameObject.Find("PlayerRightHandPos").transform;
@@ -149,14 +152,26 @@ public class InputsManager : MonoBehaviour
         if (canUseItem)
         {
             canUseItem = false;
-            Instantiate(Items[itemIndex], handLeftPos);
-            if (itemIndex == 1)
+            Instantiate(Items[selectedItem], handLeftPos);
+            if (selectedItem == 1)
                 handLeftPos.transform.DetachChildren();
         }
     }
     void OnItemUseSwap(InputValue value) { }    // Relics of a past idea
     void OnItemSelect(InputValue value)
-    { itemIndex = itemIndex < Items.Length - 1 ? itemIndex + 1 : 0; }
+    {
+        if (player.itemsAcquired != null)
+        {
+            if (currentItem < player.itemsAcquired.Length - 1)
+                selectedItem = player.itemsAcquired[++currentItem];
+            else
+            {
+                selectedItem = player.itemsAcquired[0];         // selectedItem = index de l'item en cours dans Items
+                currentItem = 0;                                // currentItem = index actuel de player.itemsAcquired
+            }
+            //selectedItem = currentItem < player.itemsAcquired.Length - 1 ? player.itemsAcquired[++currentItem] : player.itemsAcquired[0];
+        }
+    }
     void OnOpenMenu(InputValue value)
     {
         if (inMenu) { playerInput.SwitchCurrentActionMap("Gameplay"); }

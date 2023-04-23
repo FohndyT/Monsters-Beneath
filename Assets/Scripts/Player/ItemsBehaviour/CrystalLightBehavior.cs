@@ -11,7 +11,7 @@ public class CrystalLightBehavior : MonoBehaviour
     }
     void Update()
     {
-        if (playerInputs.itemIndex != 2 || playerInputs.itemIndex != 3)
+        if (playerInputs.selectedItem != 2 || playerInputs.selectedItem != 3)
             Destroy(gameObject);
     }
 }

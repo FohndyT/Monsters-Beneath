@@ -19,7 +19,7 @@ public class DisplayCurrentItem : MonoBehaviour
 
     void Update()
     {
-        CurrentSpecialId = inputs.itemIndex;
+        CurrentSpecialId = inputs.selectedItem;
         textMeshPro_Current_item.text = inputs.Items[CurrentSpecialId].name;
     }
 }

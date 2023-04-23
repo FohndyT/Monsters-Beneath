@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 [ExecuteInEditMode]     // Permet a Curve d'acceder a RefreshCurveArray(), but also d'afficher splines dans éditeur. Laissez jusqu'à ce qu'on ship le jeu.
 public class DevTools : MonoBehaviour
@@ -11,7 +9,7 @@ public class DevTools : MonoBehaviour
     InputsManager inputManager;
     Material mat;
     #region Attributes
-    enum DebugFunctions { DebugDisplay, ShowHitboxes, ShowRaycasts, ShowTrajectories, UnlockNearPuzzle };
+    enum DebugFunctions { DebugFunctions, ShowHitboxes, ShowRaycasts, ShowTrajectories, GiveAllItemsToPlayer };
     KeyCode[] debugHotKeys = { KeyCode.F1, KeyCode.F5, KeyCode.F6, KeyCode.F7, KeyCode.F8 };
     public bool[] debugStates { get; private set; }
     int nbDebugStates;
@@ -23,8 +21,8 @@ public class DevTools : MonoBehaviour
     private void Awake()
     {
         nbDebugStates = debugHotKeys.Length;
-        debugStates = Enumerable.Repeat(true, nbDebugStates).ToArray();
-        debugStates[1] = false;
+        //debugStates = Enumerable.Repeat(true, nbDebugStates).ToArray();
+        debugStates = new bool[] { true, false, true, true, false };
         RefreshCurveArray();
         inputManager = GetComponent<InputsManager>();
         mat = new Material(Shader.Find("Hidden/Internal-Colored"));
@@ -120,6 +118,13 @@ public class DevTools : MonoBehaviour
                 }
             }
             GL.PopMatrix();
+            if (debugStates[4])     //GT Code
+            {
+                debugStates[4] = false;
+                Player player = GameObject.Find("Player").GetComponent<Player>();
+                for (int i = 0; i < inputManager.Items.Length; i++)
+                    player.AcquiredItem(i);
+            }
         }
     }
 }

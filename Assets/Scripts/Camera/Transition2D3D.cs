@@ -8,7 +8,7 @@ public class Transition2D3D : MonoBehaviour
     CameraBehaviour camScript;
     CurveTraveler camTraveler;
     Curve camPath;
-    GameObject player;
+    GameObject playerObj;
     Transform transPlayer;
     Rigidbody playBody;
     #endregion
@@ -31,15 +31,15 @@ public class Transition2D3D : MonoBehaviour
         camPath = GetComponent<Curve>();
         camPath.curveType = Curve.CurveType.CatmullromSpline;
 
-        player = GameObject.Find("Player");
-        transPlayer = player.transform;
-        playBody = player.GetComponent<Rigidbody>();
-        player.GetComponent<DevTools>().RefreshCurveArray();
+        playerObj = GameObject.Find("Player");
+        transPlayer = playerObj.transform;
+        playBody = playerObj.GetComponent<Rigidbody>();
+        playerObj.GetComponent<DevTools>().RefreshCurveArray();
     }
     private void OnTriggerEnter(Collider other)
     {
         camVerticalOffset2D = sideviewWorldUpVector * 1.5f;
-        if (other.gameObject.Equals(player) && !noControlOnChracter)
+        if (other.gameObject.Equals(playerObj) && !noControlOnChracter)
             Transition();
     }
     public void OnAttack()
@@ -47,7 +47,7 @@ public class Transition2D3D : MonoBehaviour
     void Transition()
     {
         camTraveler.curve = camPath;
-        player.GetComponent<InputsManager>().transitionCam = this;
+        playerObj.GetComponent<InputsManager>().transitionCam = this;
         camScript.eagleView = !camScript.eagleView;
         camScript.camOffset = camScript.eagleView ? new Vector3(-7, 7, -7) : EndPt3D * 12 + camVerticalOffset2D;
 

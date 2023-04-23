@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 8953928724453614664}
   - component: {fileID: 8953928724453614671}
   - component: {fileID: 1620086997}
-  - component: {fileID: 4767389427115355173}
+  - component: {fileID: 3118705018884641904}
   - component: {fileID: 726577651}
   - component: {fileID: 4978725764174009445}
+  - component: {fileID: 4767389427115355173}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -131,13 +132,10 @@ MonoBehaviour:
   canAttack: 1
   Fouet: {fileID: 5842108098151362548, guid: 39eb94479cf85374cb0363eb8440e1ad, type: 3}
   Projectile: {fileID: 4610062949676745976, guid: 6dd4604a38cc6d443b6af69ffc4bb5af, type: 3}
-  CrystalLight: {fileID: 4610062949676745976, guid: 76cbed7aecaab4f4aaa63953aa601221, type: 3}
-  CrystalLaser: {fileID: 4610062949676745976, guid: 76cbed7aecaab4f4aaa63953aa601221, type: 3}
-  Items: []
-  itemIndex: 0
+  CrystalLight: {fileID: 5983670973696911951, guid: 84df9a6f0eb03964a970d89fd60ea173, type: 3}
+  CrystalLaser: {fileID: 1056537022425195006, guid: a1f55227aee28af4eaf7281920fbd841, type: 3}
   canUseItem: 1
-  usingLight: 0
---- !u!114 &4767389427115355173
+--- !u!114 &3118705018884641904
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -146,10 +144,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 3058531286816293149}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fbcc0782b8abe1949b0a8342fc8818e6, type: 3}
+  m_Script: {fileID: 11500000, guid: efccf237f86518b44829037bc25f7536, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boxColles: []
+  health: 10
+  GameOverScreen: {fileID: 0}
+  itemsAcquired: 
 --- !u!114 &726577651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,6 +177,19 @@ MonoBehaviour:
   planeur: {fileID: 8291256045207381297, guid: a05d8aa351490a346ae50afaf404559f, type: 3}
   vitessePara: 0
   estCree: 0
+--- !u!114 &4767389427115355173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3058531286816293149}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbcc0782b8abe1949b0a8342fc8818e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boxColles: []
 --- !u!1 &4284518481430411970
 GameObject:
   m_ObjectHideFlags: 0
