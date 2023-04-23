@@ -11,7 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Main Dungeon.unity
     guid: 44195873253fee845860d013e878b338
-  - enabled: 1
-    path: Assets/Scenes/QuitMenu.unity
-    guid: 0c574d72f6a10264b8a4940aba027215
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   m_configObjects: {}
