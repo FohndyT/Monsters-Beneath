@@ -7,22 +7,40 @@ using UnityEngine;
 
 public class PlaqueDePression : MonoBehaviour
 {
-    private Color couleurBase;
-    private Renderer renderer;
+    [SerializeField] private GameObject temoin;
+
+    private GameObject porte;
+    
+    private Color couleurBasePlaque;
+    private Color couleurBaseTemoin;
+    
+    private Renderer rendererPlaque;
+    private Renderer rendererTemoin;
 
     private void Start()
     {
-        renderer = GetComponent<Renderer>();
-        couleurBase = renderer.material.color;
+        rendererPlaque = GetComponent<Renderer>();
+        rendererTemoin = temoin.GetComponent<Renderer>();
+        
+        couleurBasePlaque = rendererPlaque.material.color;
+        couleurBaseTemoin = rendererTemoin.material.color;
+
+        porte = (temoin.transform.parent.gameObject).transform.parent.gameObject;
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        renderer.material.color = Color.blue;
+        rendererPlaque.material.color = Color.blue;
+        rendererTemoin.material.color = Color.green;
+
+        porte.GetComponent<MecanismePorte>().nombreTemoinsActive++;
     }
 
     private void OnCollisionExit(Collision collision)
     {
-        renderer.material.color = couleurBase;
+        rendererPlaque.material.color = couleurBasePlaque;
+        rendererTemoin.material.color = couleurBaseTemoin;
+        
+        porte.GetComponent<MecanismePorte>().nombreTemoinsActive--;
     }
 }
