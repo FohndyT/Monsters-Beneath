@@ -1,7 +1,8 @@
+using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Utilities;
 
 public class InputsManager : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class InputsManager : MonoBehaviour
     CurveTraveler camPathTraveler;
     Transform handLeftPos;
     Transform handRightPos;
-    DevTools devtools;
+    BoxCollider fov;
     public Transition2D3D transitionCam { get; set; }
     #endregion
     #region Jumping
@@ -33,6 +34,12 @@ public class InputsManager : MonoBehaviour
     float dashCooldown = 0.1f;
     bool isDashing;
     private bool canDash = true;
+    #endregion
+    #region Looking
+    bool zTargeting;
+    Collider[] targets = new Collider[0];
+    int targetIndex = -1;
+    Vector3 posWhenLock;
     #endregion
     #region Attacking
     [SerializeField] private GameObject Sword;
@@ -67,7 +74,6 @@ public class InputsManager : MonoBehaviour
         Camera camu = Camera.main;
         camBehave = camu.GetComponent<CameraBehaviour>();
         camPathTraveler = camu.GetComponent<CurveTraveler>();
-        devtools = GetComponent<DevTools>();
     }
     private void Update()
     {
@@ -102,14 +108,38 @@ public class InputsManager : MonoBehaviour
         skewedDirection = Quaternion.AngleAxis(35, Vector3.up) * rawMovement;  // Mouvement avec souris est HYPER plus vite, va falloir limiter le range... detecter le medium?
     }
     void OnOrientationLock(InputValue value)
-    { StartCoroutine(OrientationLock(playerInput.actions["Orientation Lock"])); }
+    {
+        targets = Physics.OverlapBox(4.5f * transform.forward + transform.position, new(4, 2, 3), transform.rotation);
+        //targets = (Collider[])targets.Where(x => x.CompareTag("Enemy"));          $%^&*()**&^%$#@$%^&*()
+
+        Debug.Log(targets.Length.ToString());
+        if (targets == null || targets.Length < 1)
+            StartCoroutine(OrientationLock(playerInput.actions["Orientation Lock"]));
+        else
+        {
+            posWhenLock = transform.position;
+            if (targetIndex == -1)
+            {
+                float[] targetDistances = new float[targets.Length];
+                for (int i = 0; i < targets.Length; i++)
+                    targetDistances[i] = Vector3.Distance(targets[i].transform.position, transform.position);
+                Array.Sort(targetDistances, targets);
+                targetIndex = 0;
+            }
+            if (Vector3.Distance(posWhenLock, transform.position) < 0.001f)
+                targetIndex = targetIndex < targets.Length - 1 ? +1 : 0;
+
+            // start coroutine : au debut zTargeting = true ... while(zTargeting.inProgress) yield return null ... a la fin zTargeting = false, targetIndex = -1, posWhenLock = 
+            // mettre crosshair (canvas) sur ennemi
+            // reviser le code d'en haut
+            // adapter OnMove en consequence de zTargeting en plus de camLock
+        }
+    }
     IEnumerator OrientationLock(InputAction lockAction)
     {
+        camLock = true;
         while (lockAction.inProgress)
-        {
-            camLock = true;
             yield return null;
-        }
         camLock = false;
         StopCoroutine(OrientationLock(lockAction));
     }

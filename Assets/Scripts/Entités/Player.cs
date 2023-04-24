@@ -4,31 +4,29 @@ using UnityEngine;
 public class Player : Entities
 {
     //public GameOverScreen GameOverScreen;
+    Rigidbody playBody;
     float lowHealthThreshold = 1f;
-    float iFramesChrono = 2f;
-    static bool invincible = false;
+    const float DboostVelo = 10f;
+    float iFramesWindow = 2f;
     public int[] itemsAcquired = new int[0];
 
+    private void Awake()
+    {
+        playBody = GetComponent<Rigidbody>();
+    }
     void RecalculateLowHPThreshold() => lowHealthThreshold = maxHealth * 0.1f;
     void RecalculateMaxHP(float difference)
     {
         maxHealth += difference;
         RecalculateLowHPThreshold();
     }
-    private IEnumerator OnTriggerStay(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         if (!invincible && other.CompareTag("Enemy"))
         {
-            Hurt(2f);                                                                                     // Pour le faire jumper un peu du sol
-            transform.parent.GetComponent<Rigidbody>().AddForce(16000f * (-transform.rotation.eulerAngles + new Vector3(0.5f, 0.5f, 0.5f)));
-            invincible = true;
-            while (iFramesChrono > 0)
-            {
-                iFramesChrono -= Time.deltaTime;
-                yield return null;
-            }
-            iFramesChrono = 2f;
-            invincible = false;
+            Hurt(2f);                                                         // Pour le faire jumper un peu du sol
+            playBody.velocity = DboostVelo * (-transform.rotation.eulerAngles + new Vector3(0f, 0.5f, 0f));
+            StartCoroutine(IFrames(iFramesWindow));
         }
     }
     public override void Hurt(float damage)
@@ -40,7 +38,7 @@ public class Player : Entities
                 StartCoroutine(Die());
                 break;
             case var value when value < lowHealthThreshold:
-                //Sound effect, ou bien change texture for blinking one
+                //Sound effect, ou bien change texture shader for blinking one
                 break;
 
         }
@@ -54,8 +52,8 @@ public class Player : Entities
     }
     void ItemAlreadyAcquired()
     {
-        // " They are coming for you. You should have stayed put, yet you defied the Matrix. They are coming for you. "
-        Debug.LogWarning("Item duplication");
+        // " You defied the Matrix. They are coming for you. "
+        Debug.LogWarning("Watch out! : Item duplication");
     }
     public void AcquiredItem(int itemIndex)
     {

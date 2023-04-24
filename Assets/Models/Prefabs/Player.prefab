@@ -148,7 +148,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 10
-  GameOverScreen: {fileID: 0}
+  invincible: 0
   itemsAcquired: 
 --- !u!114 &726577651
 MonoBehaviour:
