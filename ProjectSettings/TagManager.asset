@@ -14,6 +14,8 @@ TagManager:
   - Mirroir Doublant
   - Boss
   - Slime
+  - DangerZone
+  - "Surface R\xE9fractante"
   layers:
   - Default
   - TransparentFX
