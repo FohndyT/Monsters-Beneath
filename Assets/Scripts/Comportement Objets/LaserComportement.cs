@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 // https://www.youtube.com/watch?v=kzHNUT9q4JE&ab_channel=BaDuy
+// https://www.google.com/search?q=how+to+refract+a+ray+unity&rlz=1C1ONGR_frCA1022CA1022&oq=how+to+refract+a+ray+unity&aqs=chrome..69i57j33i160l2.15732j0j7&sourceid=chrome&ie=UTF-8#fpstate=ive&vld=cid:0d0786ef,vid:r0Oz8FiiSUI
 
 [RequireComponent(typeof(LineRenderer))]
 public class LaserComportement : MonoBehaviour
@@ -15,7 +16,7 @@ public class LaserComportement : MonoBehaviour
     // private Vector3 directionRayon;
     
     [SerializeField] private float longueurRayon = 500;
-    [SerializeField] private float indiceDeRefraction = 1f;
+    [Range(1f,50f)] [SerializeField] private float indiceDeRefraction = 20f;
 
     private LineRenderer lr;
     private RaycastHit frappe;
@@ -46,99 +47,42 @@ public class LaserComportement : MonoBehaviour
                 lr.SetPosition(lr.positionCount - 1, frappe.point);
                 longueurÀTraverser -= Vector3.Distance(rayon.origin, frappe.point);
                 
-                //////////
-
                 if (frappe.collider.CompareTag("Mirroir"))
                 {
                     rayon = new Ray(frappe.point, Vector3.Reflect(rayon.direction, frappe.normal));
                 }
                 if (frappe.collider.CompareTag("Surface Réfractante"))
                 {
-                    float angle = CalculerAngleRefraction(Vector3.Angle(rayon.direction, frappe.normal) * Mathf.Deg2Rad, indiceDeRefraction);
-                    Vector3 direction = new Vector3(0,Mathf.Sin(angle),0);
+                    float angle = CalculerAngleRefraction(Vector3.Angle(rayon.direction, frappe.normal) * Mathf.Deg2Rad);
+                    //Vector3 direction = new Vector3(Mathf.Cos(angle),0,Mathf.Sin(angle));
+
+                    frappe.point = new Vector3(Mathf.Abs(CalculerVecteurRefraction().x) / (CalculerVecteurRefraction().x + 0.0001f) * 0.001f + frappe.point.x,
+                                               Mathf.Abs(CalculerVecteurRefraction().y) / (CalculerVecteurRefraction().y + 0.0001f) * 0.001f + frappe.point.y,
+                                               Mathf.Abs(CalculerVecteurRefraction().z) / (CalculerVecteurRefraction().z + 0.0001f) * 0.001f + frappe.point.z);
                     
-                    rayon = new Ray(frappe.point,direction);
+                    rayon = new Ray(frappe.point,CalculerVecteurRefraction());
                 }
-                    //if (frappe.collider.CompareTag("Bois"))
-                    //{
-                        //Destroy(frappe.transform.gameObject);
-                    //}
-                    // else
-                    // {
-                        // if (frappe.collider.CompareTag("Surface Réfractante"))
-                        // {
-                        //     rayon = new Ray(frappe.point,CalculerAngleRefraction(Vector3.Angle(rayon.direction,frappe.normal),indiceDeRefraction) * Vector3.up);
-                        // }
-                    // }
                 if (frappe.collider.CompareTag("Bois"))
                 {
                     Destroy(frappe.transform.gameObject);
                 }
-                if (!(frappe.collider.CompareTag("Mirroir")) && !(frappe.collider.CompareTag("Surface Réfractante")))
+                if (!frappe.collider.CompareTag("Mirroir") && !frappe.collider.CompareTag("Surface Réfractante"))
                 {
                     break;
                 }
-                
-                
-                // rayon = new Ray(frappe.point, Vector3.Reflect(rayon.direction, frappe.normal));
-                //
-                // if (frappe.collider.tag != "Mirroir")
-                // {
-                //     if (frappe.collider.CompareTag("Bois") && !transform.parent.CompareTag("Mirroir"))
-                //     {
-                //         Destroy(frappe.transform.gameObject);
-                //     }
-                //     
-                //     // À effacer si pas utilisé
-                //     if (transform.parent.CompareTag("Mirroir") && frappe.collider.CompareTag("Player"))
-                //     {
-                //         Debug.Log("Joueur touché");
-                //     }
-                //
-                //     break;
-                // }
-            }
-            else
-            {
-                lr.positionCount += 1;
-                lr.SetPosition(lr.positionCount - 1, rayon.origin + rayon.direction * longueurÀTraverser);
             }
         }
 
-        float CalculerAngleRefraction(float angleIncidence, float indiceDeRefraction)
+        float CalculerAngleRefraction(float angleIncidence)
         {
             return Mathf.Asin(Mathf.Sin(angleIncidence) / indiceDeRefraction) /* * Mathf.Rad2Deg*/;
         }
 
-        /* void Direction()
+        Vector3 CalculerVecteurRefraction()
         {
-            if (up)
-            {
-                directionRayon = transform.up;
-            }
-            if (down)
-            {
-                directionRayon = -transform.up;
-            }
-            if (left)
-            {
-                directionRayon = -transform.right;
-            }
-            if (right)
-            {
-                directionRayon = transform.right;
-            }
-            if (forward)
-            {
-                directionRayon = transform.forward;
-            }
-
-            if (backward)
-            {
-                directionRayon = -transform.forward;
-            }
-        }*/
-
+            return (1/indiceDeRefraction * Vector3.Cross(frappe.normal, Vector3.Cross(-frappe.normal,rayon.direction)) - frappe.normal * Mathf.Sqrt(1-Vector3.Dot(Vector3.Cross(frappe.normal,rayon.direction) * (1/indiceDeRefraction * 1/indiceDeRefraction),Vector3.Cross(frappe.normal, rayon.direction)))).normalized;
+        }
+        
         /////////////////////////////////////////////////////////////////////////////////////////
         
         /* if (Physics.Raycast(transform.position,transform.forward, out frappe))
