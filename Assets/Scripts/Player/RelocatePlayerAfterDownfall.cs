@@ -25,7 +25,7 @@ public class RelocatePlayerAfterDownfall : MonoBehaviour
     { StartCoroutine(RelocateSafePt()); }
 
     private void OnTriggerExit(Collider other)
-    { StartCoroutine(RelocatePlayer()); }
+    { if (other.tag.Equals("Player")) { StartCoroutine(RelocatePlayer()); } }
     IEnumerator RelocateSafePt()
     {
         yield return new WaitForSeconds(1f);

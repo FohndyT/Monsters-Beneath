@@ -32,7 +32,7 @@ public class Curve : MonoBehaviour
         CalculateCoefficients(0);
     }
     private void OnEnable()
-    { devtools.RefreshCurveArray(); }
+    { devtools?.RefreshCurveArray(); }
     private void Update()
     {
         if (transform.hasChanged)

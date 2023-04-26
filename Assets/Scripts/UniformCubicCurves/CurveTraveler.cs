@@ -1,9 +1,9 @@
-using System.Transactions;
+using System.Collections;
 using UnityEngine;
 
 public class CurveTraveler : MonoBehaviour
 {
-    public Curve curve;     // public pour EnemyAi
+    public Curve curve;
     DevTools devtools;
     #region Attributes
     public float duration;
@@ -17,6 +17,14 @@ public class CurveTraveler : MonoBehaviour
 
     private void Awake()
     { devtools = GameObject.Find("Player").GetComponent<DevTools>(); }
+    void OnDisable()
+    { devtools.RefreshCurveArray(); }
+    IEnumerator ChangeProgressValueNextFrame(float value)
+    {   // pour éviter le jitter de dernière frame avant disable
+        yield return null;
+        progress = value;
+        StopCoroutine(ChangeProgressValueNextFrame(0));
+    }
     private void Update()
     {
         if (curve != null)
@@ -27,7 +35,8 @@ public class CurveTraveler : MonoBehaviour
                 if (progress > 1f)
                 {
                     ++currentCurve;
-                    progress -= 1f;
+                    if (mode != Behaviour.Once)
+                        progress -= 1f;
                     if (currentCurve >= curve.nbCurves)
                     {
                         switch (mode)
@@ -35,7 +44,7 @@ public class CurveTraveler : MonoBehaviour
                             case Behaviour.Once:
                                 currentCurve = 0;
                                 enabled = false;
-                                progress = 0f;
+                                StartCoroutine(ChangeProgressValueNextFrame(0f));
                                 break;
                             case Behaviour.Loop:
                                 currentCurve = 0;
@@ -77,7 +86,8 @@ public class CurveTraveler : MonoBehaviour
             transform.position = pos;
             if (lookFwd)
             {
-                Vector3 cible = goingFwd ? pos + curve.GetVelocity(progress) : pos - curve.GetVelocity(progress);
+                Vector3 cible = goingFwd ? pos + curve.transform.InverseTransformPoint(curve.GetVelocity(progress)) :
+                                           pos - curve.transform.InverseTransformPoint(curve.GetVelocity(progress));
                 transform.LookAt(cible);
             }
         }

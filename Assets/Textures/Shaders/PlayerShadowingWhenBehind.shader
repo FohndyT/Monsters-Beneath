@@ -7,7 +7,7 @@ Shader "Custom/PlayerShadowingWhenBehind"
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
+        Tags { "RenderType"="Opaque"    "Queue"="AlphaTest"}
 
         Pass
         {

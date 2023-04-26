@@ -1,14 +1,21 @@
+using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class InputsManager : MonoBehaviour
 {
     #region Components
     Rigidbody playbody;
     PlayerInput playerInput;
+    Player player;
+    Camera camu;
     CameraBehaviour camBehave;
     CurveTraveler camPathTraveler;
+    Transform handLeftPos;
+    Transform handRightPos;
     public Transition2D3D transitionCam { get; set; }
     #endregion
     #region Jumping
@@ -29,38 +36,48 @@ public class InputsManager : MonoBehaviour
     bool isDashing;
     private bool canDash = true;
     #endregion
+    #region Looking
+    bool zTargeting;
+    Collider[] targets = new Collider[0];
+    int targetIndex = -1;
+    Transform target;
+    Vector3 posWhenLock = Vector3.zero;
+    GameObject crosshair;
+    #endregion
     #region Attacking
     [SerializeField] private GameObject Sword;
     float attackCooldown = 0.5f;
     public bool canAttack = true;
-    public bool canAttackSpecial = true;
     #endregion
     #region Items
     [SerializeField] private GameObject Fouet;
     [SerializeField] private GameObject Projectile;
-    [SerializeField] private GameObject PowerGlove;
     [SerializeField] private GameObject CrystalLight;
-    private GameObject[] Items;
-    private int itemIndex = 0;
-    public static bool usingLight = false;
+    [SerializeField] private GameObject CrystalLaser;
+    public GameObject[] Items { get; private set; }
+    public int selectedItem { get; private set; } = -1;
+    int currentItem = -1;
+    public bool canUseItem = true;
     #endregion
     #region Autres
-    Transform handPos;
     bool camLock = false;
     bool inMenu = true;
     #endregion
 
-    void Start()
+    void Awake()
     {
         playbody = GetComponent<Rigidbody>();
         rayHitMax = (GetComponent<BoxCollider>().size.y * 0.5f) + 0.05f;
         playerInput = GetComponent<PlayerInput>();
+        player = GetComponent<Player>();
         playbody.freezeRotation = true;
-        handPos = GameObject.Find("PlayerHandPos").transform;
-        Items = new[] { Fouet, Projectile, PowerGlove, CrystalLight };
-        Camera camu = Camera.main;
+        handLeftPos = GameObject.Find("PlayerLeftHandPos").transform;
+        handRightPos = GameObject.Find("PlayerRightHandPos").transform;
+        Items = new[] { Fouet, Projectile, CrystalLight, CrystalLaser };
+        camu = Camera.main;
         camBehave = camu.GetComponent<CameraBehaviour>();
         camPathTraveler = camu.GetComponent<CurveTraveler>();
+        crosshair = GameObject.FindGameObjectWithTag("Crosshair");
     }
     private void Update()
     {
@@ -91,16 +108,66 @@ public class InputsManager : MonoBehaviour
     {
         rawMovement = new Vector3(value.Get<Vector2>().x, 0, value.Get<Vector2>().y);
         skewedMovement = Quaternion.AngleAxis(45, Vector3.up) * rawMovement;
-        skewedDirection = Quaternion.AngleAxis(35, Vector3.up) * rawMovement;  // Mouvement avec souris est HYPER plus vite, va falloir limiter le range... detecter le medium?
+        skewedDirection = Quaternion.AngleAxis(35, Vector3.up) * rawMovement;  // Mouvement avec souris est HYPER plus vite, used as Debug.
     }
     void OnOrientationLock(InputValue value)
     {
-        camLock = true;     // Only called once. Trouver comment appeler a repetition lorsque le button est held.
-        Invoke("OrientationUnlock", 1f);
+        targets = Physics.OverlapBox(4.5f * transform.forward + transform.position, new(5, 2, 5), transform.rotation);
+        targets = targets.Where(x => x.transform.CompareTag("Enemy")).Where(x => x.GetType().Equals(typeof(BoxCollider))).ToArray();
+
+        if (targets == null || targets.Length < 1)      // Pas d'ennemi en vue
+        {
+            targetIndex = -1;
+            StartCoroutine(OrientationLock(playerInput.actions["Orientation Lock"]));
+        }
+        else
+        {
+            if (Vector3.Distance(posWhenLock, transform.position) > 0.001f)     // Nouveau Z Target
+            {
+                posWhenLock = transform.position;
+                targetIndex = 0;
+
+                float[] targetDistances = new float[targets.Length];
+                for (int i = 0; i < targets.Length; i++)
+                    targetDistances[i] = Vector3.Distance(targets[i].transform.position, transform.position);
+                Array.Sort(targetDistances, targets);
+            }
+            else        // N'a pas bougé depuis le dernier Z Target
+                targetIndex++;
+
+            zTargeting = true;
+            target = targets[targetIndex].transform;
+            //crosshair.gameObject.SetActive(true);
+            StartCoroutine(Targeting(playerInput.actions["Orientation Lock"]));
+
+
+            // TODO : adapter OnMove en consequence de zTargeting
+        }
     }
-    void OrientationUnlock()
+    IEnumerator Targeting(InputAction lockAction)
     {
+        GameObject temp = GameObject.Instantiate(GameObject.CreatePrimitive(PrimitiveType.Sphere));         // (temp)
+        temp.transform.localScale = 1.8f * Vector3.one;                                                     // (temp)
+
+        while (lockAction.inProgress)
+        {
+
+            temp.transform.SetPositionAndRotation(target.position, Quaternion.Euler(new Vector3(Mathf.Sin(Time.time), 0, Mathf.Cos(Time.time))));
+            //crosshair.transform.SetPositionAndRotation(camu.WorldToScreenPoint(target.position),
+                                                       //Quaternion.Euler(new Vector3(Mathf.Sin(Time.time), 0, Mathf.Cos(Time.time))));
+            yield return null;
+        }
+        DestroyImmediate(temp, true);                                                                      // (temp)
+        //crosshair.gameObject.SetActive(false);
+        zTargeting = false;
+    }
+    IEnumerator OrientationLock(InputAction lockAction)
+    {
+        camLock = true;
+        while (lockAction.inProgress)
+            yield return null;
         camLock = false;
+        StopCoroutine(OrientationLock(lockAction));
     }
     private void OnDash()
     { if (canDash) { StartCoroutine(Dash()); } }
@@ -130,47 +197,37 @@ public class InputsManager : MonoBehaviour
     IEnumerator Attack()
     {
         canAttack = false;
-        Instantiate(Sword, handPos);
+        Instantiate(Sword, handRightPos);
         yield return new WaitForSeconds(attackCooldown);
         canAttack = true;
         StopCoroutine(Attack());
     }
     void OnAttackCharged(InputValue value) { }
-    /*void OnItem(InputValue value)
+    void OnItem(InputValue value)
     {
-        if (canAttackSpecial)
+        if (canUseItem && selectedItem != -1)
         {
-            canAttackSpecial = false;
-            if (itemIndex == 3)
-            {
-                if (usingLight)
-                {
-                    usingLight = false;
-                    return;
-                }
-                Instantiate(CrystalLight, handPos);
-                usingLight = true;
-                return;
-            }
-            if (itemIndex == 1)
-            {
-                Instantiate(Projectile, handPos);
-                handPos.transform.DetachChildren();
-            }
-            else
-            {
-                Instantiate(Items[itemIndex], handPos);
-                canAttackSpecial = true;
-            }
+            canUseItem = false;
+            Instantiate(Items[selectedItem], handLeftPos);
+            if (selectedItem == 1)
+                handLeftPos.transform.DetachChildren();
         }
-    }*/
-    void OnItemUseSwap(InputValue value) { }
-    /*void OnItemSelect(InputValue value)
+    }
+    void OnItemUseSwap(InputValue value) { }    // Relics of a past idea
+    void OnItemSelect(InputValue value)
     {
-        if (usingLight)
-            return;
-        itemIndex = itemIndex < Items.Length - 1 ? +1 : 0;
-    }*/
+        if (player.itemsAcquired != null)
+        {
+            if (currentItem < player.itemsAcquired.Length - 1)
+                selectedItem = player.itemsAcquired[++currentItem];
+            else if (player.itemsAcquired != null)
+            {
+                selectedItem = player.itemsAcquired[0];             // selectedItem = index de l'item en cours dans Items        PROBLEMO : even if selectedItem is changed correctly, le laser ne veut pas Destroy, et les autres items afterwards ne s'Instantiatent pas
+                currentItem = 0;                                    // currentItem = index actuel de player.itemsAcquired
+            }
+            //selectedItem = currentItem < player.itemsAcquired.Length - 1 ? player.itemsAcquired[++currentItem] : player.itemsAcquired[0];
+        }
+    }
     void OnOpenMenu(InputValue value)
     {
         if (inMenu) { playerInput.SwitchCurrentActionMap("Gameplay"); }

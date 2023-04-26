@@ -1,5 +1,3 @@
-// Fohndy Nomerth Tah
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,41 +7,31 @@ using UnityEngine;
 public class Planage : MonoBehaviour
 {
     [SerializeField] private GameObject planeur;
-    [NonSerialized] public float vitesseParachute;
     private GameObject clonePlaneur;
-    private Rigidbody rb;
 
     // À modifier plus tard
-    private bool planeurEstCollecté;
-    
-    [NonSerialized] public bool estCréé;
-
-    private void Start()
-    {
-        rb = GetComponent<Rigidbody>();
-        vitesseParachute = -2f;
-    }
+    private bool planeurEstCollecté = false;
+    public float vitessePara;
+    public bool estCree;
 
     private void Update()
     {
         if (planeurEstCollecté)
         {
-            if (Input.GetKey("1") && !estCréé)
+            if (Input.GetKey("1") && !estCree)
             {
                 clonePlaneur = Instantiate(planeur, transform.localPosition + new Vector3(0,0.7499999f,0),transform.rotation);
                 clonePlaneur.transform.parent = transform;
                 
-                estCréé = true;
+                estCree = true;
             }
 
-            if (Input.GetKey("2") && estCréé)
+            if (Input.GetKey("2") && estCree)
             {
                 Destroy(clonePlaneur);
-                estCréé = false;
+                estCree = false;
             }
         }
-
-        MettreVitesse();
     }
     
     private void OnCollisionEnter(Collision collision)
@@ -51,19 +39,6 @@ public class Planage : MonoBehaviour
         if (collision.gameObject.tag == "Planeur")
         {
             planeurEstCollecté = true;
-        }
-    }
-
-    private void MettreVitesse()
-    {
-        if (estCréé)
-        {
-            rb.useGravity = false;
-            rb.velocity = new Vector3(rb.velocity.x, vitesseParachute, rb.velocity.z);
-        }
-        else
-        {
-            rb.useGravity = true;
         }
     }
 }

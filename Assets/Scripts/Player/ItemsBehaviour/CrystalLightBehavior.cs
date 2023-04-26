@@ -1,15 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CrystalLightBehavior : MonoBehaviour
 {
-    private bool isUsingLight;
+
+    InputsManager playerInputs;
+    private void Awake()
+    {
+        playerInputs = GameObject.Find("Player").GetComponent<InputsManager>();
+        playerInputs.canUseItem = true;
+        transform.position = GameObject.Find("PlayerLeftHandPos").transform.position;
+    }
     void Update()
     {
-        isUsingLight = SpecialAttackInput.isUsingLight;
-        if(!isUsingLight)
+        if (playerInputs.selectedItem != 2)
             Destroy(gameObject);
     }
-    
 }

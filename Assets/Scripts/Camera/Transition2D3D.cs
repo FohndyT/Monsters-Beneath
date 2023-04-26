@@ -8,7 +8,7 @@ public class Transition2D3D : MonoBehaviour
     CameraBehaviour camScript;
     CurveTraveler camTraveler;
     Curve camPath;
-    GameObject player;
+    GameObject playerObj;
     Transform transPlayer;
     Rigidbody playBody;
     #endregion
@@ -31,23 +31,23 @@ public class Transition2D3D : MonoBehaviour
         camPath = GetComponent<Curve>();
         camPath.curveType = Curve.CurveType.CatmullromSpline;
 
-        player = GameObject.Find("Player");
-        transPlayer = player.transform;
-        playBody = player.GetComponent<Rigidbody>();
-        player.GetComponent<DevTools>().RefreshCurveArray();
+        playerObj = GameObject.Find("Player");
+        transPlayer = playerObj.transform;
+        playBody = playerObj.GetComponent<Rigidbody>();
+        playerObj.GetComponent<DevTools>().RefreshCurveArray();
     }
     private void OnTriggerEnter(Collider other)
     {
         camVerticalOffset2D = sideviewWorldUpVector * 1.5f;
-        if (other.gameObject.Equals(player) && !noControlOnChracter)
+        if (other.gameObject.Equals(playerObj) && !noControlOnChracter)
             Transition();
     }
     public void OnAttack()
-    { if (GetComponent<InteractInput>().canInteract) { Transition(); } }
+    { if (GetComponent<InteractInput>().canInteract && !noControlOnChracter) { Transition(); } }
     void Transition()
     {
         camTraveler.curve = camPath;
-        player.GetComponent<InputsManager>().transitionCam = this;
+        playerObj.GetComponent<InputsManager>().transitionCam = this;
         camScript.eagleView = !camScript.eagleView;
         camScript.camOffset = camScript.eagleView ? new Vector3(-7, 7, -7) : EndPt3D * 12 + camVerticalOffset2D;
 
@@ -64,16 +64,17 @@ public class Transition2D3D : MonoBehaviour
     }
     IEnumerator SmoothCam()
     {
+        noControlOnChracter = true;
         for (float t = 0; t < camTraveler.duration; t += Time.deltaTime)
         {
             cam.transform.LookAt(transPlayer.position + camVerticalOffset2D);
             yield return null;
         }
+        noControlOnChracter = false;
         StopCoroutine(SmoothCam());
     }
     IEnumerator SlideToPt(Vector3 tempV)
     {
-        noControlOnChracter = true;
         playBody.useGravity = false;
         Vector3 posIni = transPlayer.position;
         while (timer < slideDuration)
@@ -84,7 +85,6 @@ public class Transition2D3D : MonoBehaviour
         }
         timer = 0f;
         playBody.useGravity = true;
-        noControlOnChracter = false;
         transPlayer.position = tempV;
         StopCoroutine(SlideToPt(Vector3.zero));
     }
