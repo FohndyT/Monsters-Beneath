@@ -13,9 +13,6 @@ using UnityEngine.EventSystems;
 [RequireComponent(typeof(LineRenderer))]
 public class LaserComportement : MonoBehaviour
 {
-    // [SerializeField] private bool up, down, left, right, forward, backward;
-    // private Vector3 directionRayon;
-    
     [SerializeField] private float longueurRayon = 500;
     [Range(1f,50f)] [SerializeField] private float indiceDeRefraction = 20f;
 

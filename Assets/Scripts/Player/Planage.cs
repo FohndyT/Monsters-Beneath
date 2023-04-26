@@ -1,3 +1,5 @@
+// Fohndy Nomerth Tah
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,12 +9,20 @@ using UnityEngine;
 public class Planage : MonoBehaviour
 {
     [SerializeField] private GameObject planeur;
+    [NonSerialized] public float vitesseParachute;
     private GameObject clonePlaneur;
+    private Rigidbody rb;
 
     // À modifier plus tard
-    private bool planeurEstCollecté = false;
-    public float vitessePara;
-    public bool estCree;
+    private bool planeurEstCollecté;
+    
+    [NonSerialized] public bool estCree;
+
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+        vitesseParachute = -2f;
+    }
 
     private void Update()
     {
@@ -32,6 +42,8 @@ public class Planage : MonoBehaviour
                 estCree = false;
             }
         }
+
+        MettreVitesse();
     }
     
     private void OnCollisionEnter(Collision collision)
@@ -39,6 +51,19 @@ public class Planage : MonoBehaviour
         if (collision.gameObject.tag == "Planeur")
         {
             planeurEstCollecté = true;
+        }
+    }
+
+    private void MettreVitesse()
+    {
+        if (estCree)
+        {
+            rb.useGravity = false;
+            rb.velocity = new Vector3(rb.velocity.x, vitesseParachute, rb.velocity.z);
+        }
+        else
+        {
+            rb.useGravity = true;
         }
     }
 }
