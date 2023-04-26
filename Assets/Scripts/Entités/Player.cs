@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Player : Entities
 {
-    //public GameOverScreen GameOverScreen;
+    public GameOverScreen GameOverScreen;
     Rigidbody playBody;
     float lowHealthThreshold = 1f;
     const float DboostVelo = 10f;
@@ -25,7 +25,8 @@ public class Player : Entities
         if (!invincible && other.CompareTag("Enemy"))
         {
             Hurt(2f);                                                         // Pour le faire jumper un peu du sol
-            playBody.velocity = DboostVelo * (-transform.rotation.eulerAngles + new Vector3(0f, 0.5f, 0f));
+            playBody.AddForce(0, 16000f, 0); // temp fix car velo ne fonctionne pas tjrs
+            //playBody.velocity = DboostVelo * (-transform.rotation.eulerAngles + new Vector3(0f, .5f, 0f));
             StartCoroutine(IFrames(iFramesWindow));
         }
     }
@@ -45,9 +46,8 @@ public class Player : Entities
     }
     protected override IEnumerator Die()
     {
-        Time.timeScale = 0;
+        GameOverScreen.Setup();
         yield return StartCoroutine(base.Die());
-        //GameOverScreen.Setup();
         StopCoroutine(Die());
     }
     void ItemAlreadyAcquired()
