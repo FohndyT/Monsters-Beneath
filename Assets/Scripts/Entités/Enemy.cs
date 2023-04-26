@@ -25,8 +25,12 @@ public class Enemy : Entities
     
     public override void Hurt(float damage)
     {
-        base.Hurt(damage);
-        StartCoroutine(IFrames(iFramesWindow));
+        if (!invincible)
+        {
+            base.Hurt(damage);
+            StartCoroutine(IFrames(iFramesWindow));
+        }
+
     }
 
     IEnumerator BackAway()

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CrystalLightBehavior : MonoBehaviour
+public class CrystalLaser : MonoBehaviour
 {
 
     InputsManager playerInputs;
@@ -12,7 +12,11 @@ public class CrystalLightBehavior : MonoBehaviour
     }
     void Update()
     {
-        if (playerInputs.selectedItem != 2)
+        if (playerInputs.selectedItem != 3)     // Namor ne veut pas mourrrirr !
+        {
+            gameObject.SetActive(false);
             Destroy(gameObject);
+        }
+
     }
 }

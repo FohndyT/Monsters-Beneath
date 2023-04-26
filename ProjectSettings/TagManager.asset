@@ -17,6 +17,7 @@ TagManager:
   - Enemy
   - DangerZone
   - PlayerAttack
+  - Crosshair
   layers:
   - Default
   - TransparentFX

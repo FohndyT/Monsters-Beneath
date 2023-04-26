@@ -128,6 +128,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   estATerre: 0
   dashVelo: 20
+  crosshair: {fileID: 627851199972892215, guid: 359bfbed048fe444db188f7d22dfb392, type: 3}
   Sword: {fileID: 2158391310216367706, guid: 8e185d6fdea9fc446858816ae432acb1, type: 3}
   canAttack: 1
   Fouet: {fileID: 5842108098151362548, guid: 39eb94479cf85374cb0363eb8440e1ad, type: 3}
@@ -149,6 +150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 10
   invincible: 0
+  GameOverScreen: {fileID: 0}
   itemsAcquired: 
 --- !u!114 &726577651
 MonoBehaviour:
