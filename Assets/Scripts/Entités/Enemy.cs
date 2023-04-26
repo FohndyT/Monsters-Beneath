@@ -20,8 +20,12 @@ public class Enemy : Entities
     { if (!player.invincible && other.CompareTag("Player")) { player.Hurt(2f); } }
     public override void Hurt(float damage)
     {
-        base.Hurt(damage);
-        StartCoroutine(IFrames(iFramesWindow));
+        if (!invincible)
+        {
+            base.Hurt(damage);
+            StartCoroutine(IFrames(iFramesWindow));
+        }
+
     }
 
     IEnumerator BackAway()

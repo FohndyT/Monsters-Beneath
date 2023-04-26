@@ -6,6 +6,7 @@ public class EnemyAi : MonoBehaviour
 {
     CurveTraveler traveler;
     NavMeshAgent agent;
+    Enemy enemyScript;
     [SerializeField] GameObject target;
     [SerializeField] bool chaseMode = false;
     [SerializeField] bool patrolMode = true;
@@ -21,6 +22,7 @@ public class EnemyAi : MonoBehaviour
         target = GameObject.Find("Player");
         agent = GetComponent<NavMeshAgent>();
         traveler = GetComponent<CurveTraveler>();
+        enemyScript = GetComponent<Enemy>();
         returnPos = transform.position;
 
     }
@@ -35,7 +37,7 @@ public class EnemyAi : MonoBehaviour
 
         if (other.CompareTag("PlayerAttack"))
         {
-            Health -= 50f;
+            enemyScript.Hurt(2f);
             for (float alpha = 1.5f; alpha >= 0; alpha -= 0.1f)
             {
                 agent.SetDestination(transform.position);
@@ -59,11 +61,6 @@ public class EnemyAi : MonoBehaviour
 
     void Update()
     {
-        if (Health <= 0)
-        {
-            Destroy(gameObject);
-            chaseMode = false;
-        }
         if (patrolMode)
         {
             // maybe do something but for now CurveTraveler fait cette job

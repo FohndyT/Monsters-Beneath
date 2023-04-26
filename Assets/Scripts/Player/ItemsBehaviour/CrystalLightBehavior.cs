@@ -8,10 +8,11 @@ public class CrystalLightBehavior : MonoBehaviour
     {
         playerInputs = GameObject.Find("Player").GetComponent<InputsManager>();
         playerInputs.canUseItem = true;
+        transform.position = GameObject.Find("PlayerLeftHandPos").transform.position;
     }
     void Update()
     {
-        if (playerInputs.selectedItem != 2 || playerInputs.selectedItem != 3)
+        if (playerInputs.selectedItem != 2)
             Destroy(gameObject);
     }
 }

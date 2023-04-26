@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class InputsManager : MonoBehaviour
 {
@@ -10,11 +11,11 @@ public class InputsManager : MonoBehaviour
     Rigidbody playbody;
     PlayerInput playerInput;
     Player player;
+    Camera camu;
     CameraBehaviour camBehave;
     CurveTraveler camPathTraveler;
     Transform handLeftPos;
     Transform handRightPos;
-    BoxCollider fov;
     public Transition2D3D transitionCam { get; set; }
     #endregion
     #region Jumping
@@ -39,7 +40,9 @@ public class InputsManager : MonoBehaviour
     bool zTargeting;
     Collider[] targets = new Collider[0];
     int targetIndex = -1;
-    Vector3 posWhenLock;
+    Transform target;
+    Vector3 posWhenLock = Vector3.zero;
+    GameObject crosshair;
     #endregion
     #region Attacking
     [SerializeField] private GameObject Sword;
@@ -52,8 +55,8 @@ public class InputsManager : MonoBehaviour
     [SerializeField] private GameObject CrystalLight;
     [SerializeField] private GameObject CrystalLaser;
     public GameObject[] Items { get; private set; }
-    public int selectedItem { get; private set; } = 0;
-    int currentItem = 0;
+    public int selectedItem { get; private set; } = -1;
+    int currentItem = -1;
     public bool canUseItem = true;
     #endregion
     #region Autres
@@ -71,15 +74,15 @@ public class InputsManager : MonoBehaviour
         handLeftPos = GameObject.Find("PlayerLeftHandPos").transform;
         handRightPos = GameObject.Find("PlayerRightHandPos").transform;
         Items = new[] { Fouet, Projectile, CrystalLight, CrystalLaser };
-        Camera camu = Camera.main;
+        camu = Camera.main;
         camBehave = camu.GetComponent<CameraBehaviour>();
         camPathTraveler = camu.GetComponent<CurveTraveler>();
+        crosshair = GameObject.FindGameObjectWithTag("Crosshair");
     }
     private void Update()
     {
         CheckIfGrounded();
         MovePlayer();
-        //Debug.Log(canUseItem.ToString() + "  " + Items[itemIndex].ToString());
     }
 
     void CheckIfGrounded()
@@ -105,35 +108,58 @@ public class InputsManager : MonoBehaviour
     {
         rawMovement = new Vector3(value.Get<Vector2>().x, 0, value.Get<Vector2>().y);
         skewedMovement = Quaternion.AngleAxis(45, Vector3.up) * rawMovement;
-        skewedDirection = Quaternion.AngleAxis(35, Vector3.up) * rawMovement;  // Mouvement avec souris est HYPER plus vite, va falloir limiter le range... detecter le medium?
+        skewedDirection = Quaternion.AngleAxis(35, Vector3.up) * rawMovement;  // Mouvement avec souris est HYPER plus vite, used as Debug.
     }
     void OnOrientationLock(InputValue value)
     {
-        targets = Physics.OverlapBox(4.5f * transform.forward + transform.position, new(4, 2, 3), transform.rotation);
-        //targets = (Collider[])targets.Where(x => x.CompareTag("Enemy"));          $%^&*()**&^%$#@$%^&*()
+        targets = Physics.OverlapBox(4.5f * transform.forward + transform.position, new(5, 2, 5), transform.rotation);
+        targets = targets.Where(x => x.transform.CompareTag("Enemy")).Where(x => x.GetType().Equals(typeof(BoxCollider))).ToArray();
 
-        Debug.Log(targets.Length.ToString());
-        if (targets == null || targets.Length < 1)
+        if (targets == null || targets.Length < 1)      // Pas d'ennemi en vue
+        {
+            targetIndex = -1;
             StartCoroutine(OrientationLock(playerInput.actions["Orientation Lock"]));
+        }
         else
         {
-            posWhenLock = transform.position;
-            if (targetIndex == -1)
+            if (Vector3.Distance(posWhenLock, transform.position) > 0.001f)     // Nouveau Z Target
             {
+                posWhenLock = transform.position;
+                targetIndex = 0;
+
                 float[] targetDistances = new float[targets.Length];
                 for (int i = 0; i < targets.Length; i++)
                     targetDistances[i] = Vector3.Distance(targets[i].transform.position, transform.position);
                 Array.Sort(targetDistances, targets);
-                targetIndex = 0;
             }
-            if (Vector3.Distance(posWhenLock, transform.position) < 0.001f)
-                targetIndex = targetIndex < targets.Length - 1 ? +1 : 0;
+            else        // N'a pas bougé depuis le dernier Z Target
+                targetIndex++;
 
-            // start coroutine : au debut zTargeting = true ... while(zTargeting.inProgress) yield return null ... a la fin zTargeting = false, targetIndex = -1, posWhenLock = 
-            // mettre crosshair (canvas) sur ennemi
-            // reviser le code d'en haut
-            // adapter OnMove en consequence de zTargeting en plus de camLock
+            zTargeting = true;
+            target = targets[targetIndex].transform;
+            //crosshair.gameObject.SetActive(true);
+            StartCoroutine(Targeting(playerInput.actions["Orientation Lock"]));
+
+
+            // TODO : adapter OnMove en consequence de zTargeting
         }
+    }
+    IEnumerator Targeting(InputAction lockAction)
+    {
+        GameObject temp = GameObject.Instantiate(GameObject.CreatePrimitive(PrimitiveType.Sphere));         // (temp)
+        temp.transform.localScale = 1.8f * Vector3.one;                                                     // (temp)
+
+        while (lockAction.inProgress)
+        {
+
+            temp.transform.SetPositionAndRotation(target.position, Quaternion.Euler(new Vector3(Mathf.Sin(Time.time), 0, Mathf.Cos(Time.time))));
+            //crosshair.transform.SetPositionAndRotation(camu.WorldToScreenPoint(target.position),
+                                                       //Quaternion.Euler(new Vector3(Mathf.Sin(Time.time), 0, Mathf.Cos(Time.time))));
+            yield return null;
+        }
+        DestroyImmediate(temp, true);                                                                      // (temp)
+        //crosshair.gameObject.SetActive(false);
+        zTargeting = false;
     }
     IEnumerator OrientationLock(InputAction lockAction)
     {
@@ -179,7 +205,7 @@ public class InputsManager : MonoBehaviour
     void OnAttackCharged(InputValue value) { }
     void OnItem(InputValue value)
     {
-        if (canUseItem)
+        if (canUseItem && selectedItem != -1)
         {
             canUseItem = false;
             Instantiate(Items[selectedItem], handLeftPos);
@@ -194,10 +220,10 @@ public class InputsManager : MonoBehaviour
         {
             if (currentItem < player.itemsAcquired.Length - 1)
                 selectedItem = player.itemsAcquired[++currentItem];
-            else
+            else if (player.itemsAcquired != null)
             {
-                selectedItem = player.itemsAcquired[0];         // selectedItem = index de l'item en cours dans Items
-                currentItem = 0;                                // currentItem = index actuel de player.itemsAcquired
+                selectedItem = player.itemsAcquired[0];             // selectedItem = index de l'item en cours dans Items        PROBLEMO : even if selectedItem is changed correctly, le laser ne veut pas Destroy, et les autres items afterwards ne s'Instantiatent pas
+                currentItem = 0;                                    // currentItem = index actuel de player.itemsAcquired
             }
             //selectedItem = currentItem < player.itemsAcquired.Length - 1 ? player.itemsAcquired[++currentItem] : player.itemsAcquired[0];
         }

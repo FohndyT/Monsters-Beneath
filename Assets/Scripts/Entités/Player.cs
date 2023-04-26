@@ -3,12 +3,12 @@ using UnityEngine;
 
 public class Player : Entities
 {
-    //public GameOverScreen GameOverScreen;
+    [SerializeField] GameOverScreen GameOverScreen;
     Rigidbody playBody;
     float lowHealthThreshold = 1f;
     const float DboostVelo = 10f;
     float iFramesWindow = 2f;
-    public int[] itemsAcquired = new int[0];
+    public int[] itemsAcquired;
 
     private void Awake()
     {
@@ -36,6 +36,7 @@ public class Player : Entities
         {
             case <= 0:
                 StartCoroutine(Die());
+                GameOverScreen.Setup();
                 break;
             case var value when value < lowHealthThreshold:
                 //Sound effect, ou bien change texture shader for blinking one
@@ -47,7 +48,6 @@ public class Player : Entities
     {
         Time.timeScale = 0;
         yield return StartCoroutine(base.Die());
-        //GameOverScreen.Setup();
         StopCoroutine(Die());
     }
     void ItemAlreadyAcquired()
