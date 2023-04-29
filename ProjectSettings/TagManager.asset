@@ -16,6 +16,8 @@ TagManager:
   - Slime
   - DangerZone
   - "Surface R\xE9fractante"
+  - Enemy
+  - Crosshair
   layers:
   - Default
   - TransparentFX

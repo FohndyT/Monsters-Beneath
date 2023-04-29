@@ -1,3 +1,5 @@
+// Fohndy Nomerth Tah
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,70 +8,92 @@ using UnityEngine;
 
 public class RopeMovement : MonoBehaviour
 {
-    private bool onRope = false;
+    private float angleMaximum;
+    private float angle;
+    private float temps;
+    private float vitesse = 1f;
+    private float x, y, z;
+    
+    private GameObject joueur;
+    private Rigidbody rbCorde;
+    private Rigidbody rbJoueur;
 
-    private float characterPositionY;
+    private Vector3 direction;
+    private Vector3 positionJoueur;
 
-    GameObject mainRope;
-    private Rigidbody selfRigidbody;
-    private Rigidbody ropeRigidbody;
-
-    private float playerSpeed;
+    private bool estSurCorde;
+    private bool cordeEstDisponible = true;
 
     private void Start()
     {
-        selfRigidbody = GetComponent<Rigidbody>();
+        joueur = GameObject.Find("Player");
+
+        rbCorde = GetComponent<Rigidbody>();
+        rbJoueur = joueur.GetComponent<Rigidbody>();
+        
+        x = transform.position.x;
+        y = transform.position.y;
+        z = transform.position.z;
     }
 
-    void Update()
+    private void FixedUpdate()
     {
-        if (onRope == true)
+        // Empêche un bug de Unity
+        transform.parent.position = new Vector3(x, y, z);
+        
+        if (estSurCorde)
         {
-            transform.position = new Vector3(mainRope.transform.position.x,
-                                           mainRope.transform.position.y - characterPositionY,
-                                             mainRope.transform.position.z);
+            temps += Time.deltaTime;
+            angle = angleMaximum * Mathf.Sin( temps * vitesse);
             
-            if (Input.GetKey("w"))
-            {
-                ropeRigidbody.velocity = new Vector3(0, 0, playerSpeed);
-            }
+            transform.parent.localRotation = Quaternion.Euler( -angle, 0, 0);
+
+            joueur.transform.localPosition = positionJoueur;
             
-            if (Input.GetKey("s"))
+            if (Input.GetKeyDown("d"))
             {
-                ropeRigidbody.velocity = new Vector3(0, 0, -playerSpeed);
+                
             }
 
-            if (Input.GetKey("space"))
+            if (Input.GetKeyDown("a"))
             {
-                onRope = false;
-                selfRigidbody.velocity = new Vector3(0, ropeRigidbody.velocity.y + 2, ropeRigidbody.velocity.z);
+                
+            }
+
+            if (Input.GetKeyDown("space"))
+            {
+                PartirDeCorde();
             }
         }
     }
 
-    private void OnTriggerEnter(Collider rope)
+    private void OnTriggerEnter(Collider other)
     {
-        if (rope.CompareTag("MainRope") || rope.CompareTag("MainRope2"))
+        if (other.gameObject.name == "Player" && cordeEstDisponible)
         {
-            onRope = true;
-            
-            playerSpeed = selfRigidbody.velocity.z;
-            characterPositionY = rope.transform.position.y - transform.position.y;
-            
-            Debug.Log("Collision Rope Detected");
-            
-            if (rope.CompareTag("MainRope"))
-            {
-                mainRope = GameObject.FindWithTag("MainRope");
-            }
-
-            if (rope.CompareTag("MainRope2"))
-            {
-                mainRope = GameObject.FindWithTag("MainRope2");
-            }
-            
-            ropeRigidbody = mainRope.GetComponent<Rigidbody>();
-            ropeRigidbody.AddForce(new Vector3(selfRigidbody.velocity.x * 35,0,selfRigidbody.velocity.z * 35));
+            angleMaximum = rbJoueur.velocity.z * 5f;
+            joueur.transform.SetParent(transform);
+            positionJoueur = joueur.transform.localPosition;
+            estSurCorde = true;
+            rbJoueur.useGravity = false;
+            rbJoueur.isKinematic = true;
+            cordeEstDisponible = false;
         }
+    }
+
+    private void PartirDeCorde()
+    {
+        estSurCorde = false;
+        joueur.transform.SetParent(null);
+        rbJoueur.useGravity = true;
+        rbJoueur.isKinematic = false;
+        Invoke("MettreDisponibilitéCordeTrue",1f);
+        
+        rbJoueur.AddForce(new Vector3(0f,0f,-angle * 10f));
+    }
+
+    private void MettreDisponibilitéCordeTrue()
+    {
+        cordeEstDisponible = true;
     }
 }
