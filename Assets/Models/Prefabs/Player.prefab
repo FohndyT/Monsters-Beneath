@@ -128,7 +128,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   estATerre: 0
   dashVelo: 20
-  Sword: {fileID: 2158391310216367706, guid: 8e185d6fdea9fc446858816ae432acb1, type: 3}
+  Sword: {fileID: 2158391310216367706, guid: 663028343c286d949b5486d6d9e66cd2, type: 3}
   canAttack: 1
   Fouet: {fileID: 5842108098151362548, guid: 39eb94479cf85374cb0363eb8440e1ad, type: 3}
   Projectile: {fileID: 4610062949676745976, guid: 6dd4604a38cc6d443b6af69ffc4bb5af, type: 3}
@@ -176,8 +176,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   planeur: {fileID: 8291256045207381297, guid: a05d8aa351490a346ae50afaf404559f, type: 3}
-  vitessePara: 0
-  estCree: 0
 --- !u!114 &4767389427115355173
 MonoBehaviour:
   m_ObjectHideFlags: 0
