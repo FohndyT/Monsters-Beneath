@@ -31,17 +31,8 @@ public class DevTools : MonoBehaviour
     public void RefreshCurveArray()
     {
         if (debugStates != null && debugStates[0] && debugStates[3])
-        {
-            curves = FindObjectsOfType<Curve>();
-            var curvs = new List<Curve>();
-            foreach (var curve in curves)   // pour ne pas afficher les paths d'objets destroyed (génère Exception)
-            {
-                if (curve.isActiveAndEnabled)
-                    curvs.Add(curve);
-            }
-            curves = curvs.ToArray();
-        }
-    }
+            curves = FindObjectsOfType<Curve>().Where(x => x.isActiveAndEnabled).ToArray();
+    }                                           // pour ne pas afficher les paths d'objets destroyed (génère Exception)
 
     void Update()
     {
