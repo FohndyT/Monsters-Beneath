@@ -25,23 +25,25 @@ public class EnemyAiShoot : MonoBehaviour
         if (regardeJoueur && peutRegarderJoueur)
         {
             transform.LookAt(cible);
-            if (shootCooldown >= 0.75f)
+            if (shootCooldown >= 1.5f)
             {
                 BAM();
                 shootCooldown = 0f;
             }
         }
 
-        if (shootCooldown != 0.75f)
+        if (shootCooldown != 1.5f)
             shootCooldown += Time.deltaTime;
     }
 
     private void BAM()
     {
-        Vector3 shootPos = shootT.position;
-        shootT.position = new Vector3(shootPos.x * Random.Range(0.95f, 1.05f), shootPos.y * Random.Range(0.95f, 1.05f),
+        Vector3 originalShootPos = shootT.position;
+        Vector3 shootPos = originalShootPos;
+        shootT.position = new Vector3(shootPos.x * Random.Range(0.85f,1.15f), shootPos.y * Random.Range(0.90f,1.1f),
             shootPos.z);
         Instantiate(bullet, shootT);
+        shootT.position = originalShootPos;
         shootT.DetachChildren();
     }
 

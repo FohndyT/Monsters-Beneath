@@ -16,6 +16,10 @@ TagManager:
   - Slime
   - DangerZone
   - "Surface R\xE9fractante"
+  - Enemy
+  - PlayerAttack
+  - Light
+  - Crosshair
   layers:
   - Default
   - TransparentFX
@@ -25,7 +29,7 @@ TagManager:
   - UI
   - InteractableObject
   - Player
-  - 
+  - Enemy
   - 
   - 
   - 

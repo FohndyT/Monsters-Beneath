@@ -3,15 +3,12 @@ using UnityEngine;
 
 public class Player : Entities
 {
-<<<<<<< HEAD
 
-    public GameOverScreen GameOverScreen;
+    //public GameOverScreen GameOverScreen;
 
     //[SerializeField] GameOverScreen GameOverScreen;
 
-=======
     [SerializeField] GameOverScreen GameOverScreen;
->>>>>>> 6dd49e578cd266f97c4541dddcb9d7dec8e3bddd
     Rigidbody playBody;
     float lowHealthThreshold = 1f;
     const float DboostVelo = 10f;
@@ -35,6 +32,15 @@ public class Player : Entities
             Hurt(2f);                                                         // Pour le faire jumper un peu du sol
             playBody.AddForce(0, 16000f, 0); // temp fix car velo ne fonctionne pas tjrs
             //playBody.velocity = DboostVelo * (-transform.rotation.eulerAngles + new Vector3(0f, .5f, 0f));
+            StartCoroutine(IFrames(iFramesWindow));
+        }
+    }
+    private void OnCollisionEnter(Collision collision) //Est nécessaire pour la collision des attaques à distance
+    {
+        if (!invincible && collision.collider.CompareTag("Enemy"))
+        {
+            Hurt(2f);                                                        
+            playBody.AddForce(0, 16000f, 0);
             StartCoroutine(IFrames(iFramesWindow));
         }
     }

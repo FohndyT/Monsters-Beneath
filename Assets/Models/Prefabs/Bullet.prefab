@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 7083921239149248285}
   - component: {fileID: 4761966249786612773}
   - component: {fileID: 7285951878467833864}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Capsule
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -94,7 +94,7 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 566641915030240604}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.5
   m_Height: 9.922188
@@ -112,6 +112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 990d577724288ea499c99d51f44b8d19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timeSpent: 0
 --- !u!54 &7285951878467833864
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -137,9 +138,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2101272322769944433}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bullet
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
