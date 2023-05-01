@@ -17,8 +17,11 @@ TagManager:
   - DangerZone
   - "Surface R\xE9fractante"
   - Enemy
+<<<<<<< HEAD
   - PlayerAttack
   - Light
+=======
+>>>>>>> 65a47721494ee992629f2c0321f96afc564c7d81
   - Crosshair
   layers:
   - Default
