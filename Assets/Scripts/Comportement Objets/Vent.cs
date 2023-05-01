@@ -19,14 +19,6 @@ public class Vent : MonoBehaviour
         planage = rb.gameObject.GetComponent<Planage>();
     }
 
-    /* private void Update()
-    {
-        if (estEnVol)
-        {
-            rb.velocity = forceVent;
-        }
-    }*/
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -36,7 +28,7 @@ public class Vent : MonoBehaviour
                 Debug.Log("Collision Vent");
             
                 // estEnVol = true;
-                planage.vitessePara = 8f;
+                planage.vitesseParachute = 8f;
             }
         }
     }
@@ -46,7 +38,7 @@ public class Vent : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             // estEnVol = false;
-            planage.vitessePara = -2f;
+            planage.vitesseParachute = -2f;
         }
     }
 }

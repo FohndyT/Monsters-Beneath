@@ -58,7 +58,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1318544754210236, guid: 5e8b0a74c7acf8c48a21818d8b51b84e, type: 3}
       propertyPath: m_TagString
+<<<<<<< HEAD
+      value: Untagged
+=======
       value: PlayerAttack
+>>>>>>> 487148988f9eaa42b0932e8978397d80db8832eb
       objectReference: {fileID: 0}
     - target: {fileID: 4116729675002970, guid: 5e8b0a74c7acf8c48a21818d8b51b84e, type: 3}
       propertyPath: m_RootOrder

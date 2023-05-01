@@ -17,7 +17,12 @@ public class Enemy : Entities
     }
 
     private void OnTriggerStay(Collider other)
-    { if (!player.invincible && other.CompareTag("Player")) { player.Hurt(2f); } }
+    {
+        if (!player.invincible && other.CompareTag("Player")) { player.Hurt(2f); }
+
+        //if (other.CompareTag("PlayerAttack") && )
+    }
+    
     public override void Hurt(float damage)
     {
         if (!invincible)
@@ -42,5 +47,5 @@ public class Enemy : Entities
         backingAway = false;
         StopCoroutine(BackAway());
     }
-    void Freeze() => isFrozen = !isFrozen;      // Geré par EnemyAI ?
+    void Freeze() => isFrozen = !isFrozen;      // Gerï¿½ par EnemyAI ?
 }
