@@ -58,6 +58,7 @@ public class InputsManager : MonoBehaviour
     public int selectedItem { get; private set; } = -1;
     int currentItem = -1;
     public bool canUseItem = true;
+    private bool isUsingLight = false;
     #endregion
     #region Autres
     bool camLock = false;
@@ -132,7 +133,7 @@ public class InputsManager : MonoBehaviour
                     targetDistances[i] = Vector3.Distance(targets[i].transform.position, transform.position);
                 Array.Sort(targetDistances, targets);
             }
-            else        // N'a pas bougé depuis le dernier Z Target
+            else        // N'a pas bougï¿½ depuis le dernier Z Target
                 targetIndex++;
 
             zTargeting = true;
@@ -207,6 +208,16 @@ public class InputsManager : MonoBehaviour
     {
         if (canUseItem && selectedItem != -1)
         {
+            if (selectedItem is 2 or 3)
+            {
+                if (isUsingLight)
+                {
+                    isUsingLight = false;
+                    Destroy(GameObject.FindGameObjectWithTag("Light"));
+                    return;
+                }
+                isUsingLight = true;
+            }
             canUseItem = false;
             Instantiate(Items[selectedItem], handLeftPos);
             if (selectedItem == 1)
