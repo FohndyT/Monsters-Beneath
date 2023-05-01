@@ -16,8 +16,8 @@ public class RopeMovement : MonoBehaviour
     private float x, y, z;
     
     private GameObject joueur;
-    private Rigidbody rbCorde;
     private Rigidbody rbJoueur;
+    private Rigidbody rbCorde;
 
     private Vector3 direction;
     private Vector3 positionJoueur;
@@ -30,8 +30,8 @@ public class RopeMovement : MonoBehaviour
     {
         joueur = GameObject.Find("Player");
 
-        rbCorde = GetComponent<Rigidbody>();
         rbJoueur = joueur.GetComponent<Rigidbody>();
+        rbCorde = GetComponent<Rigidbody>();
         
         x = transform.position.x;
         y = transform.position.y;
@@ -46,41 +46,10 @@ public class RopeMovement : MonoBehaviour
         if (estSurCorde)
         {
             temps += Time.deltaTime;
-            //AngleCourrant = Mathf.Sin( temps * vitesse);
-            angle = angleMaximum * Mathf.Sin( temps * vitesse);
+            angle = angleMaximum * Mathf.Sin(temps * vitesse);
             transform.parent.localRotation = Quaternion.Euler( -angle, 0, 0);
 
-            // while (angleMaximum >= 0f)
-            // {
-            //     angleMaximum -= 5f;
-            // }
-            //
-            // if (angleMaximum < 0f)
-            // {
-            //     angleMaximum = 0f;
-            // }
-
             joueur.transform.localPosition = positionJoueur;
-            
-            if (Input.GetKeyDown("d"))
-            {
-                // if (AngleCourrant < 0)
-                // {
-                //     angleMaximum += 10f;
-                // }
-                //
-                // angleMaximum += 10f;
-            }
-
-            if (Input.GetKeyDown("a"))
-            {
-                // if (AngleCourrant > 0)
-                // {
-                //     angleMaximum += 10f;
-                // }
-                //
-                // angleMaximum += 10f;
-            }
 
             if (Input.GetKeyDown("space"))
             {
@@ -114,39 +83,20 @@ public class RopeMovement : MonoBehaviour
     private void PartirDeCorde()
     {
         estSurCorde = false;
-        joueur.transform.SetParent(null);
+        
         rbJoueur.useGravity = true;
         rbJoueur.isKinematic = false;
+        
+        // Évite que le personnage saute dans la corde et qu'il reste donc coincé dessus.
         Invoke("MettreDisponibilitéCordeTrue",1f);
 
-        // rbJoueur.velocity = new Vector3(0f, /*Mathf.Abs(angle) * */rbCorde.velocity.y * 500f, rbCorde.velocity.z * 500f/*angle * 3f*/);
-
-        rbJoueur.AddForce(new Vector3(0f,Mathf.Abs(angle) * 20f,angle * 100f),ForceMode.Impulse);
+        rbJoueur.AddForce(new Vector3(0f,Mathf.Abs(angle) * 10f * vitesse/2f,angle * 100f * vitesse/2f),ForceMode.Impulse);
+        
+        joueur.transform.SetParent(null);
     }
 
     private void MettreDisponibilitéCordeTrue()
     {
         cordeEstDisponible = true;
-    }
-
-    private void DiminutionAngleMaximum()
-    {
-        if (estSurCorde == false)
-        {
-            if (angleMaximum > 0)
-            {
-                Invoke("DiminuerAngleMax",2f);
-            }
-            
-            if (angleMaximum < 0)
-            {
-                angleMaximum = 0;
-            }
-        }
-    }
-
-    private void DiminuerAngleMax()
-    {
-        angleMaximum -= 5f;
     }
 }
