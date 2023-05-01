@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.3731193, g: 0.38073996, b: 0.35872698, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -12449,8 +12449,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cible: {fileID: 1620087014}
+  shootT: {fileID: 2112425629}
   regardeJoueur: 0
   peutRegarderJoueur: 1
+  bullet: {fileID: 5321447165858355921, guid: 7e52449768f5feb41aca6097dcd3ec50, type: 3}
 --- !u!65 &1140558020
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -13545,6 +13547,10 @@ PrefabInstance:
       propertyPath: GameOverScreen
       value: 
       objectReference: {fileID: 2137676822}
+    - target: {fileID: 1257236786508071490, guid: 6e1d3bc4a718e904597a8ca3113387a3, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2531202349029093172, guid: 6e1d3bc4a718e904597a8ca3113387a3, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -13601,6 +13607,14 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: dc112e9b2af832e4c872d76275cb35ee, type: 2}
+    - target: {fileID: 8953928724453614656, guid: 6e1d3bc4a718e904597a8ca3113387a3, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 6de6a5d6abb5c6f49a9193f608ffd35a, type: 2}
+    - target: {fileID: 8953928724620501658, guid: 6e1d3bc4a718e904597a8ca3113387a3, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.203
+      objectReference: {fileID: 0}
     - target: {fileID: 8953928724620501658, guid: 6e1d3bc4a718e904597a8ca3113387a3, type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
@@ -13949,7 +13963,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh48400
+  m_Name: pb_Mesh28074
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -14758,6 +14772,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1673698387, guid: 77a689b9bec4f414dba52e833f0a5bd0, type: 3}
       propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1480457159411448289, guid: 77a689b9bec4f414dba52e833f0a5bd0, type: 3}
+      propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1828990065792329485, guid: 77a689b9bec4f414dba52e833f0a5bd0, type: 3}
