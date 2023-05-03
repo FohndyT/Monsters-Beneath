@@ -3,15 +3,8 @@ using UnityEngine;
 
 public class Player : Entities
 {
-<<<<<<< HEAD
-
-    public GameOverScreen GameOverScreen;
-
-    //[SerializeField] GameOverScreen GameOverScreen;
-
-=======
     [SerializeField] GameOverScreen GameOverScreen;
->>>>>>> 6dd49e578cd266f97c4541dddcb9d7dec8e3bddd
+    
     Rigidbody playBody;
     float lowHealthThreshold = 1f;
     const float DboostVelo = 10f;
