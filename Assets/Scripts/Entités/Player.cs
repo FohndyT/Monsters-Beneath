@@ -8,7 +8,7 @@ public class Player : Entities
     Rigidbody playBody;
     float lowHealthThreshold = 1f;
     const float DboostVelo = 10f;
-    float iFramesWindow = 2f;
+    float iFramesWindow = 4f;
     public int[] itemsAcquired;
 
     private void Awake()
@@ -26,11 +26,23 @@ public class Player : Entities
         if (!invincible && other.CompareTag("Enemy"))
         {
             Hurt(2f);                                                         // Pour le faire jumper un peu du sol
-            playBody.AddForce(0, 16000f, 0); // temp fix car velo ne fonctionne pas tjrs
+            playBody.AddForce(0, 8000f, 0); // temp fix car velo ne fonctionne pas tjrs
             //playBody.velocity = DboostVelo * (-transform.rotation.eulerAngles + new Vector3(0f, .5f, 0f));
             StartCoroutine(IFrames(iFramesWindow));
         }
     }
+<<<<<<< HEAD
+    private void OnCollisionEnter(Collision collision) //Est nécessaire pour la collision des attaques à distance
+    {
+        if (!invincible && collision.collider.CompareTag("EnemyProjectile"))
+        {
+            Hurt(2f);                                                        
+            playBody.AddForce(0, 16000f, 0);
+            StartCoroutine(IFrames(iFramesWindow));
+        }
+    }
+=======
+>>>>>>> d94e8364dc2660dad4eea9f8d9b8fe4d4db942cf
     public override void Hurt(float damage)
     {
         health -= damage;
