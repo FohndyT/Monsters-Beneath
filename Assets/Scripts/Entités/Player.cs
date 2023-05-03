@@ -3,12 +3,8 @@ using UnityEngine;
 
 public class Player : Entities
 {
-
-    //public GameOverScreen GameOverScreen;
-
-    //[SerializeField] GameOverScreen GameOverScreen;
-
     [SerializeField] GameOverScreen GameOverScreen;
+    
     Rigidbody playBody;
     float lowHealthThreshold = 1f;
     const float DboostVelo = 10f;
@@ -35,6 +31,7 @@ public class Player : Entities
             StartCoroutine(IFrames(iFramesWindow));
         }
     }
+<<<<<<< HEAD
     private void OnCollisionEnter(Collision collision) //Est nécessaire pour la collision des attaques à distance
     {
         if (!invincible && collision.collider.CompareTag("EnemyProjectile"))
@@ -44,6 +41,8 @@ public class Player : Entities
             StartCoroutine(IFrames(iFramesWindow));
         }
     }
+=======
+>>>>>>> d94e8364dc2660dad4eea9f8d9b8fe4d4db942cf
     public override void Hurt(float damage)
     {
         health -= damage;
