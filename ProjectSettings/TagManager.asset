@@ -4,29 +4,18 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - MainRope
-  - Rope
-  - MainRope2
-  - Obstacle
-  - Planeur
-  - Mirroir
-  - Bois
-  - Mirroir Doublant
-  - Boss
-  - Slime
-  - DangerZone
+  - Crosshair
   - "Surface R\xE9fractante"
   - Enemy
-  - Crosshair
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Obstacle
+  - 
   - Water
   - UI
-  - InteractableObject
-  - Player
+  - 
+  - 
   - 
   - 
   - 
