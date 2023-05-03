@@ -23,13 +23,18 @@ public class BossComportement : MonoBehaviour
     [SerializeField] private AnimatorController animationChangementPhase;
     [SerializeField] private AnimatorController animationMort;
 
+    private DommageBoss attaqueCorps;
+    private DommageBoss attaqueMainGauche;
+    private DommageBoss attaqueMainDroite;
+    private DommageBoss attaquePiedsGauche;
+
     public BarDeVie barDeVie;
     
     [SerializeField] private GameObject slime;
     private GameObject ennemiSlime;
 
     [SerializeField] public int vieMax = 500;
-    [SerializeField] public int vieRestante;
+    [NonSerialized] private int vieRestante;
     [SerializeField] private float vitesseMouvement = 5f;
 
     private GameObject joueur;
@@ -52,11 +57,16 @@ public class BossComportement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        joueur = GameObject.FindWithTag("Player");
+        joueur = GameObject.Find("Player");
         animation = GetComponent<Animator>();
 
         vieRestante = vieMax;
         barDeVie.MettreVieMax(vieMax);
+
+        attaqueCorps = GameObject.Find("Boss").GetComponent<DommageBoss>();
+        attaqueMainGauche = GameObject.Find("B-hand.L").GetComponent<DommageBoss>();
+        attaqueMainDroite = GameObject.Find("B-hand.R").GetComponent<DommageBoss>();
+        attaquePiedsGauche = GameObject.Find("B-toe.L").GetComponent<DommageBoss>();
 
         StartCoroutine(Attente());
     }
@@ -75,7 +85,8 @@ public class BossComportement : MonoBehaviour
         {
             PoursuitePhaseDeux();
         }
-
+        
+        // À enlever après
         if (Input.GetKeyDown("e"))
         {
             PrendreDegats(20);
@@ -110,19 +121,24 @@ public class BossComportement : MonoBehaviour
         if (marche)
         {
             transform.position = Vector3.MoveTowards(transform.position,
-            new Vector3(joueur.transform.position.x, transform.position.y, joueur.transform.position.z), vitesseMouvement * 2 * Time.deltaTime);
+            new Vector3(joueur.transform.position.x, transform.position.y, joueur.transform.position.z), vitesseMouvement * 1.5f * Time.deltaTime);
         
             animation.runtimeAnimatorController = animationCourir;
         }
     }
 
     // Attaque en corps à corps
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.gameObject.name == "Player")
         {
             Debug.Log("Trigger Activated");
             marche = false;
+            
+            attaqueMainGauche.estActive = true;
+            attaqueMainDroite.estActive = true;
+            attaquePiedsGauche.estActive = true;
+            
             animation.runtimeAnimatorController = animationFrappe;
         }
     }
@@ -131,7 +147,10 @@ public class BossComportement : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             // Ne pas changer
-            Invoke("MarcheEnTrue",1f);
+            Invoke("MarcheEnTrue",1.5f);
+            attaqueMainGauche.estActive = false;
+            attaqueMainDroite.estActive = false;
+            attaquePiedsGauche.estActive = false;
         }
     }
     private void MarcheEnTrue()
@@ -170,11 +189,9 @@ public class BossComportement : MonoBehaviour
             
             marche = false;
             
-            //transform.position = Vector3.MoveTowards(transform.position, direction,vitesseMouvement * Time.deltaTime);
-            
-            // transform.position += vitesseMouvement / 70f * temps * -positionJoueurDash;
-            
             transform.position += vitesseMouvement / 30f * -positionJoueurDash;
+
+            attaqueCorps.estActive = true;
             
             animation.runtimeAnimatorController = animationCourir;
 
@@ -186,6 +203,7 @@ public class BossComportement : MonoBehaviour
     void MettreDashEnFalse()
     {
         dashEnMarche = false;
+        attaqueCorps.estActive = false;
     }
 
     void CreationSlimesVolants()
