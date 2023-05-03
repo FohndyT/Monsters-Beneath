@@ -4,35 +4,22 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - MainRope
-  - Rope
-  - MainRope2
-  - Obstacle
-  - Planeur
-  - Mirroir
-  - Bois
-  - Mirroir Doublant
-  - Boss
-  - Slime
-  - DangerZone
-  - "Surface R\xE9fractante"
   - Enemy
-<<<<<<< HEAD
   - PlayerAttack
   - Light
-=======
->>>>>>> 65a47721494ee992629f2c0321f96afc564c7d81
-  - Crosshair
+  - Mirroir
+  - DangerZone
+  - EnemyProjectile
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Obstacle
+  - 
   - Water
   - UI
-  - InteractableObject
-  - Player
-  - Enemy
+  - 
+  - 
+  - 
   - 
   - 
   - 

@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 7285951878467833864}
   m_Layer: 8
   m_Name: Capsule
-  m_TagString: Enemy
+  m_TagString: EnemyProjectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -140,7 +140,7 @@ GameObject:
   - component: {fileID: 2101272322769944433}
   m_Layer: 8
   m_Name: Bullet
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
