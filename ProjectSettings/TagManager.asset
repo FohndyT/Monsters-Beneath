@@ -4,18 +4,16 @@
 TagManager:
   serializedVersion: 2
   tags:
-<<<<<<< HEAD
-  - Enemy
+  - Mirroir
   - PlayerAttack
   - Light
-  - Mirroir
+  - Boss
   - DangerZone
-  - EnemyProjectile
-=======
-  - Crosshair
   - "Surface R\xE9fractante"
+  - Bois
+  - Planeur
+  - Crosshair
   - Enemy
->>>>>>> d94e8364dc2660dad4eea9f8d9b8fe4d4db942cf
   layers:
   - Default
   - TransparentFX

@@ -10,6 +10,7 @@ using Random = UnityEngine.Random;
 
 public class BossComportement : MonoBehaviour
 {
+    #region Animations
     [SerializeField] private AnimatorController animationDefaut;
     [SerializeField] private AnimatorController animationMarche;
     [SerializeField] private AnimatorController animationCourir;
@@ -22,6 +23,7 @@ public class BossComportement : MonoBehaviour
     [SerializeField] private AnimatorController animationPerte;
     [SerializeField] private AnimatorController animationChangementPhase;
     [SerializeField] private AnimatorController animationMort;
+    #endregion
 
     private DommageBoss attaqueCorps;
     private DommageBoss attaqueMainGauche;
@@ -43,6 +45,7 @@ public class BossComportement : MonoBehaviour
     private bool marche = true;
     // private bool seFaitAttaquer;
     private bool dashEnMarche;
+    private bool RochesMontantesEnMarche;
     // private bool slimeEstCreer;
 
     private Rigidbody rb;
@@ -68,7 +71,8 @@ public class BossComportement : MonoBehaviour
         attaqueMainDroite = GameObject.Find("B-hand.R").GetComponent<DommageBoss>();
         attaquePiedsGauche = GameObject.Find("B-toe.L").GetComponent<DommageBoss>();
 
-        StartCoroutine(Attente());
+        StartCoroutine(AttenteDash());
+        StartCoroutine(AttenteRochesMontantes());
     }
 
     void Update()
@@ -78,6 +82,7 @@ public class BossComportement : MonoBehaviour
         if (phase == 1)
         {
             PoursuitePhaseUn();
+            //AttaqueCorpsACorps();
             Dash();
         }
 
@@ -99,6 +104,7 @@ public class BossComportement : MonoBehaviour
         barDeVie.MettreVie(vieRestante);
     }
 
+    #region Mouvements
     void RegarderJoueur()
     {
         if (marche)
@@ -126,8 +132,9 @@ public class BossComportement : MonoBehaviour
             animation.runtimeAnimatorController = animationCourir;
         }
     }
+    #endregion
 
-    // Attaque en corps à corps
+    #region AttaqueCorpsACorps
     private void OnTriggerStay(Collider other)
     {
         if (other.gameObject.name == "Player")
@@ -153,12 +160,10 @@ public class BossComportement : MonoBehaviour
             attaquePiedsGauche.estActive = false;
         }
     }
-    private void MarcheEnTrue()
-    {
-        marche = true;
-    }
+    #endregion
 
-    IEnumerator Attente()
+    #region Attente
+    IEnumerator AttenteDash()
     {
         // Dash
         while (true)
@@ -175,12 +180,22 @@ public class BossComportement : MonoBehaviour
             }
         }
     }
-
-    void Bouclier()
+    IEnumerator AttenteRochesMontantes()
     {
         
     }
+    #endregion
 
+    #region Attaques
+    void RochesMontantes()
+    {
+        if (RochesMontantesEnMarche)
+        {
+            
+            
+            animation.runtimeAnimatorController = animationSauter;
+        }
+    }
     void Dash()
     {
         if (dashEnMarche)
@@ -199,26 +214,21 @@ public class BossComportement : MonoBehaviour
             Invoke("MettreDashEnFalse", 4f);
         }
     }
+    #endregion
 
+    #region MettreEnBool
+    void MettreRochesMontantesEnFalse()
+    {
+        RochesMontantesEnMarche = false;
+    }
     void MettreDashEnFalse()
     {
         dashEnMarche = false;
         attaqueCorps.estActive = false;
     }
-
-    void CreationSlimesVolants()
+    private void MarcheEnTrue()
     {
-        Random.Range(0, 100);
-        ennemiSlime = Instantiate(slime, transform.position, Quaternion.LookRotation(joueur.transform.position));
+        marche = true;
     }
-
-    void RochesMontantes()
-    {
-        
-    }
-
-    void AttaqueADistance()
-    {
-        
-    }
+    #endregion
 }
