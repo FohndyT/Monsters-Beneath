@@ -330,7 +330,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1961590836}
         m_TargetAssemblyTypeName: Cryptologie, Assembly-CSharp
-        m_MethodName: "OnClickBouttonNonCrypt\xE91"
+        m_MethodName: OnClickBouttonNonCrypted1
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1032,20 +1032,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 495f8f77d3705fb4496ed8afc50db45c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  "buttonTextNonCrypt\xE91": {fileID: 1802076571}
-  "buttonTextNonCrypt\xE92": {fileID: 0}
-  "buttonTextNonCrypt\xE93": {fileID: 0}
-  "buttonTextNonCrypt\xE94": {fileID: 0}
-  "buttonTextNonCrypt\xE95": {fileID: 0}
-  "buttonTextNonCrypt\xE96": {fileID: 0}
-  "buttonTextNonCrypt\xE97": {fileID: 0}
-  "buttonTextCrypt\xE91": {fileID: 1342810021}
-  "buttonTextCrypt\xE92": {fileID: 0}
-  "buttonTextCrypt\xE93": {fileID: 0}
-  "buttonTextCrypt\xE94": {fileID: 0}
-  "buttonTextCrypt\xE95": {fileID: 0}
-  "buttonTextCrypt\xE96": {fileID: 0}
-  "buttonTextCrypt\xE97": {fileID: 0}
+  buttonTextNonCrypted1: {fileID: 1802076571}
+  buttonTextNonCrypted2: {fileID: 0}
+  buttonTextNonCrypted3: {fileID: 0}
+  buttonTextNonCrypted4: {fileID: 0}
+  buttonTextNonCrypted5: {fileID: 0}
+  buttonTextNonCrypted6: {fileID: 0}
+  buttonTextNonCrypted7: {fileID: 0}
+  buttonTextCrypted1: {fileID: 1342810021}
+  buttonTextCrypted2: {fileID: 0}
+  buttonTextCrypted3: {fileID: 0}
+  buttonTextCrypted4: {fileID: 0}
+  buttonTextCrypted5: {fileID: 0}
+  buttonTextCrypted6: {fileID: 0}
+  buttonTextCrypted7: {fileID: 0}
   IndiceDeLettreParBoutons: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 --- !u!4 &1961590837
 Transform:
