@@ -14,6 +14,7 @@ TagManager:
   - Planeur
   - Crosshair
   - Enemy
+  - EnemyProjectile
   layers:
   - Default
   - TransparentFX

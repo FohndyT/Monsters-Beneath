@@ -32,25 +32,23 @@ public class BossComportement : MonoBehaviour
 
     public BarDeVie barDeVie;
     
-    [SerializeField] private GameObject slime;
-    private GameObject ennemiSlime;
-
     [SerializeField] public int vieMax = 500;
-    [NonSerialized] private int vieRestante;
+    private int vieRestante;
     [SerializeField] private float vitesseMouvement = 5f;
 
     private GameObject joueur;
     private Animator animation;
 
     private bool marche = true;
-    // private bool seFaitAttaquer;
     private bool dashEnMarche;
     private bool RochesMontantesEnMarche;
     // private bool slimeEstCreer;
+    // private bool seFaitAttaquer;
 
     private Rigidbody rb;
     
     private float temps;
+    private float chronometre;
     private Vector3 positionJoueurDash;
     private Vector3 directionJoueurDash;
 
@@ -72,7 +70,7 @@ public class BossComportement : MonoBehaviour
         attaquePiedsGauche = GameObject.Find("B-toe.L").GetComponent<DommageBoss>();
 
         StartCoroutine(AttenteDash());
-        StartCoroutine(AttenteRochesMontantes());
+        // StartCoroutine(AttenteRochesMontantes());
     }
 
     void Update()
@@ -97,7 +95,6 @@ public class BossComportement : MonoBehaviour
             PrendreDegats(20);
         }
     }
-
     void PrendreDegats(int degats)
     {
         vieRestante -= degats;
@@ -112,7 +109,10 @@ public class BossComportement : MonoBehaviour
             transform.LookAt(new Vector3(joueur.transform.position.x,transform.position.y,joueur.transform.position.z));
         }
     }
-
+    void TournerVersJoueur()
+    {
+        transform.LookAt(new Vector3(joueur.transform.position.x,transform.position.y,joueur.transform.position.z));
+    }
     void PoursuitePhaseUn()
     {
         if (marche)
@@ -145,8 +145,15 @@ public class BossComportement : MonoBehaviour
             attaqueMainGauche.estActive = true;
             attaqueMainDroite.estActive = true;
             attaquePiedsGauche.estActive = true;
-            
+
             animation.runtimeAnimatorController = animationFrappe;
+
+            CommencerChronometre();
+            if (chronometre >= 4f)
+            {
+                Sauter();
+            }
+            ReinitialiserChronometre();
         }
     }
     private void OnTriggerExit(Collider other)
@@ -154,7 +161,7 @@ public class BossComportement : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             // Ne pas changer
-            Invoke("MarcheEnTrue",1.5f);
+            Invoke("MarcheEnTrue",2f);
             attaqueMainGauche.estActive = false;
             attaqueMainDroite.estActive = false;
             attaquePiedsGauche.estActive = false;
@@ -176,26 +183,42 @@ public class BossComportement : MonoBehaviour
                 dashEnMarche = true;
                 positionJoueurDash = joueur.transform.position;
                 positionJoueurDash = (transform.position - positionJoueurDash).normalized;
-
             }
         }
     }
-    IEnumerator AttenteRochesMontantes()
-    {
-        
-    }
+    // IEnumerator AttenteRochesMontantes()
+    // {
+    //     while (true)
+    //     {
+    //         if (Mathf.Abs(Vector3.Distance(transform.position,joueur.transform.position)) > 5f && Mathf.Abs(Vector3.Distance(transform.position,joueur.transform.position)) < 15)
+    //         {
+    //             if (marche)
+    //             {
+    //                 yield return new WaitForSeconds(5);
+    //                 
+    //                 float nombre = Random.Range(0, 3);
+    //                 if (nombre == 0 && marche && !RochesMontantesEnMarche)
+    //                 {
+    //                     RochesMontantesEnMarche = true;
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
     #endregion
 
     #region Attaques
-    void RochesMontantes()
-    {
-        if (RochesMontantesEnMarche)
-        {
-            
-            
-            animation.runtimeAnimatorController = animationSauter;
-        }
-    }
+    // void RochesMontantes()
+    // {
+    //     if (RochesMontantesEnMarche)
+    //     {
+    //         marche = false;
+    //
+    //         //Instantiate();
+    //         
+    //         animation.runtimeAnimatorController = animationSauter;
+    //     }
+    // }
     void Dash()
     {
         if (dashEnMarche)
@@ -214,6 +237,11 @@ public class BossComportement : MonoBehaviour
             Invoke("MettreDashEnFalse", 4f);
         }
     }
+    void Sauter()
+    {
+        animation.runtimeAnimatorController = animationSauter;
+        rb.AddForce(new Vector3(0,10000f,0));
+    }
     #endregion
 
     #region MettreEnBool
@@ -231,4 +259,13 @@ public class BossComportement : MonoBehaviour
         marche = true;
     }
     #endregion
+
+    private void CommencerChronometre()
+    {
+        chronometre = Time.deltaTime;
+    }
+    void ReinitialiserChronometre()
+    {
+        chronometre = 0;
+    }
 }
