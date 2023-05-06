@@ -25,6 +25,8 @@ public class BossComportement : MonoBehaviour
     [SerializeField] private AnimatorController animationMort;
     #endregion
 
+    [SerializeField] private GameObject fumee;
+
     private DommageBoss attaqueCorps;
     private DommageBoss attaqueMainGauche;
     private DommageBoss attaqueMainDroite;
@@ -172,8 +174,10 @@ public class BossComportement : MonoBehaviour
                     marche = false;
                     
                     animation.runtimeAnimatorController = animationSauter;
-                    rb.AddForce(new Vector3(0,7000f,0),ForceMode.Impulse);
+                    rb.AddForce(new Vector3(0,10000f,0),ForceMode.Impulse);
                     
+                    
+                    this.Attendre(4f, () => { GameObject cloneFumee = Instantiate(fumee,transform); this.Attendre(4f, ()=> Destroy(cloneFumee));});
                     this.Attendre(4f, () => { sautEnMarche = false;});
                     this.Attendre(4f, () => { marche = true;});
                 }
