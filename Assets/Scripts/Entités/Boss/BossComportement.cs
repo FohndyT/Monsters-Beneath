@@ -39,7 +39,7 @@ public class BossComportement : MonoBehaviour
     private GameObject joueur;
     private Animator animation;
 
-    private bool seFaitAttaquer;
+    private bool estProchePourSaut;
     private bool marche = true;
     private bool sautEnMarche;
     private bool RochesMontantesEnMarche;
@@ -131,11 +131,11 @@ public class BossComportement : MonoBehaviour
     #region AttaqueCorpsACorps
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.name == "Player")
+        if (other.gameObject.name == "Player" && sautEnMarche == false)
         {
             Debug.Log("Trigger Activated");
             marche = false;
-            seFaitAttaquer = true;
+            estProchePourSaut = true;
             
             attaqueMainGauche.estActive = true;
             attaqueMainDroite.estActive = true;
@@ -148,83 +148,40 @@ public class BossComportement : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            // Ne pas changer
-            //Invoke("MarcheEnTrue",2f);
             this.Attendre(2f, () => { marche = true;});
+            
             attaqueMainGauche.estActive = false;
             attaqueMainDroite.estActive = false;
             attaquePiedsGauche.estActive = false;
 
-            seFaitAttaquer = false;
+            estProchePourSaut = false;
         }
     }
-    #endregion
-
-    #region Attente
-    IEnumerator AttenteSaut()
-    {
-        // Saut
-        while (true)
-        {
-            if (seFaitAttaquer)
-            {
-                yield return new WaitForSeconds(4);
-
-                if (seFaitAttaquer)
-                {
-                    sautEnMarche = true;
-                }
-            }
-        }
-    }
-    // IEnumerator AttenteRochesMontantes()
-    // {
-    //     while (true)
-    //     {
-    //         if (Mathf.Abs(Vector3.Distance(transform.position,joueur.transform.position)) > 5f && Mathf.Abs(Vector3.Distance(transform.position,joueur.transform.position)) < 15)
-    //         {
-    //             if (marche)
-    //             {
-    //                 yield return new WaitForSeconds(5);
-    //                 
-    //                 float nombre = Random.Range(0, 3);
-    //                 if (nombre == 0 && marche && !RochesMontantesEnMarche)
-    //                 {
-    //                     RochesMontantesEnMarche = true;
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
     #endregion
 
     #region Attaques
-    // void RochesMontantes()
-    // {
-    //     if (RochesMontantesEnMarche)
-    //     {
-    //         marche = false;
-    //
-    //         //Instantiate();
-    //         
-    //         animation.runtimeAnimatorController = animationSauter;
-    //     }
-    // }
     void Sauter()
     {
-        if (sautEnMarche)
+        if (estProchePourSaut)
         {
-            marche = false;
-            animation.runtimeAnimatorController = animationSauter;
-            rb.AddForce(new Vector3(0,10000f));
-            
-            Invoke("MarcheEnTrue",4f);
-            Invoke("MettreSautEnFalse", 2f);
+            this.Attendre(7f, () =>
+            {
+                if (estProchePourSaut)
+                {
+                    sautEnMarche = true;
+                    marche = false;
+                    
+                    animation.runtimeAnimatorController = animationSauter;
+                    rb.AddForce(new Vector3(0,7000f,0),ForceMode.Impulse);
+                    
+                    this.Attendre(4f, () => { sautEnMarche = false;});
+                    this.Attendre(4f, () => { marche = true;});
+                }
+            });
         }
     }
     #endregion
-
-    #region MettreEnBool
+    
     void MettreRochesMontantesEnFalse()
     {
         RochesMontantesEnMarche = false;
@@ -238,5 +195,4 @@ public class BossComportement : MonoBehaviour
     {
         marche = true;
     }
-    #endregion
 }
