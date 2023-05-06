@@ -23,7 +23,7 @@ public class Cryptologie : MonoBehaviour
     public TMP_Text buttonTextCrypted7;
 
     private string[] lettres = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" };
-    public int[] IndiceDeLettreParBoutons = new int[14];
+    private int[] IndiceDeLettreParBoutons = new int[14];
 
     public string AvancerDUneLettre(int indice, TMP_Text button)
     {
