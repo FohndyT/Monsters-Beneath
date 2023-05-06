@@ -44,6 +44,7 @@ public class BossComportement : MonoBehaviour
     private bool estProchePourSaut;
     private bool marche = true;
     private bool sautEnMarche;
+    private bool PeutSauter = true;
     private bool RochesMontantesEnMarche;
 
     private Rigidbody rb;
@@ -83,6 +84,11 @@ public class BossComportement : MonoBehaviour
         if (phase == 2)
         {
             PoursuitePhaseDeux();
+        }
+
+        if (vieRestante == 0)
+        {
+            
         }
         
         // À enlever après
@@ -164,22 +170,26 @@ public class BossComportement : MonoBehaviour
     #region Attaques
     void Sauter()
     {
-        if (estProchePourSaut)
+        if (estProchePourSaut && PeutSauter)
         {
             this.Attendre(7f, () =>
             {
-                if (estProchePourSaut)
+                while (estProchePourSaut)
                 {
                     sautEnMarche = true;
                     marche = false;
                     
                     animation.runtimeAnimatorController = animationSauter;
                     rb.AddForce(new Vector3(0,15000f,0),ForceMode.Impulse);
+                    PeutSauter = false;
                     
                     
                     this.Attendre(3f, () => { GameObject cloneOnde = Instantiate(ondeDeShoc,transform.position,transform.rotation); this.Attendre(1f, ()=> Destroy(cloneOnde));});
                     this.Attendre(4f, () => { sautEnMarche = false;});
                     this.Attendre(4f, () => { marche = true;});
+                    this.Attendre(10f, () => { PeutSauter = true;});
+                    PeutSauter = false;
+                    estProchePourSaut = false;
                 }
             });
         }
