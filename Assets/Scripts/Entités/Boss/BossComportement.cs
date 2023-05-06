@@ -10,6 +10,7 @@ using Random = UnityEngine.Random;
 
 public class BossComportement : MonoBehaviour
 {
+    #region Animations
     [SerializeField] private AnimatorController animationDefaut;
     [SerializeField] private AnimatorController animationMarche;
     [SerializeField] private AnimatorController animationCourir;
@@ -22,23 +23,28 @@ public class BossComportement : MonoBehaviour
     [SerializeField] private AnimatorController animationPerte;
     [SerializeField] private AnimatorController animationChangementPhase;
     [SerializeField] private AnimatorController animationMort;
+    #endregion
+
+    [SerializeField] private GameObject fumee;
+
+    private DommageBoss attaqueCorps;
+    private DommageBoss attaqueMainGauche;
+    private DommageBoss attaqueMainDroite;
+    private DommageBoss attaquePiedsGauche;
 
     public BarDeVie barDeVie;
     
-    [SerializeField] private GameObject slime;
-    private GameObject ennemiSlime;
-
     [SerializeField] public int vieMax = 500;
-    [SerializeField] public int vieRestante;
+    private int vieRestante;
     [SerializeField] private float vitesseMouvement = 5f;
 
     private GameObject joueur;
     private Animator animation;
 
+    private bool estProchePourSaut;
     private bool marche = true;
-    // private bool seFaitAttaquer;
-    private bool dashEnMarche;
-    // private bool slimeEstCreer;
+    private bool sautEnMarche;
+    private bool RochesMontantesEnMarche;
 
     private Rigidbody rb;
     
@@ -52,13 +58,16 @@ public class BossComportement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        joueur = GameObject.FindWithTag("Player");
+        joueur = GameObject.Find("Player");
         animation = GetComponent<Animator>();
 
         vieRestante = vieMax;
         barDeVie.MettreVieMax(vieMax);
 
-        StartCoroutine(Attente());
+        attaqueCorps = GameObject.Find("Boss").GetComponent<DommageBoss>();
+        attaqueMainGauche = GameObject.Find("B-hand.L").GetComponent<DommageBoss>();
+        attaqueMainDroite = GameObject.Find("B-hand.R").GetComponent<DommageBoss>();
+        attaquePiedsGauche = GameObject.Find("B-toe.L").GetComponent<DommageBoss>();
     }
 
     void Update()
@@ -68,26 +77,27 @@ public class BossComportement : MonoBehaviour
         if (phase == 1)
         {
             PoursuitePhaseUn();
-            Dash();
+            Sauter();
         }
 
         if (phase == 2)
         {
             PoursuitePhaseDeux();
         }
-
+        
+        // À enlever après
         if (Input.GetKeyDown("e"))
         {
             PrendreDegats(20);
         }
     }
-
     void PrendreDegats(int degats)
     {
         vieRestante -= degats;
         barDeVie.MettreVie(vieRestante);
     }
 
+    #region Mouvements
     void RegarderJoueur()
     {
         if (marche)
@@ -95,7 +105,10 @@ public class BossComportement : MonoBehaviour
             transform.LookAt(new Vector3(joueur.transform.position.x,transform.position.y,joueur.transform.position.z));
         }
     }
-
+    void TournerVersJoueur()
+    {
+        transform.LookAt(new Vector3(joueur.transform.position.x,transform.position.y,joueur.transform.position.z));
+    }
     void PoursuitePhaseUn()
     {
         if (marche)
@@ -110,19 +123,26 @@ public class BossComportement : MonoBehaviour
         if (marche)
         {
             transform.position = Vector3.MoveTowards(transform.position,
-            new Vector3(joueur.transform.position.x, transform.position.y, joueur.transform.position.z), vitesseMouvement * 2 * Time.deltaTime);
+            new Vector3(joueur.transform.position.x, transform.position.y, joueur.transform.position.z), vitesseMouvement * 1.5f * Time.deltaTime);
         
             animation.runtimeAnimatorController = animationCourir;
         }
     }
+    #endregion
 
-    // Attaque en corps à corps
-    private void OnTriggerEnter(Collider other)
+    #region AttaqueCorpsACorps
+    private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.gameObject.name == "Player" && sautEnMarche == false)
         {
             Debug.Log("Trigger Activated");
             marche = false;
+            estProchePourSaut = true;
+            
+            attaqueMainGauche.estActive = true;
+            attaqueMainDroite.estActive = true;
+            attaquePiedsGauche.estActive = true;
+
             animation.runtimeAnimatorController = animationFrappe;
         }
     }
@@ -130,77 +150,53 @@ public class BossComportement : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            // Ne pas changer
-            Invoke("MarcheEnTrue",1f);
+            this.Attendre(2f, () => { marche = true;});
+            
+            attaqueMainGauche.estActive = false;
+            attaqueMainDroite.estActive = false;
+            attaquePiedsGauche.estActive = false;
+
+            estProchePourSaut = false;
         }
+    }
+    #endregion
+
+    #region Attaques
+    void Sauter()
+    {
+        if (estProchePourSaut)
+        {
+            this.Attendre(7f, () =>
+            {
+                if (estProchePourSaut)
+                {
+                    sautEnMarche = true;
+                    marche = false;
+                    
+                    animation.runtimeAnimatorController = animationSauter;
+                    rb.AddForce(new Vector3(0,10000f,0),ForceMode.Impulse);
+                    
+                    
+                    this.Attendre(4f, () => { GameObject cloneFumee = Instantiate(fumee,transform); this.Attendre(4f, ()=> Destroy(cloneFumee));});
+                    this.Attendre(4f, () => { sautEnMarche = false;});
+                    this.Attendre(4f, () => { marche = true;});
+                }
+            });
+        }
+    }
+    #endregion
+    
+    void MettreRochesMontantesEnFalse()
+    {
+        RochesMontantesEnMarche = false;
+    }
+    void MettreSautEnFalse()
+    {
+        sautEnMarche = false;
+        attaqueCorps.estActive = false;
     }
     private void MarcheEnTrue()
     {
         marche = true;
-    }
-
-    IEnumerator Attente()
-    {
-        // Dash
-        while (true)
-        {
-            yield return new WaitForSeconds(10);
-
-            float nombre = Random.Range(0, 5);
-            if (nombre == 0 && marche && !dashEnMarche)
-            {
-                dashEnMarche = true;
-                positionJoueurDash = joueur.transform.position;
-                positionJoueurDash = (transform.position - positionJoueurDash).normalized;
-
-            }
-        }
-    }
-
-    void Bouclier()
-    {
-        
-    }
-
-    void Dash()
-    {
-        if (dashEnMarche)
-        {
-            temps += Time.deltaTime;
-            
-            marche = false;
-            
-            //transform.position = Vector3.MoveTowards(transform.position, direction,vitesseMouvement * Time.deltaTime);
-            
-            // transform.position += vitesseMouvement / 70f * temps * -positionJoueurDash;
-            
-            transform.position += vitesseMouvement / 30f * -positionJoueurDash;
-            
-            animation.runtimeAnimatorController = animationCourir;
-
-            Invoke("MarcheEnTrue",4f);
-            Invoke("MettreDashEnFalse", 4f);
-        }
-    }
-
-    void MettreDashEnFalse()
-    {
-        dashEnMarche = false;
-    }
-
-    void CreationSlimesVolants()
-    {
-        Random.Range(0, 100);
-        ennemiSlime = Instantiate(slime, transform.position, Quaternion.LookRotation(joueur.transform.position));
-    }
-
-    void RochesMontantes()
-    {
-        
-    }
-
-    void AttaqueADistance()
-    {
-        
     }
 }
