@@ -23,7 +23,7 @@ public class Player : Entities
     }
     private void OnTriggerStay(Collider other)
     {
-        if (!invincible && other.CompareTag("Enemy"))
+        if (!invincible && other.CompareTag("Enemy") && !other.CompareTag("Sight"))
         {
             Hurt(2f);                                                         // Pour le faire jumper un peu du sol
             playBody.AddForce(0, 8000f, 0); // temp fix car velo ne fonctionne pas tjrs
@@ -31,6 +31,10 @@ public class Player : Entities
             StartCoroutine(IFrames(iFramesWindow));
         }
     }
+<<<<<<< HEAD
+
+=======
+>>>>>>> 546062255338f809c344e8044d9f1bf9bd1fca0c
     private void OnCollisionEnter(Collision collision) //Est nécessaire pour la collision des attaques à distance
     {
         if (!invincible && collision.collider.CompareTag("EnemyProjectile"))

@@ -16,12 +16,12 @@ public class Enemy : Entities
         body = GetComponent<Rigidbody>();
     }
 
-    private void OnTriggerStay(Collider other)
+    /*private void OnTriggerStay(Collider other)
     {
         if (!player.invincible && other.CompareTag("Player")) { player.Hurt(2f); }
 
         //if (other.CompareTag("PlayerAttack") && )
-    }
+    }*/
     
     public override void Hurt(float damage)
     {
