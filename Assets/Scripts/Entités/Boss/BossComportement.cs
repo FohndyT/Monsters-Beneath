@@ -39,16 +39,14 @@ public class BossComportement : MonoBehaviour
     private GameObject joueur;
     private Animator animation;
 
+    private bool seFaitAttaquer;
     private bool marche = true;
-    private bool dashEnMarche;
+    private bool sautEnMarche;
     private bool RochesMontantesEnMarche;
-    // private bool slimeEstCreer;
-    // private bool seFaitAttaquer;
 
     private Rigidbody rb;
     
     private float temps;
-    private float chronometre;
     private Vector3 positionJoueurDash;
     private Vector3 directionJoueurDash;
 
@@ -68,9 +66,6 @@ public class BossComportement : MonoBehaviour
         attaqueMainGauche = GameObject.Find("B-hand.L").GetComponent<DommageBoss>();
         attaqueMainDroite = GameObject.Find("B-hand.R").GetComponent<DommageBoss>();
         attaquePiedsGauche = GameObject.Find("B-toe.L").GetComponent<DommageBoss>();
-
-        StartCoroutine(AttenteDash());
-        // StartCoroutine(AttenteRochesMontantes());
     }
 
     void Update()
@@ -80,8 +75,7 @@ public class BossComportement : MonoBehaviour
         if (phase == 1)
         {
             PoursuitePhaseUn();
-            //AttaqueCorpsACorps();
-            Dash();
+            Sauter();
         }
 
         if (phase == 2)
@@ -141,19 +135,13 @@ public class BossComportement : MonoBehaviour
         {
             Debug.Log("Trigger Activated");
             marche = false;
+            seFaitAttaquer = true;
             
             attaqueMainGauche.estActive = true;
             attaqueMainDroite.estActive = true;
             attaquePiedsGauche.estActive = true;
 
             animation.runtimeAnimatorController = animationFrappe;
-
-            CommencerChronometre();
-            if (chronometre >= 4f)
-            {
-                Sauter();
-            }
-            ReinitialiserChronometre();
         }
     }
     private void OnTriggerExit(Collider other)
@@ -161,28 +149,31 @@ public class BossComportement : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             // Ne pas changer
-            Invoke("MarcheEnTrue",2f);
+            //Invoke("MarcheEnTrue",2f);
+            this.Attendre(2f, () => { marche = true;});
             attaqueMainGauche.estActive = false;
             attaqueMainDroite.estActive = false;
             attaquePiedsGauche.estActive = false;
+
+            seFaitAttaquer = false;
         }
     }
     #endregion
 
     #region Attente
-    IEnumerator AttenteDash()
+    IEnumerator AttenteSaut()
     {
-        // Dash
+        // Saut
         while (true)
         {
-            yield return new WaitForSeconds(10);
-
-            float nombre = Random.Range(0, 5);
-            if (nombre == 0 && marche && !dashEnMarche)
+            if (seFaitAttaquer)
             {
-                dashEnMarche = true;
-                positionJoueurDash = joueur.transform.position;
-                positionJoueurDash = (transform.position - positionJoueurDash).normalized;
+                yield return new WaitForSeconds(4);
+
+                if (seFaitAttaquer)
+                {
+                    sautEnMarche = true;
+                }
             }
         }
     }
@@ -219,28 +210,17 @@ public class BossComportement : MonoBehaviour
     //         animation.runtimeAnimatorController = animationSauter;
     //     }
     // }
-    void Dash()
-    {
-        if (dashEnMarche)
-        {
-            temps += Time.deltaTime;
-            
-            marche = false;
-            
-            transform.position += vitesseMouvement / 30f * -positionJoueurDash;
-
-            attaqueCorps.estActive = true;
-            
-            animation.runtimeAnimatorController = animationCourir;
-
-            Invoke("MarcheEnTrue",4f);
-            Invoke("MettreDashEnFalse", 4f);
-        }
-    }
     void Sauter()
     {
-        animation.runtimeAnimatorController = animationSauter;
-        rb.AddForce(new Vector3(0,10000f,0));
+        if (sautEnMarche)
+        {
+            marche = false;
+            animation.runtimeAnimatorController = animationSauter;
+            rb.AddForce(new Vector3(0,10000f));
+            
+            Invoke("MarcheEnTrue",4f);
+            Invoke("MettreSautEnFalse", 2f);
+        }
     }
     #endregion
 
@@ -249,9 +229,9 @@ public class BossComportement : MonoBehaviour
     {
         RochesMontantesEnMarche = false;
     }
-    void MettreDashEnFalse()
+    void MettreSautEnFalse()
     {
-        dashEnMarche = false;
+        sautEnMarche = false;
         attaqueCorps.estActive = false;
     }
     private void MarcheEnTrue()
@@ -259,13 +239,4 @@ public class BossComportement : MonoBehaviour
         marche = true;
     }
     #endregion
-
-    private void CommencerChronometre()
-    {
-        chronometre = Time.deltaTime;
-    }
-    void ReinitialiserChronometre()
-    {
-        chronometre = 0;
-    }
 }
