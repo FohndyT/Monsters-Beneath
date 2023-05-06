@@ -14,7 +14,7 @@ public class CrystalLaser : MonoBehaviour
     {
         if (playerInputs.selectedItem != 3)     // Namor ne veut pas mourrrirr !
         {
-            gameObject.SetActive(false);
+            //gameObject.SetActive(false);
             Destroy(gameObject);
         }
 

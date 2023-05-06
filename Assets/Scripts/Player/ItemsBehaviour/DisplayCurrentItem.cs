@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Unity.VisualScripting;
 
 public class DisplayCurrentItem : MonoBehaviour
 {
@@ -20,6 +21,8 @@ public class DisplayCurrentItem : MonoBehaviour
     void Update()
     {
         CurrentSpecialId = inputs.selectedItem;
+        if (CurrentSpecialId == -1)
+            return;
         textMeshPro_Current_item.text = inputs.Items[CurrentSpecialId].name;
     }
 }

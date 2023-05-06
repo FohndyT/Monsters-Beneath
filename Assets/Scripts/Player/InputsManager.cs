@@ -250,5 +250,10 @@ public class InputsManager : MonoBehaviour
     //  Menu Inputs
     void OnMoveCursor(InputValue inputValue) { }
     void OnSelect(InputValue inputvalue) { }
-    void OnBack(InputValue inputValue) { }
+
+    void OnBack(InputValue inputValue)
+    {
+        playerInput.SwitchCurrentActionMap("Gameplay");
+        Debug.Log(playerInput.currentActionMap);
+    }
 }
