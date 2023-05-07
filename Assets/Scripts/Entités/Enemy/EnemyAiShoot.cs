@@ -62,7 +62,7 @@ public class EnemyAiShoot : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("PlayerAttack") && this.name == hurtBox.name)
+        if (other.CompareTag("PlayerAttack") && name == hurtBox.name)
         {
             enemyScript.Hurt(2f);
         }

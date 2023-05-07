@@ -20,7 +20,6 @@ public class EnemyAi : MonoBehaviour
     float waitingTime = 0f;
     Vector3 returnPos;
     public float Health = 100f;
-
     public float rayHitMax { get; private set; }
     private void Awake()
     {
