@@ -27,6 +27,7 @@ public class BossComportement : MonoBehaviour
     #endregion
 
     [SerializeField] private GameObject ondeDeShoc;
+    [SerializeField] private GameObject ennemi;
 
     private DommageBoss attaqueCorps;
     private DommageBoss attaqueMainGauche;
@@ -44,6 +45,7 @@ public class BossComportement : MonoBehaviour
     private GameObject joueur;
     private Rigidbody rbJoueur;
 
+    private bool peutAttaquer = true;
     private bool EstEnTrainDeMarcher = true;
     private bool peutGenererOnde = true;
     
@@ -86,26 +88,21 @@ public class BossComportement : MonoBehaviour
             OndeDeChoc();
         }
 
-        if (vieRestante <= 400f)
+        if (vieRestante <= 225f)
         {
-            phase = 2;
+            ChangementPhase2();
         }
         
-        if (vieRestante == 0)
+        if (vieRestante <= 0)
         {
-            
+            Meurt();
         }
         
         // À enlever après
-        if (Input.GetKeyDown("e"))
+        if (Input.GetKeyDown("h"))
         {
-            PrendreDegats(20);
+            PrendreDegats(100);
         }
-    }
-    public void PrendreDegats(int degats)
-    {
-        vieRestante -= degats;
-        barDeVie.MettreVie(vieRestante);
     }
 
     #region Mouvements
@@ -134,7 +131,7 @@ public class BossComportement : MonoBehaviour
         if (EstEnTrainDeMarcher)
         {
             transform.position = Vector3.MoveTowards(transform.position,
-            new Vector3(joueur.transform.position.x, transform.position.y, joueur.transform.position.z), vitesseMouvement * 1.5f * Time.deltaTime);
+            new Vector3(joueur.transform.position.x, transform.position.y, joueur.transform.position.z), vitesseMouvement * 2f * Time.deltaTime);
         
             animation.runtimeAnimatorController = animationCourir;
         }
@@ -144,7 +141,7 @@ public class BossComportement : MonoBehaviour
     #region AttaqueCorpsACorps
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.name == "Player")
+        if (other.gameObject.name == "Player" && peutAttaquer)
         {
             EstEnTrainDeMarcher = false;
             
@@ -157,7 +154,7 @@ public class BossComportement : MonoBehaviour
     }
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && peutAttaquer)
         {
             this.Attendre(2f, ()=> {EstEnTrainDeMarcher = true;});
             
@@ -171,7 +168,7 @@ public class BossComportement : MonoBehaviour
     #region Attaques
     void OndeDeChoc()
     {
-        if (DistanceEntreBossJoueur() <= 7f && peutGenererOnde)
+        if (DistanceEntreBossJoueur() <= 7f && peutGenererOnde && peutAttaquer)
         {
             EstEnTrainDeMarcher = false;
 
@@ -179,19 +176,45 @@ public class BossComportement : MonoBehaviour
             this.Attendre(2f, () =>
             {
                 GameObject cloneOndeDeChoc = Instantiate(ondeDeShoc,transform.position,transform.rotation);
-                Vector3 directionForce = (transform.position - joueur.transform.position).normalized;
-                directionForce.y = 0;
-                rbJoueur.AddForce(10000f * directionForce, ForceMode.Impulse);
+                Vector3 directionForce = new Vector3((joueur.transform.position - transform.position).x,500f/4000f,(joueur.transform.position - transform.position).z);
+                if (DistanceEntreBossJoueur() <= 7f)
+                {
+                    rbJoueur.AddForce(4000f * directionForce, ForceMode.Impulse);
+                }
                 this.Attendre(1.7f, () => { Destroy(cloneOndeDeChoc);});
             });
 
             peutGenererOnde = false;
             this.Attendre(4f, () => { EstEnTrainDeMarcher = true;});
-            this.Attendre(15f, () => { peutGenererOnde = true;});
+            this.Attendre(20f, () => { peutGenererOnde = true;});
         }
     }
     #endregion
-
+    
+    public void PrendreDegats(int degats)
+    {
+        vieRestante -= degats;
+        barDeVie.MettreVie(vieRestante);
+    }
+    void ChangementPhase2()
+    {
+        if (phase == 1)
+        {
+            peutAttaquer = false;
+            EstEnTrainDeMarcher = false;
+            animation.runtimeAnimatorController = animationPerte;
+            this.Attendre(5f, () => { EstEnTrainDeMarcher = true; peutAttaquer = true;});
+            phase = 2;
+        }
+    }
+    void Meurt()
+    {
+        EstEnTrainDeMarcher = false;
+        peutAttaquer = false;
+        vieRestante = 0;
+        animation.runtimeAnimatorController = animationMort;
+        this.Attendre(2.4f, () => { Destroy(gameObject);});
+    }
     private float DistanceEntreBossJoueur()
     {
         return Vector3.Distance(transform.position, joueur.transform.position);

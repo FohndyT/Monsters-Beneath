@@ -6,6 +6,15 @@ TagManager:
   tags:
   - Crosshair
   - EnemyProjectile
+  - Mirroir
+  - DangerZone
+  - "Surface R\xE9fractante"
+  - Bois
+  - PlayerAttack
+  - Light
+  - Planeur
+  - Boss
+  - Enemy
   layers:
   - Default
   - TransparentFX
