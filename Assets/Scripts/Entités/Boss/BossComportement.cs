@@ -52,10 +52,11 @@ public class BossComportement : MonoBehaviour
     private FrostEffect effetDeGele;
 
     private bool peutAttaquer = true;
+    private bool joueurPeutAttaquer = true;
     private bool EstEnTrainDeMarcher = true;
     private bool peutGenererOnde = true;
     private bool peutGenererGlace = true;
-    
+
     private float temps;
     private Vector3 positionJoueurDash;
     private Vector3 directionJoueurDash;
@@ -91,7 +92,6 @@ public class BossComportement : MonoBehaviour
         {
             PoursuitePhaseUn();
             OndeDeChoc();
-            Geler();
         }
 
         if (phase == 2)
@@ -171,6 +171,13 @@ public class BossComportement : MonoBehaviour
 
             animation.runtimeAnimatorController = animationFrappe;
         }
+
+        if (other.gameObject.CompareTag("PlayerAttack") && joueurPeutAttaquer)
+        {
+            PrendreDegats(15);
+            joueurPeutAttaquer = false;
+            this.Attendre(0.2f, () => { joueurPeutAttaquer = true;});
+        }
     }
     private void OnTriggerExit(Collider other)
     {
@@ -211,7 +218,6 @@ public class BossComportement : MonoBehaviour
             this.Attendre(20f, () => { peutGenererOnde = true;});
         }
     }
-
     void Geler()
     {
         if (peutAttaquer && peutGenererGlace)
