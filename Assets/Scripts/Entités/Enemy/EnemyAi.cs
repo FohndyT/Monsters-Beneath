@@ -19,7 +19,6 @@ public class EnemyAi : MonoBehaviour
     [SerializeField] float waitTime = 5f;
     float waitingTime = 0f;
     Vector3 returnPos;
-    public float Health = 100f;
     public float rayHitMax { get; private set; }
     private void Awake()
     {
@@ -68,7 +67,7 @@ public class EnemyAi : MonoBehaviour
         if (patrolMode)
         {
             // maybe do something but for now CurveTraveler fait cette job
-            if(Physics.Raycast(transform.position, transform.forward, out rayHit, rayHitMax) || Physics.Raycast(transform.position, transform.forward + Vector3.right/3, out rayHit, rayHitMax) || Physics.Raycast(transform.position, transform.forward+ Vector3.left/3, out rayHit, rayHitMax))
+            if(Physics.Raycast(transform.position, transform.forward, out rayHit, rayHitMax) || Physics.Raycast(transform.position, transform.forward + Vector3.right/4, out rayHit, rayHitMax) || Physics.Raycast(transform.position, transform.forward+ Vector3.left/4, out rayHit, rayHitMax))
                 chaseMode = rayHit.collider.tag == "Player";
         }
         if (chaseMode)

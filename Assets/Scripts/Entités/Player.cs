@@ -13,7 +13,7 @@ public class Player : Entities
     public int[] itemsAcquired;
     private float maxHp;
     private float healthRegen = 0f;
-    public bool ouch;
+    private bool ouch;
 
     private void Awake()
     {

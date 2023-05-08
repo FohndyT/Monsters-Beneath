@@ -29,7 +29,7 @@ public class EnemyAiShoot : MonoBehaviour
 
     void Update()
     {
-        if (regardeJoueur && peutRegarderJoueur)
+        if (Physics.Raycast(transform.position, transform.forward, out rayHit, rayHitMax) &&  rayHit.collider.tag == "Player")
         {
             transform.LookAt(cible);
             if (shootCooldown >= 1.5f)
@@ -70,9 +70,10 @@ public class EnemyAiShoot : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        regardeJoueur = true;
-        if(Physics.Raycast(transform.position, transform.forward, out rayHit, rayHitMax))
-            peutRegarderJoueur = rayHit.collider.tag == "Player";
+        /*regardeJoueur = true;
+        if(Physics.Raycast(transform.position, transform.forward, out rayHit, rayHitMax)) //Conflit de trigger/ manque de temps pour vraiment voir comment fix
+            peutRegarderJoueur = rayHit.collider.tag == "Player";*/
+        transform.LookAt(cible);
     }
     private void OnTriggerExit(Collider other)
     {
