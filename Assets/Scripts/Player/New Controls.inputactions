@@ -554,6 +554,28 @@
                     "path": "<Keyboard>/shift",
                     "interactions": "",
                     "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Dash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "00a800dc-5a69-438a-b4f9-6d7a6c251897",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Controller",
+                    "action": "Dash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e04881a2-41a8-4f15-99aa-6a035b8a29c2",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
                     "groups": "",
                     "action": "Dash",
                     "isComposite": false,

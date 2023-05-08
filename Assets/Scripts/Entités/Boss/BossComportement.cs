@@ -27,7 +27,10 @@ public class BossComportement : MonoBehaviour
     #endregion
 
     [SerializeField] private GameObject ondeDeShoc;
+    [SerializeField] private GameObject explosionDeGlace;
     [SerializeField] private GameObject ennemi;
+    
+    private Player joueurPlayer;
 
     private DommageBoss attaqueCorps;
     private DommageBoss attaqueMainGauche;
@@ -44,10 +47,12 @@ public class BossComportement : MonoBehaviour
     private Animator animation;
     private GameObject joueur;
     private Rigidbody rbJoueur;
+    private GameObject sourceDeChaleur;
 
     private bool peutAttaquer = true;
     private bool EstEnTrainDeMarcher = true;
     private bool peutGenererOnde = true;
+    private bool peutGenererGlace = true;
     
     private float temps;
     private Vector3 positionJoueurDash;
@@ -62,6 +67,10 @@ public class BossComportement : MonoBehaviour
         joueur = GameObject.Find("Player");
         rbJoueur = joueur.GetComponent<Rigidbody>();
         animation = GetComponent<Animator>();
+        
+        sourceDeChaleur = GameObject.FindWithTag("Flamme");
+        
+        joueurPlayer = joueur.GetComponent<Player>();
 
         vieRestante = vieMax;
         barDeVie.MettreVieMax(vieMax);
@@ -80,12 +89,14 @@ public class BossComportement : MonoBehaviour
         {
             PoursuitePhaseUn();
             OndeDeChoc();
+            Geler();
         }
 
         if (phase == 2)
         {
             PoursuitePhaseDeux();
             OndeDeChoc();
+            Geler();
         }
 
         if (vieRestante <= 225f)
@@ -96,6 +107,12 @@ public class BossComportement : MonoBehaviour
         if (vieRestante <= 0)
         {
             Meurt();
+        }
+        
+        // Protection contre congélation
+        if (Vector3.Distance(joueur.transform.position, sourceDeChaleur.transform.position) < 8f)
+        {
+            rbJoueur.drag = 0;
         }
         
         // À enlever après
@@ -171,6 +188,7 @@ public class BossComportement : MonoBehaviour
         if (DistanceEntreBossJoueur() <= 7f && peutGenererOnde && peutAttaquer)
         {
             EstEnTrainDeMarcher = false;
+            peutAttaquer = false;
 
             animation.runtimeAnimatorController = animationCreationSlime;
             this.Attendre(2f, () =>
@@ -180,13 +198,34 @@ public class BossComportement : MonoBehaviour
                 if (DistanceEntreBossJoueur() <= 7f)
                 {
                     rbJoueur.AddForce(4000f * directionForce, ForceMode.Impulse);
+                    joueurPlayer.Hurt(1f);
                 }
                 this.Attendre(1.7f, () => { Destroy(cloneOndeDeChoc);});
             });
 
             peutGenererOnde = false;
-            this.Attendre(4f, () => { EstEnTrainDeMarcher = true;});
+            this.Attendre(4f, () => { EstEnTrainDeMarcher = true;peutAttaquer = true;});
             this.Attendre(20f, () => { peutGenererOnde = true;});
+        }
+    }
+
+    void Geler()
+    {
+        if (peutAttaquer && peutGenererGlace)
+        {
+            EstEnTrainDeMarcher = false;
+            peutAttaquer = false;
+            
+            animation.runtimeAnimatorController = animationTomber;
+            
+            GameObject cloneExplosionDeGlace = Instantiate(explosionDeGlace,transform.position,transform.rotation);
+            this.Attendre(3f, () => { Destroy(cloneExplosionDeGlace);});
+
+            rbJoueur.drag = 20f;
+
+            peutGenererGlace = false;
+            this.Attendre(4f, () => { EstEnTrainDeMarcher = true;peutAttaquer = true;});
+            this.Attendre(45f, () => { peutGenererGlace = true;});
         }
     }
     #endregion

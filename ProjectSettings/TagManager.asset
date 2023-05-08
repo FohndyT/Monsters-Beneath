@@ -15,6 +15,7 @@ TagManager:
   - Planeur
   - Boss
   - Enemy
+  - Flamme
   layers:
   - Default
   - TransparentFX
