@@ -49,6 +49,8 @@ public class BossComportement : MonoBehaviour
     private Rigidbody rbJoueur;
     private GameObject sourceDeChaleur;
 
+    private FrostEffect effetDeGele;
+
     private bool peutAttaquer = true;
     private bool EstEnTrainDeMarcher = true;
     private bool peutGenererOnde = true;
@@ -69,7 +71,7 @@ public class BossComportement : MonoBehaviour
         animation = GetComponent<Animator>();
         
         sourceDeChaleur = GameObject.FindWithTag("Flamme");
-        
+        effetDeGele = GameObject.FindWithTag("MainCamera").GetComponent<FrostEffect>();
         joueurPlayer = joueur.GetComponent<Player>();
 
         vieRestante = vieMax;
@@ -113,6 +115,7 @@ public class BossComportement : MonoBehaviour
         if (Vector3.Distance(joueur.transform.position, sourceDeChaleur.transform.position) < 8f)
         {
             rbJoueur.drag = 0;
+            effetDeGele.FrostAmount = 0f;
         }
         
         // À enlever après
@@ -220,6 +223,7 @@ public class BossComportement : MonoBehaviour
             
             GameObject cloneExplosionDeGlace = Instantiate(explosionDeGlace,transform.position,transform.rotation);
             this.Attendre(3f, () => { Destroy(cloneExplosionDeGlace);});
+            effetDeGele.FrostAmount = 0.5f;
 
             rbJoueur.drag = 20f;
 
