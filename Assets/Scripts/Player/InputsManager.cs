@@ -254,7 +254,7 @@ public class InputsManager : MonoBehaviour
     void OnMoveCursor(InputValue inputValue)  {  }
     void OnSelect(InputValue inputvalue) { }
 
-    void OnBack(InputValue inputValue)
+    public void OnBack(InputValue inputValue)
     {
         playerInput.SwitchCurrentActionMap("Gameplay");
         Debug.Log(playerInput.currentActionMap);
