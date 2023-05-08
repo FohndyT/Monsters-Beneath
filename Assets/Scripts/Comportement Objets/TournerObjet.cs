@@ -1,43 +1,40 @@
-// Fohndy Nomerth Tah
+// Fohndy Nomerth Tah et Jeremy Legault
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class TournerObjet : MonoBehaviour
 {
-    private bool estControléParJoueur;
+    private bool estControleParJoueur;
+    bool left;
+    bool right;
 
     void Update()
     {
-        if (estControléParJoueur)
+        if (estControleParJoueur)
         {
-            if (Input.GetKey("k"))
-            {
-                transform.parent.Rotate(-Vector3.up / 3,Space.Self);
-            }
-            
-            if (Input.GetKey("j"))
-            {
-                transform.parent.Rotate(Vector3.up / 3,Space.Self);
-            }
+            if (left)
+                transform.parent.Rotate(Vector3.up / 3, Space.Self);
+            if (right)
+                transform.parent.Rotate(-Vector3.up / 3, Space.Self);
         }
     }
+    void OnRotateLeft(InputValue value) => left = !left;
+    void OnRotateRight(InputValue value) => right = !right;
 
     private void OnTriggerEnter(Collider collision)
     {
         if (collision.CompareTag("Player"))
         {
-            estControléParJoueur = true;
+            estControleParJoueur = true;
         }
     }
-    
+
     private void OnTriggerExit(Collider collision)
     {
         if (collision.CompareTag("Player"))
         {
-            estControléParJoueur = false;
+            estControleParJoueur = false;
         }
     }
 }

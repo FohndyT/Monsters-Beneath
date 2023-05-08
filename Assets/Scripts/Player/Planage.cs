@@ -1,10 +1,8 @@
-// Fohndy Nomerth Tah
+// Fohndy Nomerth Tah et Jeremy Legault
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Planage : MonoBehaviour
 {
@@ -13,10 +11,9 @@ public class Planage : MonoBehaviour
     private GameObject clonePlaneur;
     private Rigidbody rb;
 
-    // À modifier plus tard
-    private bool planeurEstCollecté;
-    
-    [NonSerialized] public bool estCree;
+    public bool collectedGlider;
+    [NonSerialized] public bool instantiated;
+    bool inUse;
 
     private void Start()
     {
@@ -26,37 +23,33 @@ public class Planage : MonoBehaviour
 
     private void Update()
     {
-        if (planeurEstCollecté)
-        {
-            if (Input.GetKey("1") && !estCree)
-            {
-                clonePlaneur = Instantiate(planeur, transform.localPosition + new Vector3(0,0.7499999f,0),transform.rotation);
-                clonePlaneur.transform.parent = transform;
-                
-                estCree = true;
-            }
-
-            if (Input.GetKey("2") && estCree)
-            {
-                Destroy(clonePlaneur);
-                estCree = false;
-            }
-        }
-
         MettreVitesse();
     }
-    
-    private void OnCollisionEnter(Collision collision)
+    void OnGlider(InputValue value)
     {
-        if (collision.gameObject.tag == "Planeur")
+        inUse = !inUse;
+
+        if (collectedGlider)
         {
-            planeurEstCollecté = true;
+            if (!inUse && !instantiated)
+            {
+                clonePlaneur = Instantiate(planeur, transform.localPosition + new Vector3(0, 0.75f, 0), transform.rotation);
+                clonePlaneur.transform.localScale = Vector3.one;
+                clonePlaneur.transform.parent = transform;
+
+                instantiated = true;
+            }
+
+            if (inUse && instantiated)
+            {
+                Destroy(clonePlaneur);
+                instantiated = false;
+            }
         }
     }
-
     private void MettreVitesse()
     {
-        if (estCree)
+        if (instantiated)
         {
             rb.useGravity = false;
             rb.velocity = new Vector3(rb.velocity.x, vitesseParachute, rb.velocity.z);

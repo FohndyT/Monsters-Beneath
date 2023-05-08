@@ -1,9 +1,10 @@
+// Jeremy Legault
+
 using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 public class InputsManager : MonoBehaviour
 {
@@ -37,12 +38,9 @@ public class InputsManager : MonoBehaviour
     private bool canDash = true;
     #endregion
     #region Looking
-    bool zTargeting;
+    public bool zTargeting;
     Collider[] targets = new Collider[0];
-    int targetIndex = -1;
-    Transform target;
-    Vector3 posWhenLock = Vector3.zero;
-    GameObject crosshair;
+    public Transform zTarget { get; private set; }
     #endregion
     #region Attacking
     [SerializeField] private GameObject Sword;
@@ -50,10 +48,10 @@ public class InputsManager : MonoBehaviour
     public bool canAttack = true;
     #endregion
     #region Items
-    [SerializeField] private GameObject Fouet;
-    [SerializeField] private GameObject Projectile;
-    [SerializeField] private GameObject CrystalLight;
-    [SerializeField] private GameObject CrystalLaser;
+    [SerializeField] GameObject Fouet;
+    [SerializeField] GameObject Projectile;
+    [SerializeField] GameObject CrystalLight;
+    [SerializeField] GameObject CrystalLaser;
     public GameObject[] Items { get; private set; }
     public int selectedItem { get; private set; } = -1;
     int currentItem = -1;
@@ -62,7 +60,6 @@ public class InputsManager : MonoBehaviour
     #endregion
     #region Autres
     bool camLock = false;
-    bool inMenu = true;
     #endregion
 
     void Awake()
@@ -78,7 +75,6 @@ public class InputsManager : MonoBehaviour
         camu = Camera.main;
         camBehave = camu.GetComponent<CameraBehaviour>();
         camPathTraveler = camu.GetComponent<CurveTraveler>();
-        crosshair = GameObject.FindGameObjectWithTag("Crosshair");
     }
     private void Update()
     {
@@ -94,9 +90,16 @@ public class InputsManager : MonoBehaviour
         {
             if (!isDashing)
             {
-                playbody.velocity = camBehave.eagleView ? new Vector3(skewedMovement.x * moveVelo, playbody.velocity.y, skewedMovement.z * moveVelo) :
-                                                          Vector3.up * playbody.velocity.y + rawMovement.x * moveVelo * transitionCam.sideviewWorldDirection;
-                if (skewedDirection != Vector3.zero && !camLock)
+                if (!zTargeting)
+                {
+                    playbody.velocity = camBehave.eagleView ? new Vector3(skewedMovement.x * moveVelo, playbody.velocity.y, skewedMovement.z * moveVelo) :
+                                                              Vector3.up * playbody.velocity.y + rawMovement.x * moveVelo * transitionCam.sideviewWorldDirection;
+                }
+                else
+                    playbody.velocity = moveVelo * rawMovement.z * transform.forward.normalized + moveVelo * rawMovement.x * transform.right.normalized + playbody.velocity.y * Vector3.up;
+                if (zTargeting)
+                    transform.LookAt(new Vector3(zTarget.position.x, transform.position.y, zTarget.position.z));
+                else if (skewedDirection != Vector3.zero && !camLock)
                 {
                     transform.forward = camBehave.eagleView ? Vector3.Lerp(transform.forward, skewedDirection, Time.deltaTime * 35) :
                                                               rawMovement.x * transitionCam.sideviewWorldDirection + rawMovement.z * Vector3.Cross(transitionCam.sideviewWorldDirection, transitionCam.sideviewWorldUpVector);
@@ -117,50 +120,31 @@ public class InputsManager : MonoBehaviour
         targets = targets.Where(x => x.transform.CompareTag("Enemy")).Where(x => x.GetType().Equals(typeof(BoxCollider))).ToArray();
 
         if (targets == null || targets.Length < 1)      // Pas d'ennemi en vue
-        {
-            targetIndex = -1;
             StartCoroutine(OrientationLock(playerInput.actions["Orientation Lock"]));
-        }
         else
         {
-            if (Vector3.Distance(posWhenLock, transform.position) > 0.001f)     // Nouveau Z Target
-            {
-                posWhenLock = transform.position;
-                targetIndex = 0;
-
-                float[] targetDistances = new float[targets.Length];
-                for (int i = 0; i < targets.Length; i++)
-                    targetDistances[i] = Vector3.Distance(targets[i].transform.position, transform.position);
-                Array.Sort(targetDistances, targets);
-            }
-            else        // N'a pas boug� depuis le dernier Z Target
-                targetIndex++;
+            float[] targetDistances = new float[targets.Length];
+            for (int i = 0; i < targets.Length; i++)
+                targetDistances[i] = Vector3.Distance(targets[i].transform.position, transform.position);
+            Array.Sort(targetDistances, targets);
 
             zTargeting = true;
-            target = targets[targetIndex].transform;
-            //crosshair.gameObject.SetActive(true);
+            zTarget = targets[0].transform;
             StartCoroutine(Targeting(playerInput.actions["Orientation Lock"]));
-
-
-            // TODO : adapter OnMove en consequence de zTargeting
         }
     }
     IEnumerator Targeting(InputAction lockAction)
     {
-        GameObject temp = GameObject.Instantiate(GameObject.CreatePrimitive(PrimitiveType.Sphere));         // (temp)
-        temp.transform.localScale = 1.8f * Vector3.one;                                                     // (temp)
-
+        zTarget.transform.localScale += new Vector3(0.5f, 0.5f, 0.5f);
         while (lockAction.inProgress)
         {
-
-            temp.transform.SetPositionAndRotation(target.position, Quaternion.Euler(new Vector3(Mathf.Sin(Time.time), 0, Mathf.Cos(Time.time))));
-            //crosshair.transform.SetPositionAndRotation(camu.WorldToScreenPoint(target.position),
-                                                       //Quaternion.Euler(new Vector3(Mathf.Sin(Time.time), 0, Mathf.Cos(Time.time))));
+            if (Vector3.Distance(zTarget.position, transform.position) > 12f)
+                break;
             yield return null;
         }
-        DestroyImmediate(temp, true);                                                                      // (temp)
-        //crosshair.gameObject.SetActive(false);
+        zTarget.transform.localScale -= new Vector3(0.5f, 0.5f, 0.5f);
         zTargeting = false;
+        StopCoroutine(Targeting(lockAction));
     }
     IEnumerator OrientationLock(InputAction lockAction)
     {
@@ -227,11 +211,11 @@ public class InputsManager : MonoBehaviour
     void OnItemUseSwap(InputValue value) { }    // Relics of a past idea
     void OnItemSelect(InputValue value)
     {
-        if (player.itemsAcquired != null)
+        if (player.itemsAcquired.Length != 0 || selectedItem != -1)
         {
             if (currentItem < player.itemsAcquired.Length - 1)
                 selectedItem = player.itemsAcquired[++currentItem];
-            else if (player.itemsAcquired != null)
+            else
             {
                 selectedItem = player.itemsAcquired[0];             // selectedItem = index de l'item en cours dans Items        PROBLEMO : even if selectedItem is changed correctly, le laser ne veut pas Destroy, et les autres items afterwards ne s'Instantiatent pas
                 currentItem = 0;                                    // currentItem = index actuel de player.itemsAcquired
@@ -241,16 +225,13 @@ public class InputsManager : MonoBehaviour
     }
     void OnOpenMenu(InputValue value)
     {
-        if (inMenu) { playerInput.SwitchCurrentActionMap("Gameplay"); }
-        else { playerInput.SwitchCurrentActionMap("Menu"); }
+        playerInput.SwitchCurrentActionMap("Menu");
         Debug.Log(playerInput.currentActionMap);
-        inMenu = !inMenu;
     }
 
     //  Menu Inputs
     void OnMoveCursor(InputValue inputValue) { }
     void OnSelect(InputValue inputvalue) { }
-
     void OnBack(InputValue inputValue)
     {
         playerInput.SwitchCurrentActionMap("Gameplay");
