@@ -5,6 +5,7 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class InputsManager : MonoBehaviour
 {
@@ -60,6 +61,8 @@ public class InputsManager : MonoBehaviour
     #endregion
     #region Autres
     bool camLock = false;
+    bool inMenu = true;
+    public GameObject PauseMenuCanvas;
     #endregion
 
     void Awake()
@@ -227,6 +230,9 @@ public class InputsManager : MonoBehaviour
     {
         playerInput.SwitchCurrentActionMap("Menu");
         Debug.Log(playerInput.currentActionMap);
+
+        PauseMenuCanvas.SetActive(true);
+        Time.timeScale = 0f;
     }
 
     //  Menu Inputs
@@ -236,5 +242,12 @@ public class InputsManager : MonoBehaviour
     {
         playerInput.SwitchCurrentActionMap("Gameplay");
         Debug.Log(playerInput.currentActionMap);
+
+        PauseMenuCanvas.SetActive(false);
+        Time.timeScale = 1f;
+    }
+    public void MainMenuButton()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
 }
