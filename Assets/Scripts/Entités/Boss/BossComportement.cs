@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using Unity.VisualScripting;
 using UnityEditor.Animations;
 using UnityEngine;
@@ -25,6 +26,12 @@ public class BossComportement : MonoBehaviour
     [SerializeField] private AnimatorController animationMort;
     #endregion
 
+    [SerializeField] private GameObject ondeDeShoc;
+    [SerializeField] private GameObject explosionDeGlace;
+    [SerializeField] private GameObject ennemi;
+    
+    private Player joueurPlayer;
+
     private DommageBoss attaqueCorps;
     private DommageBoss attaqueMainGauche;
     private DommageBoss attaqueMainDroite;
@@ -36,15 +43,18 @@ public class BossComportement : MonoBehaviour
     private int vieRestante;
     [SerializeField] private float vitesseMouvement = 5f;
 
-    private GameObject joueur;
-    private Animator animation;
-
-    private bool estProchePourSaut;
-    private bool marche = true;
-    private bool sautEnMarche;
-    private bool RochesMontantesEnMarche;
-
     private Rigidbody rb;
+    private Animator animation;
+    private GameObject joueur;
+    private Rigidbody rbJoueur;
+    private GameObject sourceDeChaleur;
+
+    private FrostEffect effetDeGele;
+
+    private bool peutAttaquer = true;
+    private bool EstEnTrainDeMarcher = true;
+    private bool peutGenererOnde = true;
+    private bool peutGenererGlace = true;
     
     private float temps;
     private Vector3 positionJoueurDash;
@@ -57,7 +67,12 @@ public class BossComportement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         joueur = GameObject.Find("Player");
+        rbJoueur = joueur.GetComponent<Rigidbody>();
         animation = GetComponent<Animator>();
+        
+        sourceDeChaleur = GameObject.FindWithTag("Flamme");
+        effetDeGele = GameObject.FindWithTag("MainCamera").GetComponent<FrostEffect>();
+        joueurPlayer = joueur.GetComponent<Player>();
 
         vieRestante = vieMax;
         barDeVie.MettreVieMax(vieMax);
@@ -68,37 +83,52 @@ public class BossComportement : MonoBehaviour
         attaquePiedsGauche = GameObject.Find("B-toe.L").GetComponent<DommageBoss>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
         RegarderJoueur();
         
         if (phase == 1)
         {
             PoursuitePhaseUn();
-            Sauter();
+            OndeDeChoc();
+            Geler();
         }
 
         if (phase == 2)
         {
             PoursuitePhaseDeux();
+            OndeDeChoc();
+            Geler();
+        }
+
+        if (vieRestante <= 225f)
+        {
+            ChangementPhase2();
+        }
+        
+        if (vieRestante <= 0)
+        {
+            Meurt();
+        }
+        
+        // Protection contre congélation
+        if (Vector3.Distance(joueur.transform.position, sourceDeChaleur.transform.position) < 8f)
+        {
+            rbJoueur.drag = 0;
+            effetDeGele.FrostAmount = 0f;
         }
         
         // À enlever après
-        if (Input.GetKeyDown("e"))
+        if (Input.GetKeyDown("h"))
         {
-            PrendreDegats(20);
+            PrendreDegats(100);
         }
-    }
-    void PrendreDegats(int degats)
-    {
-        vieRestante -= degats;
-        barDeVie.MettreVie(vieRestante);
     }
 
     #region Mouvements
     void RegarderJoueur()
     {
-        if (marche)
+        if (EstEnTrainDeMarcher)
         {
             transform.LookAt(new Vector3(joueur.transform.position.x,transform.position.y,joueur.transform.position.z));
         }
@@ -109,7 +139,7 @@ public class BossComportement : MonoBehaviour
     }
     void PoursuitePhaseUn()
     {
-        if (marche)
+        if (EstEnTrainDeMarcher)
         {
             transform.position = Vector3.MoveTowards(transform.position, new Vector3(joueur.transform.position.x, transform.position.y, joueur.transform.position.z), vitesseMouvement * Time.deltaTime);
             
@@ -118,10 +148,10 @@ public class BossComportement : MonoBehaviour
     }
     void PoursuitePhaseDeux()
     {
-        if (marche)
+        if (EstEnTrainDeMarcher)
         {
             transform.position = Vector3.MoveTowards(transform.position,
-            new Vector3(joueur.transform.position.x, transform.position.y, joueur.transform.position.z), vitesseMouvement * 1.5f * Time.deltaTime);
+            new Vector3(joueur.transform.position.x, transform.position.y, joueur.transform.position.z), vitesseMouvement * 2f * Time.deltaTime);
         
             animation.runtimeAnimatorController = animationCourir;
         }
@@ -131,11 +161,9 @@ public class BossComportement : MonoBehaviour
     #region AttaqueCorpsACorps
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.name == "Player" && sautEnMarche == false)
+        if (other.gameObject.name == "Player" && peutAttaquer)
         {
-            Debug.Log("Trigger Activated");
-            marche = false;
-            estProchePourSaut = true;
+            EstEnTrainDeMarcher = false;
             
             attaqueMainGauche.estActive = true;
             attaqueMainDroite.estActive = true;
@@ -146,53 +174,92 @@ public class BossComportement : MonoBehaviour
     }
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && peutAttaquer)
         {
-            this.Attendre(2f, () => { marche = true;});
+            this.Attendre(2f, ()=> {EstEnTrainDeMarcher = true;});
             
             attaqueMainGauche.estActive = false;
             attaqueMainDroite.estActive = false;
             attaquePiedsGauche.estActive = false;
-
-            estProchePourSaut = false;
         }
     }
     #endregion
 
     #region Attaques
-    void Sauter()
+    void OndeDeChoc()
     {
-        if (estProchePourSaut)
+        if (DistanceEntreBossJoueur() <= 7f && peutGenererOnde && peutAttaquer)
         {
-            this.Attendre(7f, () =>
+            EstEnTrainDeMarcher = false;
+            peutAttaquer = false;
+
+            animation.runtimeAnimatorController = animationCreationSlime;
+            this.Attendre(2f, () =>
             {
-                if (estProchePourSaut)
+                GameObject cloneOndeDeChoc = Instantiate(ondeDeShoc,transform.position,transform.rotation);
+                Vector3 directionForce = new Vector3((joueur.transform.position - transform.position).x,500f/4000f,(joueur.transform.position - transform.position).z);
+                if (DistanceEntreBossJoueur() <= 7f)
                 {
-                    sautEnMarche = true;
-                    marche = false;
-                    
-                    animation.runtimeAnimatorController = animationSauter;
-                    rb.AddForce(new Vector3(0,7000f,0),ForceMode.Impulse);
-                    
-                    this.Attendre(4f, () => { sautEnMarche = false;});
-                    this.Attendre(4f, () => { marche = true;});
+                    rbJoueur.AddForce(4000f * directionForce, ForceMode.Impulse);
+                    joueurPlayer.Hurt(1f);
                 }
+                this.Attendre(1.7f, () => { Destroy(cloneOndeDeChoc);});
             });
+
+            peutGenererOnde = false;
+            this.Attendre(4f, () => { EstEnTrainDeMarcher = true;peutAttaquer = true;});
+            this.Attendre(20f, () => { peutGenererOnde = true;});
+        }
+    }
+
+    void Geler()
+    {
+        if (peutAttaquer && peutGenererGlace)
+        {
+            EstEnTrainDeMarcher = false;
+            peutAttaquer = false;
+            
+            animation.runtimeAnimatorController = animationTomber;
+            
+            GameObject cloneExplosionDeGlace = Instantiate(explosionDeGlace,transform.position,transform.rotation);
+            this.Attendre(3f, () => { Destroy(cloneExplosionDeGlace);});
+            effetDeGele.FrostAmount = 0.5f;
+
+            rbJoueur.drag = 20f;
+
+            peutGenererGlace = false;
+            this.Attendre(4f, () => { EstEnTrainDeMarcher = true;peutAttaquer = true;});
+            this.Attendre(45f, () => { peutGenererGlace = true;});
         }
     }
     #endregion
     
-    void MettreRochesMontantesEnFalse()
+    public void PrendreDegats(int degats)
     {
-        RochesMontantesEnMarche = false;
+        vieRestante -= degats;
+        barDeVie.MettreVie(vieRestante);
     }
-    void MettreSautEnFalse()
+    void ChangementPhase2()
     {
-        sautEnMarche = false;
-        attaqueCorps.estActive = false;
+        if (phase == 1)
+        {
+            peutAttaquer = false;
+            EstEnTrainDeMarcher = false;
+            animation.runtimeAnimatorController = animationPerte;
+            this.Attendre(5f, () => { EstEnTrainDeMarcher = true; peutAttaquer = true;});
+            phase = 2;
+        }
     }
-    private void MarcheEnTrue()
+    void Meurt()
     {
-        marche = true;
+        EstEnTrainDeMarcher = false;
+        peutAttaquer = false;
+        vieRestante = 0;
+        animation.runtimeAnimatorController = animationMort;
+        this.Attendre(2.4f, () => { Destroy(gameObject);});
+    }
+    private float DistanceEntreBossJoueur()
+    {
+        return Vector3.Distance(transform.position, joueur.transform.position);
     }
 }

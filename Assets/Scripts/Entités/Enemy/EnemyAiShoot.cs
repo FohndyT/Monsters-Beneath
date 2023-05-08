@@ -2,12 +2,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
 public class EnemyAiShoot : MonoBehaviour
 {
     [SerializeField] private Transform cible;
     [SerializeField] private Transform shootT;
+    Enemy enemyScript;
+    NavMeshAgent agent;
+    private Collider hurtBox;
     public bool regardeJoueur = false;
     public bool peutRegarderJoueur = true;
     private float shootCooldown = 0.75f;
@@ -18,17 +22,20 @@ public class EnemyAiShoot : MonoBehaviour
     private void Awake()
     {
         rayHitMax = 100f;
+        agent = GetComponent<NavMeshAgent>();
+        enemyScript = GetComponent<Enemy>();
+        hurtBox = GetComponent<CapsuleCollider>();
     }
 
     void Update()
     {
-        if (regardeJoueur && peutRegarderJoueur)
+        if (Physics.Raycast(transform.position, transform.forward, out rayHit, rayHitMax) &&  rayHit.collider.tag == "Player")
         {
             transform.LookAt(cible);
             if (shootCooldown >= 1.5f)
             {
                 BAM();
-                shootCooldown = 0f;
+                shootCooldown = Random.Range(0f,0.75f);
             }
         }
 
@@ -45,13 +52,28 @@ public class EnemyAiShoot : MonoBehaviour
         Instantiate(bullet, shootT);
         shootT.position = originalShootPos;
         shootT.DetachChildren();
+        if (Random.Range(0, 100) <= 20)
+            agent.SetDestination(transform.position + Vector3.back);
+        if (Random.Range(0, 100) <= 20)
+            agent.SetDestination(transform.position + Vector3.right);
+        if (Random.Range(0, 100) <= 20)
+            agent.SetDestination(transform.position + Vector3.left);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("PlayerAttack") && name == hurtBox.name)
+        {
+            enemyScript.Hurt(2f);
+        }
     }
 
     private void OnTriggerStay(Collider other)
     {
-        regardeJoueur = true;
-        if(Physics.Raycast(transform.position, transform.forward, out rayHit, rayHitMax))
-            peutRegarderJoueur = rayHit.collider.tag == "Player";
+        /*regardeJoueur = true;
+        if(Physics.Raycast(transform.position, transform.forward, out rayHit, rayHitMax)) //Conflit de trigger/ manque de temps pour vraiment voir comment fix
+            peutRegarderJoueur = rayHit.collider.tag == "Player";*/
+        transform.LookAt(cible);
     }
     private void OnTriggerExit(Collider other)
     {

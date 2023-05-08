@@ -1,12 +1,16 @@
+using System;
 using System.Collections;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.AI;
+using Random = UnityEngine.Random;
 
 public class EnemyAi : MonoBehaviour
 {
     CurveTraveler traveler;
     NavMeshAgent agent;
     Enemy enemyScript;
+    public RaycastHit rayHit;
     [SerializeField] GameObject target;
     [SerializeField] bool chaseMode = false;
     [SerializeField] bool patrolMode = true;
@@ -15,8 +19,7 @@ public class EnemyAi : MonoBehaviour
     [SerializeField] float waitTime = 5f;
     float waitingTime = 0f;
     Vector3 returnPos;
-    public float Health = 100f;
-
+    public float rayHitMax { get; private set; }
     private void Awake()
     {
         target = GameObject.Find("Player");
@@ -24,6 +27,7 @@ public class EnemyAi : MonoBehaviour
         traveler = GetComponent<CurveTraveler>();
         enemyScript = GetComponent<Enemy>();
         returnPos = transform.position;
+        rayHitMax = 80f;
 
     }
     private IEnumerator OnTriggerEnter(Collider other)
@@ -34,7 +38,6 @@ public class EnemyAi : MonoBehaviour
             patrolMode = false;
             traveler.enabled = false;
         }
-
         if (other.CompareTag("PlayerAttack"))
         {
             enemyScript.Hurt(2f);
@@ -45,7 +48,7 @@ public class EnemyAi : MonoBehaviour
             }
         }
     }
-
+    
     private IEnumerator OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -64,12 +67,17 @@ public class EnemyAi : MonoBehaviour
         if (patrolMode)
         {
             // maybe do something but for now CurveTraveler fait cette job
+            if(Physics.Raycast(transform.position, transform.forward, out rayHit, rayHitMax) || Physics.Raycast(transform.position, transform.forward + Vector3.right/4, out rayHit, rayHitMax) || Physics.Raycast(transform.position, transform.forward+ Vector3.left/4, out rayHit, rayHitMax))
+                chaseMode = rayHit.collider.tag == "Player";
         }
         if (chaseMode)
         {
             traveler.progress = 0f;
             traveler.enabled = false;
-            agent.SetDestination(target.transform.position);
+            if (Random.Range(0, 100) <= 30)
+                agent.SetDestination(transform.position - Vector3.left);
+            else
+                agent.SetDestination(target.transform.position);
         }
         else
         {

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -10,10 +11,30 @@ public class Player : Entities
     const float DboostVelo = 10f;
     float iFramesWindow = 4f;
     public int[] itemsAcquired;
+    private float maxHp;
+    private float healthRegen = 0f;
+    private bool ouch;
 
     private void Awake()
     {
+        maxHp = health;
         playBody = GetComponent<Rigidbody>();
+    }
+
+    private void Update()
+    {
+        if(health < maxHp && !ouch)
+            healthRegen += Time.deltaTime;
+            if (healthRegen >= 10f)
+            {
+                health = maxHp;
+                healthRegen = 0f;
+            }
+    }
+
+    private void HealthRegen()
+    {
+        
     }
     void RecalculateLowHPThreshold() => lowHealthThreshold = maxHealth * 0.1f;
     void RecalculateMaxHP(float difference)
@@ -21,14 +42,18 @@ public class Player : Entities
         maxHealth += difference;
         RecalculateLowHPThreshold();
     }
-    private void OnTriggerStay(Collider other)
+    private IEnumerator OnTriggerStay(Collider other)
     {
-        if (!invincible && other.CompareTag("Enemy"))
+        if (!invincible && other.CompareTag("Enemy") && !other.CompareTag("Sight"))
         {
             Hurt(2f);                                                         // Pour le faire jumper un peu du sol
             playBody.AddForce(0, 8000f, 0); // temp fix car velo ne fonctionne pas tjrs
             //playBody.velocity = DboostVelo * (-transform.rotation.eulerAngles + new Vector3(0f, .5f, 0f));
+            ouch = true;
             StartCoroutine(IFrames(iFramesWindow));
+            for (float alpha = 8f; alpha >= 0; alpha -= 0.1f)
+                yield return null;
+            ouch = false;
         }
     }
     private void OnCollisionEnter(Collision collision) //Est nécessaire pour la collision des attaques à distance

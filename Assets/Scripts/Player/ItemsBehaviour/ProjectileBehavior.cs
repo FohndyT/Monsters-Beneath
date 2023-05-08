@@ -21,7 +21,7 @@ public class ProjectileBehavior : MonoBehaviour
     private void Start()
     {
         curv.curveType = Curve.CurveType.BezierCurve;
-        // Si quelqu'un révise le code dans le futur, on pourrait ajouter que s'il y a camLock près d'un ennemi, il est visé et target = ennemi.transform.position
+        // Si quelqu'un rï¿½vise le code dans le futur, on pourrait ajouter que s'il y a camLock prï¿½s d'un ennemi, il est visï¿½ et target = ennemi.transform.position
         // Balistique de quel doit etre l'angle pour que le tir soit spot on
         float quartDeDistance = DistanceTir * 0.25f;
         Vector3 hauteurTir = HauteurTir * Vector3.up;
@@ -38,7 +38,7 @@ public class ProjectileBehavior : MonoBehaviour
         {
             playerInputs.canUseItem = true;
             traveler.enabled = false;
-            Destroy(collision.collider.gameObject);     // Appeller Ennemi.Hurt() instead. For test purposes only
+            //Destroy(collision.collider.gameObject);     // Appeller Ennemi.Hurt() instead. For test purposes only
             Destroy(parentObj);
             devtools.RefreshCurveArray();
         }

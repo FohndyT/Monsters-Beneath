@@ -151,6 +151,7 @@ MonoBehaviour:
   invincible: 0
   GameOverScreen: {fileID: 0}
   itemsAcquired: 
+  ouch: 0
 --- !u!114 &726577651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -373,24 +374,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 01bc36b7a781d9946902d04878ad3bfd, type: 3}
---- !u!1 &8107560620629955196 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 01bc36b7a781d9946902d04878ad3bfd, type: 3}
-  m_PrefabInstance: {fileID: 8953928724493184813}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &948095428
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8107560620629955196}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eec0e6115c50d97488983a9134074a5c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PlayerTexture: {fileID: 2100000, guid: dc112e9b2af832e4c872d76275cb35ee, type: 2}
 --- !u!4 &8919387589013162182 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 01bc36b7a781d9946902d04878ad3bfd, type: 3}
