@@ -242,7 +242,7 @@ public class InputsManager : MonoBehaviour
     }
     void OnOpenMenu(InputValue value)
     {
-        playerInput.SwitchCurrentActionMap("Menu"); 
+        playerInput.SwitchCurrentActionMap("Menu");
         Debug.Log(playerInput.currentActionMap);
 
         PauseMenuCanvas.SetActive(true);
@@ -251,10 +251,10 @@ public class InputsManager : MonoBehaviour
     }
 
     //  Menu Inputs
-    void OnMoveCursor(InputValue inputValue)  {  }
+    void OnMoveCursor(InputValue inputValue) { }
     void OnSelect(InputValue inputvalue) { }
 
-    public void OnBack(InputValue inputValue)
+    void OnBack(InputValue inputValue)
     {
         playerInput.SwitchCurrentActionMap("Gameplay");
         Debug.Log(playerInput.currentActionMap);
