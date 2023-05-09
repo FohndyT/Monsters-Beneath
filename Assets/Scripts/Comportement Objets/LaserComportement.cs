@@ -14,7 +14,7 @@ using UnityEngine.EventSystems;
 public class LaserComportement : MonoBehaviour
 {
     [SerializeField] private float longueurRayon = 500;
-    [Range(1f,50f)] [SerializeField] private float indiceDeRefraction = 20f;
+    [Range(1f, 50f)][SerializeField] private float indiceDeRefraction = 20f;
 
     private LineRenderer lr;
     private RaycastHit frappe;
@@ -27,24 +27,24 @@ public class LaserComportement : MonoBehaviour
 
     void Update()
     {
-        rayon = new Ray(transform.position,transform.forward);
+        rayon = new Ray(transform.position, transform.forward);
 
         // Nombre de points (verticies)
         lr.positionCount = 1;
         // Met la position du premier point à la position du gameObject
-        lr.SetPosition(0,transform.position);
+        lr.SetPosition(0, transform.position);
         float longueurÀTraverser = longueurRayon;
 
         //for (int i = 0; i < 10; i++)
-        
-        while(true)
+
+        while (true)
         {
             if (Physics.Raycast(rayon.origin, rayon.direction, out frappe, longueurÀTraverser))
             {
                 lr.positionCount += 1;
                 lr.SetPosition(lr.positionCount - 1, frappe.point);
                 longueurÀTraverser -= Vector3.Distance(rayon.origin, frappe.point);
-                
+
                 if (frappe.collider.CompareTag("Mirroir"))
                 {
                     rayon = new Ray(frappe.point, Vector3.Reflect(rayon.direction, frappe.normal));
@@ -54,8 +54,8 @@ public class LaserComportement : MonoBehaviour
                     frappe.point = new Vector3(Mathf.Abs(CalculerVecteurRefraction().x) / (CalculerVecteurRefraction().x + 0.0001f) * 0.001f + frappe.point.x,
                                                Mathf.Abs(CalculerVecteurRefraction().y) / (CalculerVecteurRefraction().y + 0.0001f) * 0.001f + frappe.point.y,
                                                Mathf.Abs(CalculerVecteurRefraction().z) / (CalculerVecteurRefraction().z + 0.0001f) * 0.001f + frappe.point.z);
-                    
-                    rayon = new Ray(frappe.point,CalculerVecteurRefraction());
+
+                    rayon = new Ray(frappe.point, CalculerVecteurRefraction());
                 }
                 if (frappe.collider.CompareTag("Bois"))
                 {
@@ -68,14 +68,16 @@ public class LaserComportement : MonoBehaviour
             }
         }
 
+        /*
         float CalculerAngleRefraction(float angleIncidence)
         {
-            return Mathf.Asin(Mathf.Sin(angleIncidence) / indiceDeRefraction) /* * Mathf.Rad2Deg*/;
+            return Mathf.Asin(Mathf.Sin(angleIncidence) / indiceDeRefraction); // * Mathf.Rad2Deg;
         }
+        */
 
         Vector3 CalculerVecteurRefraction()
         {
-            return (1/indiceDeRefraction * Vector3.Cross(frappe.normal, Vector3.Cross(-frappe.normal,rayon.direction)) - frappe.normal * Mathf.Sqrt(1-Vector3.Dot(Vector3.Cross(frappe.normal,rayon.direction) * (1/indiceDeRefraction * 1/indiceDeRefraction),Vector3.Cross(frappe.normal, rayon.direction)))).normalized;
+            return (1 / indiceDeRefraction * Vector3.Cross(frappe.normal, Vector3.Cross(-frappe.normal, rayon.direction)) - frappe.normal * Mathf.Sqrt(1 - Vector3.Dot(Vector3.Cross(frappe.normal, rayon.direction) * (1 / indiceDeRefraction * 1 / indiceDeRefraction), Vector3.Cross(frappe.normal, rayon.direction)))).normalized;
         }
     }
 }

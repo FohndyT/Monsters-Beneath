@@ -34,6 +34,7 @@ public class Planage : MonoBehaviour
             if (!inUse && !instantiated)
             {
                 clonePlaneur = Instantiate(planeur, transform.localPosition + new Vector3(0, 0.75f, 0), transform.rotation);
+                clonePlaneur.SetActive(true);
                 clonePlaneur.transform.localScale = Vector3.one;
                 clonePlaneur.transform.parent = transform;
 

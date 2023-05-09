@@ -22,7 +22,7 @@ public class DevTools : MonoBehaviour
     {
         nbDebugStates = debugHotKeys.Length;
         //debugStates = Enumerable.Repeat(true, nbDebugStates).ToArray();
-        debugStates = new bool[] { true, false, true, true, false };
+        debugStates = new bool[] { true, false, false, true, false };
         RefreshCurveArray();
         inputManager = GetComponent<InputsManager>();
         mat = new Material(Shader.Find("Hidden/Internal-Colored"));
@@ -112,6 +112,8 @@ public class DevTools : MonoBehaviour
             if (debugStates[4])     //GT Code
             {
                 debugStates[4] = false;
+                inputManager.acquiredSword = true;
+                GameObject.Find("Player").GetComponent<Planage>().collectedGlider = true;
                 Player player = GameObject.Find("Player").GetComponent<Player>();
                 for (int i = 0; i < inputManager.Items.Length; i++)
                     player.AcquiredItem(i);

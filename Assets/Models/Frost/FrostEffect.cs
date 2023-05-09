@@ -4,7 +4,7 @@ using UnityEngine;
 [AddComponentMenu("Image Effects/Frost")]
 public class FrostEffect : MonoBehaviour
 {
-    public float FrostAmount = 0.5f; //0-1 (0=minimum Frost, 1=maximum frost)
+    public float FrostAmount = 0.25f; //0-1 (0=minimum Frost, 1=maximum frost)
     public float EdgeSharpness = 1; //>=1
     public float minFrost = 0; //0-1
     public float maxFrost = 1; //0-1

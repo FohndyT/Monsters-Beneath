@@ -38,7 +38,7 @@ public class Transition2D3D : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        camVerticalOffset2D = sideviewWorldUpVector * 1.5f;
+        camVerticalOffset2D = 2 * sideviewWorldUpVector;
         if (other.gameObject.Equals(playerObj) && !noControlOnChracter)
             Transition();
     }
@@ -49,9 +49,10 @@ public class Transition2D3D : MonoBehaviour
         camTraveler.curve = camPath;
         playerObj.GetComponent<InputsManager>().transitionCam = this;
         camScript.eagleView = !camScript.eagleView;
-        camScript.camOffset = camScript.eagleView ? new Vector3(-7, 7, -7) : EndPt3D * 12 + camVerticalOffset2D;
+        camScript.camOffset = camScript.eagleView ? new Vector3(-7, 7, -7) : 12 * Vector3.Cross(sideviewWorldUpVector, sideviewWorldDirection) + camVerticalOffset2D;
 
         Vector3 tempV = camScript.eagleView ? EndPt3D * 2 : EndPt2D * 2;
+        tempV -= new Vector3(0, 6, 0);
         camPath.points[0] = Vector3.zero;
         camPath.points[1] = camScript.transform.position - transform.position;
         camPath.points[2] = transform.InverseTransformDirection(transform.TransformDirection(tempV) + camScript.camOffset);

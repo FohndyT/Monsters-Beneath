@@ -7,13 +7,20 @@ using UnityEngine;
 
 public class MortVélocité : MonoBehaviour
 {
+    private Player joueurPlayer;
 
     [SerializeField] private float vitesseMort = 20f;
-    private void OnCollisionEnter(Collision collision)
+
+    private void Start()
+    {
+        joueurPlayer = GameObject.Find("Player").GetComponent<Player>();
+    }
+
+    private void OnTriggerEnter(Collider collision)
     {
         if (collision.gameObject.tag == "Player" && collision.gameObject.GetComponent<Rigidbody>().velocity.y > vitesseMort)
         {
-            Debug.Log("Player is dead");
+            joueurPlayer.Hurt(10);
         }
     }
 }

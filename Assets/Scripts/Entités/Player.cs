@@ -5,7 +5,7 @@ using UnityEngine;
 public class Player : Entities
 {
     [SerializeField] GameOverScreen GameOverScreen;
-    
+
     Rigidbody playBody;
     float lowHealthThreshold = 1f;
     const float DboostVelo = 10f;
@@ -19,22 +19,18 @@ public class Player : Entities
     {
         maxHp = health;
         playBody = GetComponent<Rigidbody>();
+        itemsAcquired = new int[] { 1 };
     }
 
     private void Update()
     {
-        if(health < maxHp && !ouch)
+        if (health < maxHp && !ouch)
             healthRegen += Time.deltaTime;
-            if (healthRegen >= 10f)
-            {
-                health = maxHp;
-                healthRegen = 0f;
-            }
-    }
-
-    private void HealthRegen()
-    {
-        
+        if (healthRegen >= 10f)
+        {
+            health = maxHp;
+            healthRegen = 0f;
+        }
     }
     void RecalculateLowHPThreshold() => lowHealthThreshold = maxHealth * 0.1f;
     void RecalculateMaxHP(float difference)
@@ -46,9 +42,8 @@ public class Player : Entities
     {
         if (!invincible && other.CompareTag("Enemy") && !other.CompareTag("Sight"))
         {
-            Hurt(2f);                                                         // Pour le faire jumper un peu du sol
+            Hurt(2f);
             playBody.AddForce(0, 8000f, 0); // temp fix car velo ne fonctionne pas tjrs
-            //playBody.velocity = DboostVelo * (-transform.rotation.eulerAngles + new Vector3(0f, .5f, 0f));
             ouch = true;
             StartCoroutine(IFrames(iFramesWindow));
             for (float alpha = 8f; alpha >= 0; alpha -= 0.1f)
@@ -56,12 +51,12 @@ public class Player : Entities
             ouch = false;
         }
     }
-    private void OnCollisionEnter(Collision collision) //Est nécessaire pour la collision des attaques à distance
+    private void OnCollisionStay(Collision collision)
     {
-        if (!invincible && collision.collider.CompareTag("EnemyProjectile"))
+        if (!invincible && collision.collider.CompareTag("EnemyProjectile") && collision.collider.CompareTag("Enemy") && !collision.collider.CompareTag("Sight"))
         {
-            Hurt(2f);                                                        
-            playBody.AddForce(0, 16000f, 0);
+            Hurt(2f);
+            playBody.AddForce(0, 12000f, 0);
             StartCoroutine(IFrames(iFramesWindow));
         }
     }

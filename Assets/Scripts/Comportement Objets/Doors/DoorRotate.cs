@@ -23,7 +23,7 @@ public class DoorRotate : MonoBehaviour
 
     public void OnAttack()
     {
-        if (GetComponent<InteractInput>().isUsing && canOpen && allerRetour == null)
+        if (GetComponent<InteractInput>().canInteract && canOpen && allerRetour == null)
             allerRetour = StartCoroutine(AllerRetour());
     }
     IEnumerator AllerRetour()
@@ -31,7 +31,7 @@ public class DoorRotate : MonoBehaviour
         StartCoroutine(Pivoter(-angleOuverture));
         yield return new WaitForSeconds(duréeTransition + waitTime);
         StartCoroutine(Pivoter(angleOuverture));
-        yield return new WaitForSeconds(duréeTransition);    // Emp�che d'ouvrir la porte midway lorsqu'elle se ferme
+        yield return new WaitForSeconds(duréeTransition);    // Empeche d'ouvrir la porte midway lorsqu'elle se ferme
         canOpen = true;
         StopCoroutine(allerRetour);
         allerRetour = null;
