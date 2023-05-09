@@ -47,7 +47,7 @@ public class BossComportement : MonoBehaviour
     private Animator animation;
     private GameObject joueur;
     private Rigidbody rbJoueur;
-    private GameObject sourceDeChaleur;
+    private GameObject[] sourcesDeChaleur;
 
     private FrostEffect effetDeGele;
 
@@ -56,6 +56,7 @@ public class BossComportement : MonoBehaviour
     private bool EstEnTrainDeMarcher = true;
     private bool peutGenererOnde = true;
     private bool peutGenererGlace = true;
+    private bool estMort;
 
     private float temps;
     private Vector3 positionJoueurDash;
@@ -71,7 +72,7 @@ public class BossComportement : MonoBehaviour
         rbJoueur = joueur.GetComponent<Rigidbody>();
         animation = GetComponent<Animator>();
         
-        sourceDeChaleur = GameObject.FindWithTag("Flamme");
+        sourcesDeChaleur = GameObject.FindGameObjectsWithTag("Flamme");
         effetDeGele = GameObject.FindWithTag("MainCamera").GetComponent<FrostEffect>();
         joueurPlayer = joueur.GetComponent<Player>();
 
@@ -112,16 +113,13 @@ public class BossComportement : MonoBehaviour
         }
         
         // Protection contre congélation
-        if (Vector3.Distance(joueur.transform.position, sourceDeChaleur.transform.position) < 8f)
+        for (int i = 0; i < sourcesDeChaleur.Length; i++)
         {
-            rbJoueur.drag = 0;
-            effetDeGele.FrostAmount = 0f;
-        }
-        
-        // À enlever après
-        if (Input.GetKeyDown("h"))
-        {
-            PrendreDegats(100);
+            if (Vector3.Distance(joueur.transform.position, sourcesDeChaleur[i].transform.position) < 8f)
+            {
+                rbJoueur.drag = 0;
+                effetDeGele.FrostAmount = 0f;
+            }
         }
     }
 
@@ -161,7 +159,7 @@ public class BossComportement : MonoBehaviour
     #region AttaqueCorpsACorps
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.name == "Player" && peutAttaquer)
+        if (other.gameObject.name == "Player" && peutAttaquer && !estMort)
         {
             EstEnTrainDeMarcher = false;
             
@@ -174,7 +172,7 @@ public class BossComportement : MonoBehaviour
 
         if (other.gameObject.CompareTag("PlayerAttack") && joueurPeutAttaquer)
         {
-            PrendreDegats(15);
+            PrendreDegats(50);
             joueurPeutAttaquer = false;
             this.Attendre(0.2f, () => { joueurPeutAttaquer = true;});
         }
@@ -183,8 +181,11 @@ public class BossComportement : MonoBehaviour
     {
         if (other.CompareTag("Player") && peutAttaquer)
         {
-            this.Attendre(2f, ()=> {EstEnTrainDeMarcher = true;});
-            
+            if (!estMort)
+            {
+                this.Attendre(2f, ()=> {EstEnTrainDeMarcher = true;});
+            }
+
             attaqueMainGauche.estActive = false;
             attaqueMainDroite.estActive = false;
             attaquePiedsGauche.estActive = false;
@@ -208,7 +209,7 @@ public class BossComportement : MonoBehaviour
                 if (DistanceEntreBossJoueur() <= 7f)
                 {
                     rbJoueur.AddForce(4000f * directionForce, ForceMode.Impulse);
-                    joueurPlayer.Hurt(1f);
+                    joueurPlayer.Hurt(3f);
                 }
                 this.Attendre(1.7f, () => { Destroy(cloneOndeDeChoc);});
             });
@@ -229,13 +230,13 @@ public class BossComportement : MonoBehaviour
             
             GameObject cloneExplosionDeGlace = Instantiate(explosionDeGlace,transform.position,transform.rotation);
             this.Attendre(3f, () => { Destroy(cloneExplosionDeGlace);});
-            effetDeGele.FrostAmount = 0.5f;
-
+            effetDeGele.FrostAmount = 0.3f;
+        
             rbJoueur.drag = 20f;
-
+        
             peutGenererGlace = false;
             this.Attendre(4f, () => { EstEnTrainDeMarcher = true;peutAttaquer = true;});
-            this.Attendre(45f, () => { peutGenererGlace = true;});
+            this.Attendre(40f, () => { peutGenererGlace = true;});
         }
     }
     #endregion
@@ -250,19 +251,22 @@ public class BossComportement : MonoBehaviour
         if (phase == 1)
         {
             peutAttaquer = false;
+            joueurPeutAttaquer = false;
             EstEnTrainDeMarcher = false;
             animation.runtimeAnimatorController = animationPerte;
-            this.Attendre(5f, () => { EstEnTrainDeMarcher = true; peutAttaquer = true;});
-            phase = 2;
+            this.Attendre(5f, () => { EstEnTrainDeMarcher = true; peutAttaquer = true; joueurPeutAttaquer = true; phase = 2;
+            });
         }
     }
     void Meurt()
     {
+        estMort = true;
         EstEnTrainDeMarcher = false;
         peutAttaquer = false;
+        joueurPeutAttaquer = false;
         vieRestante = 0;
         animation.runtimeAnimatorController = animationMort;
-        this.Attendre(2.4f, () => { Destroy(gameObject);});
+        this.Attendre(2.1f, () => { Destroy(gameObject);});
     }
     private float DistanceEntreBossJoueur()
     {
