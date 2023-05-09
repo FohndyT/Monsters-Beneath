@@ -172,7 +172,7 @@ public class BossComportement : MonoBehaviour
 
         if (other.gameObject.CompareTag("PlayerAttack") && joueurPeutAttaquer)
         {
-            PrendreDegats(50);
+            PrendreDegats(17);
             joueurPeutAttaquer = false;
             this.Attendre(0.2f, () => { joueurPeutAttaquer = true;});
         }
