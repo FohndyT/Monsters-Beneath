@@ -4,7 +4,6 @@ using UnityEngine;
 public class RelocatePlayerAfterDownfall : MonoBehaviour
 {
     #region Components
-    BoxCollider worldBorder;
     InputsManager inputManager;
     Transform transPlayer;
     Rigidbody playBody;
@@ -12,9 +11,9 @@ public class RelocatePlayerAfterDownfall : MonoBehaviour
     #endregion
     Vector3 safePt;
     bool playerDown;
+    public bool swinging;
     private void Awake()
     {
-        worldBorder = GetComponent<BoxCollider>();
         GameObject player = GameObject.Find("Player");
         inputManager = player.GetComponent<InputsManager>();
         transPlayer = player.transform;
@@ -25,7 +24,7 @@ public class RelocatePlayerAfterDownfall : MonoBehaviour
     { StartCoroutine(RelocateSafePt()); }
 
     private void OnTriggerExit(Collider other)
-    { if (other.tag.Equals("Player")) { StartCoroutine(RelocatePlayer()); } }
+    { if (other.CompareTag("Player") && !swinging) { StartCoroutine(RelocatePlayer()); } }
     IEnumerator RelocateSafePt()
     {
         yield return new WaitForSeconds(1f);

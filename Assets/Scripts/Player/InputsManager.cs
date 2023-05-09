@@ -29,7 +29,7 @@ public class InputsManager : MonoBehaviour
     #endregion
     #region Moving
     Vector3 rawMovement;
-    protected Vector3 skewedMovement;
+    public Vector3 skewedMovement;
     Vector3 skewedDirection;
     const float moveVelo = 9f;
     public float dashVelo = 40f;
@@ -46,6 +46,7 @@ public class InputsManager : MonoBehaviour
     #region Attacking
     [SerializeField] private GameObject Sword;
     float attackCooldown = 0.5f;
+    public bool acquiredSword;
     public bool canAttack = true;
     #endregion
     #region Items
@@ -61,7 +62,6 @@ public class InputsManager : MonoBehaviour
     #endregion
     #region Autres
     bool camLock = false;
-    bool inMenu = true;
     public GameObject PauseMenuCanvas;
     #endregion
 
@@ -141,7 +141,7 @@ public class InputsManager : MonoBehaviour
         zTarget.transform.localScale += new Vector3(0.5f, 0.5f, 0.5f);
         while (lockAction.inProgress)
         {
-            if (Vector3.Distance(zTarget.position, transform.position) > 12f)
+            if (Vector3.Distance(zTarget.position, transform.position) > 12f && zTarget != null)
                 break;
             yield return null;
         }
@@ -181,7 +181,7 @@ public class InputsManager : MonoBehaviour
         }
     }
     void OnAttack(InputValue value)
-    { if (canAttack) { StartCoroutine(Attack()); } }
+    { if (acquiredSword && canAttack) { StartCoroutine(Attack()); } }
     IEnumerator Attack()
     {
         canAttack = false;

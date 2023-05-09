@@ -21,24 +21,37 @@ public class ProjectileBehavior : MonoBehaviour
     private void Start()
     {
         curv.curveType = Curve.CurveType.BezierCurve;
-        // Si quelqu'un r�vise le code dans le futur, on pourrait ajouter que s'il y a camLock pr�s d'un ennemi, il est vis� et target = ennemi.transform.position
-        // Balistique de quel doit etre l'angle pour que le tir soit spot on
-        float quartDeDistance = DistanceTir * 0.25f;
         Vector3 hauteurTir = HauteurTir * Vector3.up;
         transform.position = hauteurTir;
-        curv.points = new Vector3[4] {  hauteurTir , quartDeDistance * Vector3.forward + hauteurTir,
-                                       2 * quartDeDistance * Vector3.forward + hauteurTir,  DistanceTir * Vector3.forward + new Vector3(2,-2,0) };
+        if (playerInputs.zTargeting)
+        {
+            var distanceZTarget = (playerInputs.zTarget.position - transform.position) * 0.07f;
+            Vector3 hauteurPara = (2 * Mathf.Abs(playerInputs.zTarget.position.y - transform.position.y) + HauteurTir) * Vector3.up;
+            curv.points = new Vector3[4] { hauteurTir,
+                                           0.25f * distanceZTarget + hauteurPara,
+                                           0.5f * distanceZTarget + hauteurPara,
+                                           distanceZTarget};
+        }
+        else
+        {
+            float quarterDistance = DistanceTir * 0.25f;
+            curv.points = new Vector3[4] {  hauteurTir ,
+                                            quarterDistance * Vector3.forward + hauteurTir,
+                                            2 * quarterDistance * Vector3.forward + hauteurTir,
+                                            DistanceTir * Vector3.forward + new Vector3(2f,-2f,0f) };
+        }
         traveler.curve = curv;
         devtools.RefreshCurveArray();
         traveler.enabled = true;
     }
     private void OnCollisionStay(Collision collision)
     {
-        if (collision.collider.gameObject.layer != 7)
+        if (collision.gameObject.layer != 7)
         {
             playerInputs.canUseItem = true;
             traveler.enabled = false;
-            //Destroy(collision.collider.gameObject);     // Appeller Ennemi.Hurt() instead. For test purposes only
+            if (collision.gameObject.CompareTag("Enemy"))
+                collision.gameObject.GetComponent<Enemy>().Hurt(2f);
             Destroy(parentObj);
             devtools.RefreshCurveArray();
         }

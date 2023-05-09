@@ -13,16 +13,11 @@ public class FouetInterraction : MonoBehaviour
     {
         switch (other.tag)
         {
-            case "Ennemi":
-                // Call Ennemi.Hurt()
+            case "Enemy":
+                other.GetComponent<Enemy>().Hurt(4f);
                 break;
             case "Grapple point":
                 retainSize = true;
-
-                break;
-            default:
-                if (other.gameObject.name != "Body")
-                    GameObject.Destroy(other.gameObject);   // Just for fun. Remove after tests
                 break;
         }
     }

@@ -2,26 +2,26 @@ using UnityEngine;
 
 public class FouetBehavior : MonoBehaviour
 {
+    GameObject player;
+    GameObject leftHand;
     InputsManager playerInputs;
     Transform transParent;
-    Vector3 posIni;
-    [SerializeField] private float dureeDeVie = 0.5f;
+    [SerializeField] private float dureeDeVie = 0.25f;
     float chrono = 0f;
     public bool retainSize = false;
     private void Awake()
     {
-        playerInputs = GameObject.Find("Player").GetComponent<InputsManager>();
+        player = GameObject.Find("Player");
+        leftHand = GameObject.Find("PlayerLeftHandPos");
+        playerInputs = player.GetComponent<InputsManager>();
         transParent = transform.parent;
-        posIni = transParent.position;
     }
     private void Update()
     {
-        if (!retainSize)
-        {
-            float x = chrono * Mathf.PI / dureeDeVie;
-            transParent.localScale = new(1, 1, Mathf.Abs(Mathf.Sin(x)));
-            transParent.position += Mathf.Cos(x) / Mathf.PI * transform.up;
-        }
+        transParent.rotation = player.transform.rotation;
+        transParent.position = leftHand.transform.position + (player.transform.rotation * new Vector3(0, 0, transform.localScale.y));
+        playerInputs.skewedMovement = Vector3.zero;
+
         if (chrono > dureeDeVie)
         {
             Destroy(transParent.gameObject);
@@ -30,7 +30,5 @@ public class FouetBehavior : MonoBehaviour
         chrono += Time.deltaTime;
     }
     private void OnTriggerEnter(Collider other)
-    {
-        Destroy(other.gameObject);     /* Appeller Ennemi.Hurt() instead. For test purposes only*/
-    }
+    { if (other.gameObject.CompareTag("Enemy")) { other.GetComponent<Enemy>().Hurt(2f); } }
 }
