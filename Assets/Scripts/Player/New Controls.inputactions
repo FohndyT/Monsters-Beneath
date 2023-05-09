@@ -60,6 +60,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Glider",
+                    "type": "Button",
+                    "id": "5b4a0b3c-394d-4403-a5c5-3ea9fee23537",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Item",
                     "type": "Button",
                     "id": "1598696e-f2c8-4843-9c45-31a3db4fd1d4",
@@ -90,6 +99,24 @@
                     "name": "Open Menu",
                     "type": "Button",
                     "id": "66db8fb0-6178-4e77-9130-e282dc09c888",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "RotateLeft",
+                    "type": "Button",
+                    "id": "ef96af93-2839-47bc-a94e-00b293d823f7",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "RotateRight",
+                    "type": "Button",
+                    "id": "5837a449-283b-4cf9-afc4-0f58a1e4073a",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -554,15 +581,15 @@
                     "path": "<Keyboard>/shift",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard",
+                    "groups": "",
                     "action": "Dash",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "00a800dc-5a69-438a-b4f9-6d7a6c251897",
-                    "path": "<Gamepad>/buttonNorth",
+                    "id": "47aa5b2b-ae7e-44b8-86de-79756766163e",
+                    "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "Controller",
@@ -572,12 +599,67 @@
                 },
                 {
                     "name": "",
-                    "id": "e04881a2-41a8-4f15-99aa-6a035b8a29c2",
-                    "path": "<Gamepad>/leftTrigger",
+                    "id": "f698387a-56eb-420a-ae64-e8cc4707c791",
+                    "path": "<Keyboard>/enter",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
-                    "action": "Dash",
+                    "groups": "Keyboard",
+                    "action": "Glider",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "93f11316-4c67-440f-8f2e-26e0f8ac8e1d",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Controller",
+                    "action": "Glider",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1c3cd8da-0717-4658-8ef3-1a4362cf4c67",
+                    "path": "<Keyboard>/j",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "RotateLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ac6dedfa-e89e-4219-9e51-57cd81b120ec",
+                    "path": "<Gamepad>/rightStick/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Controller",
+                    "action": "RotateLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b245f90c-0f0d-4635-96a5-e01a88b853cf",
+                    "path": "<Keyboard>/k",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "RotateRight",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2ce83c10-e990-46db-add0-6b703d9fb56b",
+                    "path": "<Gamepad>/rightStick/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Controller",
+                    "action": "RotateRight",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

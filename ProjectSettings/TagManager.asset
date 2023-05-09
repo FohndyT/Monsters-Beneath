@@ -16,6 +16,8 @@ TagManager:
   - Boss
   - Enemy
   - Flamme
+  - Destructible
+  - Soin
   layers:
   - Default
   - TransparentFX

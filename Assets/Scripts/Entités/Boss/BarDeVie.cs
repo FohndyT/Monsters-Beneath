@@ -16,7 +16,7 @@ public class BarDeVie : MonoBehaviour
 
     public Transform caméra;
 
-    public void MettreVieMax(int vieMax)
+    public void MettreVieMax(float vieMax)
     {
         slider.maxValue = vieMax;
         slider.value = vieMax;
@@ -25,7 +25,7 @@ public class BarDeVie : MonoBehaviour
         //transform.GetChild(0).GetComponent<Image>().color = gradiant.Evaluate(1f);
     }
 
-    public void MettreVie(int vieCurrente)
+    public void MettreVie(float vieCurrente)
     {
         slider.value = vieCurrente;
         

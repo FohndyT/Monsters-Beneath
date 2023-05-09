@@ -12,9 +12,11 @@ GameObject:
   - component: {fileID: 7069552983491454308}
   - component: {fileID: 2231550016607391548}
   - component: {fileID: 3800900421939885501}
+  - component: {fileID: 2709245364028840823}
+  - component: {fileID: 4551000280003632821}
   m_Layer: 0
   m_Name: Planeur
-  m_TagString: Untagged
+  m_TagString: Planeur
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4525,3 +4527,29 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8291256045207381297}
   m_Mesh: {fileID: 0}
+--- !u!114 &2709245364028840823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8291256045207381297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb1a21cdb35726d4e969d8947ea8ebb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemIndex: 0
+--- !u!65 &4551000280003632821
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8291256045207381297}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3, y: 2.3120778, z: 1.9999998}
+  m_Center: {x: 0.0008675674, y: 0.71218926, z: -0.0047912193}

@@ -23,7 +23,7 @@ public class Vent : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            if (planage.estCree)
+            if (planage.instantiated)
             {
                 Debug.Log("Collision Vent");
             

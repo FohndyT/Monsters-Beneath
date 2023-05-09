@@ -209,7 +209,7 @@ public class BossComportement : MonoBehaviour
                 if (DistanceEntreBossJoueur() <= 7f)
                 {
                     rbJoueur.AddForce(4000f * directionForce, ForceMode.Impulse);
-                    joueurPlayer.Hurt(1f);
+                    joueurPlayer.Hurt(3f);
                 }
                 this.Attendre(1.7f, () => { Destroy(cloneOndeDeChoc);});
             });
@@ -230,7 +230,7 @@ public class BossComportement : MonoBehaviour
             
             GameObject cloneExplosionDeGlace = Instantiate(explosionDeGlace,transform.position,transform.rotation);
             this.Attendre(3f, () => { Destroy(cloneExplosionDeGlace);});
-            effetDeGele.FrostAmount = 0.5f;
+            effetDeGele.FrostAmount = 0.3f;
         
             rbJoueur.drag = 20f;
         
@@ -266,7 +266,7 @@ public class BossComportement : MonoBehaviour
         joueurPeutAttaquer = false;
         vieRestante = 0;
         animation.runtimeAnimatorController = animationMort;
-        this.Attendre(2.4f, () => { Destroy(gameObject);});
+        this.Attendre(2.1f, () => { Destroy(gameObject);});
     }
     private float DistanceEntreBossJoueur()
     {
