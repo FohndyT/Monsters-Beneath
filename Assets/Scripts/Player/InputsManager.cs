@@ -138,14 +138,12 @@ public class InputsManager : MonoBehaviour
     }
     IEnumerator Targeting(InputAction lockAction)
     {
-        zTarget.transform.localScale += new Vector3(0.5f, 0.5f, 0.5f);
         while (lockAction.inProgress)
         {
             if (Vector3.Distance(zTarget.position, transform.position) > 12f && zTarget != null)
                 break;
             yield return null;
         }
-        zTarget.transform.localScale -= new Vector3(0.5f, 0.5f, 0.5f);
         zTargeting = false;
         StopCoroutine(Targeting(lockAction));
     }
