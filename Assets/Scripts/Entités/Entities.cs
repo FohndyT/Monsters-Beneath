@@ -3,7 +3,7 @@ using UnityEngine;
 
 public abstract class Entities : MonoBehaviour
 {
-    [SerializeField] protected float health = 10f;
+    public float health { get; protected set; } = 10f;
     protected float maxHealth = 10f;    // 1 pt = un demi coeur. Donc de base, max health = 5 coeurs
     float iFramesChrono;
     public bool invincible = false;
