@@ -32,7 +32,7 @@ public class SqueletteComportement : MonoBehaviour
         
         joueur = GameObject.Find("Player");
         joueurPlayer = joueur.GetComponent<Player>();
-        dommageAuJoueur = GameObject.Find("Bip001 R Hand").GetComponent<DommageBoss>();
+        dommageAuJoueur = GetComponentInChildren<DommageBoss>();
     }
 
     void Update()
