@@ -14,6 +14,7 @@ public class Player : Entities
     private float maxHp;
     private float healthRegen = 0f;
     private bool ouch;
+    public BarDeVie barDeVie;
 
     private void Awake()
     {
@@ -31,6 +32,8 @@ public class Player : Entities
             health = maxHp;
             healthRegen = 0f;
         }
+        
+        barDeVie.MettreVie(health);
     }
     void RecalculateLowHPThreshold() => lowHealthThreshold = maxHealth * 0.1f;
     void RecalculateMaxHP(float difference)
