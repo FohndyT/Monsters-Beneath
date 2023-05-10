@@ -73,7 +73,7 @@ public class SqueletteComportement : MonoBehaviour
         {
             vie--;
             joueurPeutAttaquer = false;
-            this.Attendre(0.7f, () => { joueurPeutAttaquer = true;});
+            this.Attendre(0.8f, () => { joueurPeutAttaquer = true;});
         }
     }
 
