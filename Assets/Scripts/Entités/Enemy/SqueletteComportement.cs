@@ -10,17 +10,20 @@ public class SqueletteComportement : MonoBehaviour
     [SerializeField] private AnimatorController animationRepos;
     [SerializeField] private AnimatorController animationMarcher;
     [SerializeField] private AnimatorController animationAttaquer;
+
+    [SerializeField] private float rayonDeDetection;
     
     private Animator animation;
     
     private GameObject joueur;
     private Player joueurPlayer;
+    private DommageBoss dommageAuJoueur;
 
     private bool peutAttaquer = true;
     private bool joueurPeutAttaquer = true;
     private bool estEnTrainDeMarcher = true;
 
-    private float vie = 3;
+    [SerializeField] private float vie = 3;
     
     void Start()
     {
@@ -29,6 +32,7 @@ public class SqueletteComportement : MonoBehaviour
         
         joueur = GameObject.Find("Player");
         joueurPlayer = joueur.GetComponent<Player>();
+        dommageAuJoueur = GameObject.Find("Bip001 R Hand").GetComponent<DommageBoss>();
     }
 
     void Update()
@@ -48,7 +52,7 @@ public class SqueletteComportement : MonoBehaviour
 
     void SeDeplacer()
     {
-        if (estEnTrainDeMarcher && Vector3.Distance(joueur.transform.position, gameObject.transform.position) < 15)
+        if (estEnTrainDeMarcher && Vector3.Distance(joueur.transform.position, gameObject.transform.position) < rayonDeDetection)
         {
             transform.LookAt(new Vector3(joueur.transform.position.x,transform.position.y,joueur.transform.position.z));
             transform.position = Vector3.MoveTowards(transform.position, new Vector3(joueur.transform.position.x, transform.position.y, joueur.transform.position.z), 5f * Time.deltaTime);
@@ -61,6 +65,7 @@ public class SqueletteComportement : MonoBehaviour
         if (other.gameObject.name == "Player" && peutAttaquer)
         {
             estEnTrainDeMarcher = false;
+            dommageAuJoueur.estActive = true;
             Attaquer();
         }
 
@@ -74,6 +79,7 @@ public class SqueletteComportement : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        dommageAuJoueur.estActive = false;
         this.Attendre(2f, ()=> {estEnTrainDeMarcher = true;});
     }
 }
