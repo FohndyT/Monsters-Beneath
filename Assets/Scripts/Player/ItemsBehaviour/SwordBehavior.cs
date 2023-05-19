@@ -1,3 +1,5 @@
+//Jeremy Legault
+
 using UnityEngine;
 
 public class SwordBehavior : MonoBehaviour

@@ -1,3 +1,5 @@
+//Gabriel Chartier et Jeremy Legault
+
 using System;
 using System.Collections;
 using Unity.Mathematics;
