@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Noirceur
+  m_Name: Transparence
   m_Shader: {fileID: -6465566751694194690, guid: b82b46a034b302a4297733425365a5a6, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []

@@ -1,22 +1,19 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Jobs.LowLevel.Unsafe;
-//using UnityEditor.Animations;
+// Fohndy Nomerth Tah
+
+using UnityEditor.Animations;
 using UnityEngine;
 
 public class SqueletteComportement : MonoBehaviour
 {
-    //[SerializeField] private AnimatorController animationRepos;
-    //[SerializeField] private AnimatorController animationMarcher;
-    //[SerializeField] private AnimatorController animationAttaquer;
+    [SerializeField] private AnimatorController animationRepos;
+    [SerializeField] private AnimatorController animationMarcher;
+    [SerializeField] private AnimatorController animationAttaquer;
 
     [SerializeField] private float rayonDeDetection;
     
     private Animator animation;
     
     private GameObject joueur;
-    private Player joueurPlayer;
     private DommageBoss dommageAuJoueur;
 
     private bool peutAttaquer = true;
@@ -28,10 +25,9 @@ public class SqueletteComportement : MonoBehaviour
     void Start()
     {
         animation = GetComponent<Animator>();
-        //animation.runtimeAnimatorController = animationRepos;
+        animation.runtimeAnimatorController = animationRepos;
         
         joueur = GameObject.Find("Player");
-        joueurPlayer = joueur.GetComponent<Player>();
         dommageAuJoueur = GetComponentInChildren<DommageBoss>();
     }
 
@@ -47,7 +43,7 @@ public class SqueletteComportement : MonoBehaviour
 
     void Attaquer()
     {
-        //animation.runtimeAnimatorController = animationAttaquer;
+        animation.runtimeAnimatorController = animationAttaquer;
     }
 
     void SeDeplacer()
@@ -56,7 +52,11 @@ public class SqueletteComportement : MonoBehaviour
         {
             transform.LookAt(new Vector3(joueur.transform.position.x,transform.position.y,joueur.transform.position.z));
             transform.position = Vector3.MoveTowards(transform.position, new Vector3(joueur.transform.position.x, transform.position.y, joueur.transform.position.z), 5f * Time.deltaTime);
-            //animation.runtimeAnimatorController = animationMarcher;
+            animation.runtimeAnimatorController = animationMarcher;
+        }
+        else
+        {
+            animation.runtimeAnimatorController = animationRepos;
         }
     }
 
@@ -73,7 +73,7 @@ public class SqueletteComportement : MonoBehaviour
         {
             vie--;
             joueurPeutAttaquer = false;
-            this.Attendre(1f, () => { joueurPeutAttaquer = true;});
+            this.Attendre(0.8f, () => { joueurPeutAttaquer = true;});
         }
     }
 
