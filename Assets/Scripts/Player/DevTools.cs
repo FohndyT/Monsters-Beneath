@@ -24,7 +24,7 @@ public class DevTools : MonoBehaviour
     {
         nbDebugStates = debugHotKeys.Length;
         //debugStates = Enumerable.Repeat(true, nbDebugStates).ToArray();
-        debugStates = new bool[] { true, false, false, true, false };
+        debugStates = new bool[] { true, false, false, true, true };
         RefreshCurveArray();
         inputManager = GetComponent<InputsManager>();
         mat = new Material(Shader.Find("Hidden/Internal-Colored"));

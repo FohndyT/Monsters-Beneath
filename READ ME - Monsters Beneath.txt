@@ -1,0 +1,28 @@
+Quelques astuces pour faciliter la correction du jeu:
+
+
+
+F1 - Active les fonctions de debug suivantes :                                      (initialement active)
+
+F5 - Affiche les colliders de forme cubique                                         (initialement desactive)
+F6 - Affiche le raycast utilise pour determiner si le joueur touche le sol ou non   (initialement desactive)
+F7 - Affiche toutes les courbes cubiques                                            (initialement active) --> (Les courbes blanches sont donc normalement invisibles)
+F8 - Donne tous les items au joueur                                                 (initialement active) --> Les items sont donc deja fournis des le debut du jeu
+
+
+
+ - Frapper un coeur flottant avec l'epee regenerera la vie du personnage
+
+ - Le collisionneur des courants ascendants de vent sont legerement chaotiques, pour un resultat desire, il faut renter dans le courant plus vers le haut
+   Si vous echouez, marcher sur un des cotes (vers le milieu gauche) de la fan industrielle avec le planeur active va vous bumper correctement
+
+ - Ne pas deplacer le personnage dans la section de crystaux puis commencer une session de jeu:
+   il y a deux trigger colliders au debut et a la fin de la section qui changent la perspective de la camera.
+   Vous aurez une belle surprise lorsque vous traverserez le second et que le script forcera le joueur a ne pas traverser (puisque vous aurez manque le premier collider)
+   En situation normale, puisque vous auriez traverse le premier collider, traverser le second forcerait le joueur a l'exterieur de la section.
+   Manquer de traverser le premier collider inversera le comportement et resultera en un deplacement force a l'interieur a la place!
+
+ - Pour traverser les boites qui bloquent la progression, elles doivent ete brulees par le laser qui doit ete reflecte par les panneux...
+   ... ou vous pouvez juste utiliser l'item "Crystal Laser" directement dessus!
+
+ - Lorsque le boss gele le personnage, il faut s'approcher d'une source de chaleur pour retablir les mouvements normaux
