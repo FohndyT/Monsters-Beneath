@@ -1,7 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Jobs.LowLevel.Unsafe;
+// Fohndy Nomerth Tah
+
 using UnityEditor.Animations;
 using UnityEngine;
 
@@ -16,7 +14,6 @@ public class SqueletteComportement : MonoBehaviour
     private Animator animation;
     
     private GameObject joueur;
-    private Player joueurPlayer;
     private DommageBoss dommageAuJoueur;
 
     private bool peutAttaquer = true;
@@ -31,7 +28,6 @@ public class SqueletteComportement : MonoBehaviour
         animation.runtimeAnimatorController = animationRepos;
         
         joueur = GameObject.Find("Player");
-        joueurPlayer = joueur.GetComponent<Player>();
         dommageAuJoueur = GetComponentInChildren<DommageBoss>();
     }
 
@@ -57,6 +53,10 @@ public class SqueletteComportement : MonoBehaviour
             transform.LookAt(new Vector3(joueur.transform.position.x,transform.position.y,joueur.transform.position.z));
             transform.position = Vector3.MoveTowards(transform.position, new Vector3(joueur.transform.position.x, transform.position.y, joueur.transform.position.z), 5f * Time.deltaTime);
             animation.runtimeAnimatorController = animationMarcher;
+        }
+        else
+        {
+            animation.runtimeAnimatorController = animationRepos;
         }
     }
 

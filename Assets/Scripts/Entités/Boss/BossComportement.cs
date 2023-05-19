@@ -17,8 +17,6 @@ public class BossComportement : MonoBehaviour
     [SerializeField] private AnimatorController animationCourir;
     [SerializeField] private AnimatorController animationSauter;
     [SerializeField] private AnimatorController animationTomber;
-    [SerializeField] private AnimatorController animationEsquiveGauche;
-    [SerializeField] private AnimatorController animationEsquiveDroite;
     [SerializeField] private AnimatorController animationFrappe;
     [SerializeField] private AnimatorController animationCreationSlime;
     [SerializeField] private AnimatorController animationPerte;
@@ -32,7 +30,6 @@ public class BossComportement : MonoBehaviour
     
     private Player joueurPlayer;
 
-    private DommageBoss attaqueCorps;
     private DommageBoss attaqueMainGauche;
     private DommageBoss attaqueMainDroite;
     private DommageBoss attaquePiedsGauche;
@@ -79,7 +76,6 @@ public class BossComportement : MonoBehaviour
         vieRestante = vieMax;
         barDeVie.MettreVieMax(vieMax);
 
-        attaqueCorps = GameObject.Find("Boss").GetComponent<DommageBoss>();
         attaqueMainGauche = GameObject.Find("B-hand.L").GetComponent<DommageBoss>();
         attaqueMainDroite = GameObject.Find("B-hand.R").GetComponent<DommageBoss>();
         attaquePiedsGauche = GameObject.Find("B-toe.L").GetComponent<DommageBoss>();
@@ -130,10 +126,6 @@ public class BossComportement : MonoBehaviour
         {
             transform.LookAt(new Vector3(joueur.transform.position.x,transform.position.y,joueur.transform.position.z));
         }
-    }
-    void TournerVersJoueur()
-    {
-        transform.LookAt(new Vector3(joueur.transform.position.x,transform.position.y,joueur.transform.position.z));
     }
     void PoursuitePhaseUn()
     {
@@ -209,7 +201,7 @@ public class BossComportement : MonoBehaviour
                 if (DistanceEntreBossJoueur() <= 7f)
                 {
                     rbJoueur.AddForce(4000f * directionForce, ForceMode.Impulse);
-                    joueurPlayer.Hurt(3f);
+                    joueurPlayer.Hurt(3.5f);
                 }
                 this.Attendre(1.7f, () => { Destroy(cloneOndeDeChoc);});
             });
@@ -236,7 +228,7 @@ public class BossComportement : MonoBehaviour
         
             peutGenererGlace = false;
             this.Attendre(4f, () => { EstEnTrainDeMarcher = true;peutAttaquer = true;});
-            this.Attendre(40f, () => { peutGenererGlace = true;});
+            this.Attendre(20f, () => { peutGenererGlace = true;});
         }
     }
     #endregion
