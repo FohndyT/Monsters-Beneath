@@ -1,7 +1,9 @@
+//Jeremy Legault
+
 using System;
 using UnityEngine;
 
-[ExecuteInEditMode]     // Permet a CurveCustomEditor d'acceder a GetPoint(), but also d'afficher splines dans éditeur. Laissez jusqu'à ce qu'on ship le jeu.
+//[ExecuteInEditMode]     // Permet a CurveCustomEditor d'acceder a GetPoint(), but also d'afficher splines dans éditeur. Laissez jusqu'à ce qu'on ship le jeu.
 public class Curve : MonoBehaviour
 {
     DevTools devtools;

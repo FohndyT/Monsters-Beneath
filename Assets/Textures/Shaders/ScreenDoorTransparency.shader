@@ -1,3 +1,5 @@
+//Jeremy Legault
+
 Shader "Custom/ScreenDoorTransparency"
 {
     Properties

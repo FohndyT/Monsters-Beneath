@@ -1,3 +1,5 @@
+//Jeremy Legault
+
 using System.Collections;
 using UnityEngine;
 

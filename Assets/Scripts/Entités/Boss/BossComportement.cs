@@ -5,14 +5,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using Unity.VisualScripting;
-using UnityEditor.Animations;
+//using UnityEditor.Animations;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class BossComportement : MonoBehaviour
 {
     #region Animations
-    [SerializeField] private AnimatorController animationDefaut;
+    /*[SerializeField] private AnimatorController animationDefaut;
     [SerializeField] private AnimatorController animationMarche;
     [SerializeField] private AnimatorController animationCourir;
     [SerializeField] private AnimatorController animationSauter;
@@ -23,7 +23,7 @@ public class BossComportement : MonoBehaviour
     [SerializeField] private AnimatorController animationCreationSlime;
     [SerializeField] private AnimatorController animationPerte;
     [SerializeField] private AnimatorController animationChangementPhase;
-    [SerializeField] private AnimatorController animationMort;
+    [SerializeField] private AnimatorController animationMort;*/
     #endregion
 
     [SerializeField] private GameObject ondeDeShoc;
@@ -141,7 +141,7 @@ public class BossComportement : MonoBehaviour
         {
             transform.position = Vector3.MoveTowards(transform.position, new Vector3(joueur.transform.position.x, transform.position.y, joueur.transform.position.z), vitesseMouvement * Time.deltaTime);
             
-            animation.runtimeAnimatorController = animationMarche;
+            //animation.runtimeAnimatorController = animationMarche;
         }
     }
     void PoursuitePhaseDeux()
@@ -151,7 +151,7 @@ public class BossComportement : MonoBehaviour
             transform.position = Vector3.MoveTowards(transform.position,
             new Vector3(joueur.transform.position.x, transform.position.y, joueur.transform.position.z), vitesseMouvement * 2f * Time.deltaTime);
         
-            animation.runtimeAnimatorController = animationCourir;
+            //animation.runtimeAnimatorController = animationCourir;
         }
     }
     #endregion
@@ -167,7 +167,7 @@ public class BossComportement : MonoBehaviour
             attaqueMainDroite.estActive = true;
             attaquePiedsGauche.estActive = true;
 
-            animation.runtimeAnimatorController = animationFrappe;
+            //animation.runtimeAnimatorController = animationFrappe;
         }
 
         if (other.gameObject.CompareTag("PlayerAttack") && joueurPeutAttaquer)
@@ -201,7 +201,7 @@ public class BossComportement : MonoBehaviour
             EstEnTrainDeMarcher = false;
             peutAttaquer = false;
 
-            animation.runtimeAnimatorController = animationCreationSlime;
+            //animation.runtimeAnimatorController = animationCreationSlime;
             this.Attendre(2f, () =>
             {
                 GameObject cloneOndeDeChoc = Instantiate(ondeDeShoc,transform.position,transform.rotation);
@@ -226,7 +226,7 @@ public class BossComportement : MonoBehaviour
             EstEnTrainDeMarcher = false;
             peutAttaquer = false;
             
-            animation.runtimeAnimatorController = animationTomber;
+            //animation.runtimeAnimatorController = animationTomber;
             
             GameObject cloneExplosionDeGlace = Instantiate(explosionDeGlace,transform.position,transform.rotation);
             this.Attendre(3f, () => { Destroy(cloneExplosionDeGlace);});
@@ -253,7 +253,7 @@ public class BossComportement : MonoBehaviour
             peutAttaquer = false;
             joueurPeutAttaquer = false;
             EstEnTrainDeMarcher = false;
-            animation.runtimeAnimatorController = animationPerte;
+            //animation.runtimeAnimatorController = animationPerte;
             this.Attendre(5f, () => { EstEnTrainDeMarcher = true; peutAttaquer = true; joueurPeutAttaquer = true; phase = 2;
             });
         }
@@ -265,7 +265,7 @@ public class BossComportement : MonoBehaviour
         peutAttaquer = false;
         joueurPeutAttaquer = false;
         vieRestante = 0;
-        animation.runtimeAnimatorController = animationMort;
+        //animation.runtimeAnimatorController = animationMort;
         this.Attendre(2.1f, () => { Destroy(gameObject);});
     }
     private float DistanceEntreBossJoueur()

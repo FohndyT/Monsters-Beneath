@@ -1,9 +1,11 @@
+//Jeremy Legault
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[ExecuteInEditMode]     // Permet a Curve d'acceder a RefreshCurveArray(), but also d'afficher splines dans éditeur. Laissez jusqu'à ce qu'on ship le jeu.
+//[ExecuteInEditMode]     // Permet a Curve d'acceder a RefreshCurveArray(), but also d'afficher splines dans éditeur. Laissez jusqu'à ce qu'on ship le jeu.
 public class DevTools : MonoBehaviour
 {
     InputsManager inputManager;
