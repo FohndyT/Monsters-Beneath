@@ -1,5 +1,7 @@
 Quelques astuces pour faciliter la correction du jeu:
 
+Pour commencer le jeu, lancez la scene "Menu"
+
 
 
 F1 - Active les fonctions de debug suivantes :                                      (initialement active)
